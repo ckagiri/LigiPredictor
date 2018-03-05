@@ -28,13 +28,13 @@ describe.only('League', () => {
                 });
             });
         });
-        describe('a full league', () => {
-            const n = {
+        describe('a non-empty league', () => {
+            const league = {
                 name: 'English Premier League',
                 slug: 'english_premier_league',
                 code: 'epl'
             };
-            const l = new league_1.League(n);
+            const l = new league_1.League(league);
             it('should have 0 errors', (done) => {
                 l.validate((err) => {
                     chai_1.expect(err).to.eql(null);

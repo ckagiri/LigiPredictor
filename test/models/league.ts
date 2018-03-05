@@ -34,13 +34,13 @@ describe.only('League', () => {
       });
     })
 
-    describe('a full league', () => {
-      const n: ILeague = {
+    describe('a non-empty league', () => {
+      const league: ILeague = {
         name: 'English Premier League',
         slug: 'english_premier_league',
         code: 'epl'
       };
-      const l = new League(n);
+      const l = new League(league);
       it('should have 0 errors', (done) => {
         l.validate((err) => {
           expect(err).to.eql(null);
