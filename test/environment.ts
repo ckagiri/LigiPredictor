@@ -3,7 +3,7 @@ import { assert } from "chai";
 
 import { isEnv, isProduction, isTest, isDevelopment } from '../src/util/environment';
 
-describe.only('environment', () => {
+describe('environment', () => {
   let keepEnv: string;
 
   beforeEach(() => {

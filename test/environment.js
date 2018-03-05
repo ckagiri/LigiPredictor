@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const environment_1 = require("../src/util/environment");
-describe.only('environment', () => {
+describe('environment', () => {
     let keepEnv;
     beforeEach(() => {
         // save the NODE_ENV
