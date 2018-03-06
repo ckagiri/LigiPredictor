@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 
-import { ILeague, League } from '../../src/db/models/league';
+import { ILeague, LeagueModel as League } from '../../src/db/models/league.model';
 
-describe.only('League', () => {
+describe('League', () => {
   describe('schema', () => {
 
     describe('an empty league', () => {
@@ -30,7 +30,7 @@ describe.only('League', () => {
         l.validate((err) => {
           expect(err.errors.code).to.not.exist;
           done();
-        })
+        }) 
       });
     })
 

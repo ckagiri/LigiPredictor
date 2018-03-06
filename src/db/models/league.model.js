@@ -15,5 +15,5 @@ exports.leagueSchema = new mongoose_1.Schema({
         default: ''
     }
 });
-exports.League = mongoose_1.model('League', exports.leagueSchema);
-//# sourceMappingURL=league.js.map
+exports.LeagueModel = mongoose_1.model('League', exports.leagueSchema);
+//# sourceMappingURL=league.model.js.map

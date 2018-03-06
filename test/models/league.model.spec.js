@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
-const league_1 = require("../../src/db/models/league");
-describe.only('League', () => {
+const league_model_1 = require("../../src/db/models/league.model");
+describe('League', () => {
     describe('schema', () => {
         describe('an empty league', () => {
-            const l = new league_1.League();
+            const l = new league_model_1.LeagueModel();
             it('should have a mongoose schema', function () {
                 chai_1.expect(l.schema).not.be.undefined;
             });
@@ -34,7 +34,7 @@ describe.only('League', () => {
                 slug: 'english_premier_league',
                 code: 'epl'
             };
-            const l = new league_1.League(league);
+            const l = new league_model_1.LeagueModel(league);
             it('should have 0 errors', (done) => {
                 l.validate((err) => {
                     chai_1.expect(err).to.eql(null);
@@ -44,4 +44,4 @@ describe.only('League', () => {
         });
     });
 });
-//# sourceMappingURL=league.js.map
+//# sourceMappingURL=league.model.spec.js.map

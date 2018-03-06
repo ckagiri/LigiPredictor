@@ -1,6 +1,8 @@
 import { Document, Model, model, Schema } from 'mongoose';
 
-export interface ILeague {
+import { IEntity } from './base.model';
+
+export interface ILeague extends IEntity {
   name: string;
   slug: string;
   code: string;
@@ -24,4 +26,4 @@ export const leagueSchema = new Schema({
   }
 });
 
-export const League: Model<ILeagueModel> = model<ILeagueModel>('League', leagueSchema);
+export const LeagueModel: Model<ILeagueModel> = model<ILeagueModel>('League', leagueSchema);
