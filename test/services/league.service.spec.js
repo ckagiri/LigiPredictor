@@ -6,7 +6,7 @@ const league_model_1 = require("../../src/db/models/league.model");
 const league_repo_1 = require("../../src/db/repositories/league.repo");
 const league_converter_1 = require("../../src/db/converters/league.converter");
 const league_service_1 = require("../../src/db/services/league.service");
-describe.only('LeagueService', () => {
+describe('LeagueService', () => {
     let service;
     before(() => {
         mongoose.connect('mongodb://localhost:27017/test123-test');

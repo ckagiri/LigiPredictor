@@ -7,7 +7,7 @@ import { LeagueConverter } from '../../src/db/converters/league.converter';
 
 import { LeagueService } from '../../src/db/services/league.service';
 
-describe.only('LeagueService', () => {
+describe('LeagueService', () => {
   let service: LeagueService;
   before(() => {
     mongoose.connect('mongodb://localhost:27017/test123-test');
