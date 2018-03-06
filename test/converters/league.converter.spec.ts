@@ -4,7 +4,7 @@ import { expect, assert } from 'chai';
 import { LeagueConverter } from '../../src/db/converters/league.converter';
 import { LigiLeagueConverter} from '../../src/db/converters/league.converter.ligi';
 
-describe.only('League Converter', () => {
+describe('League Converter', () => {
   let converter: LeagueConverter;
   let afdLeague;
   before(() => {

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const rxjs_1 = require("rxjs");
 const chai_1 = require("chai");
 const league_converter_ligi_1 = require("../../src/db/converters/league.converter.ligi");
-describe.only('League Converter', () => {
+describe('League Converter', () => {
     let converter;
     let afdLeague;
     before(() => {

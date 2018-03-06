@@ -1,7 +1,10 @@
 import { LeagueModel, ILeagueModel } from '../models/league.model';
-import { BaseRepository } from './base.repo';
+import { IBaseRepository, BaseRepository } from './base.repo';
 
-export class LeagueRepository extends BaseRepository<ILeagueModel> {
+export interface ILeagueRepository extends IBaseRepository<ILeagueModel> {
+}
+
+export class LeagueRepository extends BaseRepository<ILeagueModel> implements ILeagueRepository {
   static getInstance() {
     return new LeagueRepository();
   }
