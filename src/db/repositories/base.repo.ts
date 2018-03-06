@@ -9,7 +9,6 @@ export interface IBaseRepository<T extends Document> {
 }
 
 export class BaseRepository<T extends Document> extends DocumentRepository<T> implements IBaseRepository<T> {
-
   save$(obj: IEntity): Observable<T> {
 		return Observable.create((observer: Subscriber<T>) => {
 			this.save(obj).then((result: T) => {

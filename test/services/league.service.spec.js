@@ -21,7 +21,7 @@ let mockLeagueRepo = {
         });
     }
 };
-describe.only('LeagueService', () => {
+describe('LeagueService', () => {
     let service;
     before(() => {
         mongoose.connect('mongodb://localhost:27017/test123-test');
