@@ -7,7 +7,7 @@ function reloadConfig() {
     delete require.cache[require.resolve(configPath)];
     return require(configPath);
 }
-describe.only('config', () => {
+describe('config', () => {
     it('should select development when NODE_ENV=null', () => {
         process.env.NODE_ENV = null;
         config = reloadConfig();
