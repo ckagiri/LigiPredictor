@@ -1,4 +1,5 @@
-import { Document, Model, model, Schema } from 'mongoose';
+import * as mongoose from 'mongoose';
+const Schema = mongoose.Schema;
 
 import { IEntity } from './base.model';
 
@@ -8,22 +9,28 @@ export interface ILeague extends IEntity {
   code: string;
 }
 
-export interface ILeagueModel extends ILeague, Document {  
+export interface ILeagueModel extends ILeague, mongoose.Document {  
 }
 
 export const leagueSchema = new Schema({
   name: {
-    type:  Schema.Types.String,
+    type:  String,
     required: true
   },
   slug: {
-    type: Schema.Types.String,
+    type: String,
     required: true
   },
   code: {
-    type: Schema.Types.String,
+    type: String,
     default: ''
   }
 });
 
-export const LeagueModel: Model<ILeagueModel> = model<ILeagueModel>('League', leagueSchema);
+// This try-catch is added so that it is possible to set a watch
+// on the mocha runner. Every time the test runs, it will try
+// to create the add the model again
+
+export const LeagueModel = mongoose.model<ILeagueModel>('League', leagueSchema);
+
+//module.exports = LeagueModel;

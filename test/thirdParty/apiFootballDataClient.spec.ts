@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { ApifootballDataClient } from '../../src/thirdParty/footballApi/apiFootballData/apiClient';
 
-describe.only('apifootballDataClient', () => {
+describe('apifootballDataClient', () => {
   let apifootballDataClient;
   before(() => {
     apifootballDataClient = ApifootballDataClient.getInstance();

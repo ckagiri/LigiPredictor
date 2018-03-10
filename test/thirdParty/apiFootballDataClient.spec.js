@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const apiClient_1 = require("../../src/thirdParty/footballApi/apiFootballData/apiClient");
-describe.only('apifootballDataClient', () => {
+describe('apifootballDataClient', () => {
     let apifootballDataClient;
     before(() => {
         apifootballDataClient = apiClient_1.ApifootballDataClient.getInstance();

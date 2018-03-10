@@ -49,10 +49,13 @@
     "all": true
   },
   "dependencies": {
+    "async": "^2.6.0",
     "express": "^4.16.2",
     "lodash": "^4.17.5",
     "mongoose": "^5.0.7",
     "mongoose-seeder": "^1.2.1",
+    "object-assign": "^4.1.1",
+    "q": "^1.5.1",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "rxjs": "^5.5.6"
