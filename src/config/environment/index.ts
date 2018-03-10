@@ -17,16 +17,14 @@ export interface Configurations {
 	FACEBOOK_SECRET: string;
 	GOOGLE_SECRET: string;
 	TWITTER_KEY: string;
-	TWITTER_SECRET: string;
-  api_providers: {
-    api_football_data: {
-      name: string,
-      apiKey: string
-    },
-    sports_open_data: {
-      name: string,
-      apiKey: string
-    }
+  TWITTER_SECRET: string;
+  API_FOOTBALL_DATA: {
+    name: string,
+    apiKey: string
+  };
+  SPORTS_OPEN_DATA: {
+    name: string,
+    apiKey: string
   };
   isProduction: Function;
   isDevelopment: Function;

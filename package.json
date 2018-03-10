@@ -26,6 +26,7 @@
     "sinon": "^4.4.2",
     "sinon-chai": "^2.14.0",
     "source-map-support": "^0.5.3",
+    "supertest": "^3.0.0",
     "ts-node": "^5.0.0",
     "typescript": "^2.7.2"
   },
@@ -51,6 +52,7 @@
     "express": "^4.16.2",
     "lodash": "^4.17.5",
     "mongoose": "^5.0.7",
+    "mongoose-seeder": "^1.2.1",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "rxjs": "^5.5.6"

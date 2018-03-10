@@ -5,4 +5,4 @@
 // getByName(name || extRefName) overide for team
 // findOneAndUpdate provider
 //no services
-//# sourceMappingURL=baseprovider.repo.spec.js.map
+//# sourceMappingURL=baseProvider.repo.spec.js.map

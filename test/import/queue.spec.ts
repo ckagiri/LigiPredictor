@@ -1,18 +1,8 @@
 import { Queue } from '../../src/import/queue';
 import { assert, expect } from 'chai';
 import * as sinon from 'sinon';
-// describe('Queue', () => {
-//   it('should start with 0 jobs', () => {
-//     let q = new Queue();
-//     q.start();
-//     q.jobs.length = 0;
-//     q.pending.length = 0;
 
-//     //
-//   })
-// })
-
-describe.only('Queue', () => {  
+describe('Queue', () => {  
   let q;
   let newJob = () => ({start: () => {}})
   
