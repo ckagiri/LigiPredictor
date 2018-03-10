@@ -130,3 +130,4 @@ $RECYCLE.BIN/
 # End of https://www.gitignore.io/api/node,windows,typings,angular,visualstudiocode
 
 /src/config
+/src/config/environment
