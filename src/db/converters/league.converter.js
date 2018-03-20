@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const league_converter_ligi_1 = require("../converters/league.converter.ligi");
-class LeagueConverter {
-    static getInstance() {
-        return new league_converter_ligi_1.LigiLeagueConverter();
+const league_converter_1 = require("../converters/ligi/league.converter");
+class LeagueConverterFactory {
+    static makeLeagueConverter() {
+        return new league_converter_1.LigiLeagueConverter();
     }
 }
-exports.LeagueConverter = LeagueConverter;
+exports.LeagueConverterFactory = LeagueConverterFactory;
 //# sourceMappingURL=league.converter.js.map

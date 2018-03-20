@@ -1,16 +1,20 @@
 import { Observable } from 'rxjs';
-import { ILeagueRepository } from '../repositories/league.repo';
-import { LeagueConverter } from '../converters/league.converter';
+import { ILeagueRepository, LeagueRepository } from '../repositories/league.repo';
 import { ILeagueModel } from '../models/league.model';
 
-export class LeagueService {
-  constructor(private leagueRepo: ILeagueRepository, private leagueConverter: LeagueConverter) {
+export interface ILeagueService {
+  save$(data: any): Observable<ILeagueModel> 
+}
+
+export class LeagueService implements ILeagueService {
+  static getInstance(): ILeagueService {
+    return new LeagueService(LeagueRepository.getInstance());
+  }  
+
+  constructor(private leagueRepo: ILeagueRepository) {
   }
 
   save$(data: any): Observable<ILeagueModel> {
-    return this.leagueConverter.convert(data)
-      .flatMap((obj) => {
-        return this.leagueRepo.save$(obj);
-    });
+    return this.leagueRepo.save$(data);
   }
 }

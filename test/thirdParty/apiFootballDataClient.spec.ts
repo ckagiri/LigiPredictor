@@ -5,7 +5,7 @@ import * as sinon from 'sinon';
 
 //import { ApifootballDataClient } from '../../src/thirdParty/footballApi/apiFootballData/apiClient';
 
-describe.only('apifootballDataClient', () => {
+describe('apifootballDataClient', () => {
   let apifootballDataClient;
   before(() => {
     mockery.enable({

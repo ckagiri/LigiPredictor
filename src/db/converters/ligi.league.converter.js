@@ -1,1 +1,0 @@
-//# sourceMappingURL=ligi.league.converter.js.map

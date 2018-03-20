@@ -1,17 +1,19 @@
 import { ILeague, LeagueModel, ILeagueModel } from '../models/league.model';
-import { IBaseRepository, BaseRepository } from './base.repo';
+import { IBaseProviderRepository, BaseProviderRepository } from './baseProvider.repo';
+import { ILeagueConverter } from '../converters/league.converter';
+import { LeagueConverterFactory } from '../converters/league.converter'
 import { Observable } from 'rxjs';
 
-export interface ILeagueRepository extends IBaseRepository<ILeagueModel> {
+export interface ILeagueRepository extends IBaseProviderRepository<ILeagueModel> {
   save$(league: ILeague): Observable<ILeagueModel>
 }
 
-export class LeagueRepository extends BaseRepository<ILeagueModel> implements ILeagueRepository {
+export class LeagueRepository extends BaseProviderRepository<ILeagueModel> implements ILeagueRepository {
   static getInstance() {
-    return new LeagueRepository();
+    return new LeagueRepository(LeagueConverterFactory.makeLeagueConverter());
   }
 
-  constructor() {
-    super(LeagueModel);
+  constructor(converter: ILeagueConverter) {
+    super(LeagueModel, converter);
   }
 }

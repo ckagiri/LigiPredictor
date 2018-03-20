@@ -1,1 +1,1 @@
-{"version":3,"file":"league.converter.js","sourceRoot":"","sources":["league.converter.ts"],"names":[],"mappings":";;AAEA,+EAA0E;AAK1E;IACE,MAAM,CAAC,WAAW;QAChB,MAAM,CAAC,IAAI,2CAAmB,EAAE,CAAC;IACnC,CAAC;CAGF;AAND,0CAMC"}
+{"version":3,"file":"league.converter.js","sourceRoot":"","sources":["league.converter.ts"],"names":[],"mappings":";;AAGA,0EAA0E;AAQ1E;IACE,MAAM,CAAC,mBAAmB;QACxB,MAAM,CAAC,IAAI,sCAAmB,EAAE,CAAC;IACnC,CAAC;CACF;AAJD,wDAIC"}

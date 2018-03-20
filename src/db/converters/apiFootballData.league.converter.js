@@ -1,1 +1,0 @@
-//# sourceMappingURL=apiFootballData.league.converter.js.map

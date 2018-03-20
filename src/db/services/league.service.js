@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const league_repo_1 = require("../repositories/league.repo");
 class LeagueService {
-    constructor(leagueRepo, leagueConverter) {
+    constructor(leagueRepo) {
         this.leagueRepo = leagueRepo;
-        this.leagueConverter = leagueConverter;
+    }
+    static getInstance() {
+        return new LeagueService(league_repo_1.LeagueRepository.getInstance());
     }
     save$(data) {
-        return this.leagueConverter.convert(data)
-            .flatMap((obj) => {
-            return this.leagueRepo.save$(obj);
-        });
+        return this.leagueRepo.save$(data);
     }
 }
 exports.LeagueService = LeagueService;

@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-exports.leagueSchema = new Schema({
+const mongoose_1 = require("mongoose");
+exports.leagueSchema = new mongoose_1.Schema({
     name: {
         type: String,
         required: true
@@ -16,9 +15,6 @@ exports.leagueSchema = new Schema({
         default: ''
     }
 });
-// This try-catch is added so that it is possible to set a watch
-// on the mocha runner. Every time the test runs, it will try
-// to create the add the model again
-exports.LeagueModel = mongoose.model('League', exports.leagueSchema);
-//module.exports = LeagueModel;
+// add try-catch
+exports.LeagueModel = mongoose_1.model('League', exports.leagueSchema);
 //# sourceMappingURL=league.model.js.map

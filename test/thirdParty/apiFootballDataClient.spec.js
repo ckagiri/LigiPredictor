@@ -12,7 +12,7 @@ const chai_1 = require("chai");
 const mockery = require("mockery");
 const sinon = require("sinon");
 //import { ApifootballDataClient } from '../../src/thirdParty/footballApi/apiFootballData/apiClient';
-describe.only('apifootballDataClient', () => {
+describe('apifootballDataClient', () => {
     let apifootballDataClient;
     before(() => {
         mockery.enable({
@@ -37,7 +37,7 @@ describe.only('apifootballDataClient', () => {
             chai_1.expect(response.metadata).to.be.an('object');
         })).timeout(0);
     });
-    describe('geCompetions', () => {
+    describe('getCompetions', () => {
         let bodyResponse = require('../fixtures/requests/apiFootballData.competitions2017');
         let response = {
             body: JSON.stringify(bodyResponse),

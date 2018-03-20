@@ -1,4 +1,7 @@
-import {LeagueModel as League} from './league.model'
+import { LeagueModel } from './league.model';
+
+export const League = LeagueModel;
+
 export default [
   League
 ]
