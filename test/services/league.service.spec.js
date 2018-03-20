@@ -11,24 +11,11 @@ const league = {
     slug: 'english_premier_league',
     code: 'epl'
 };
-let mockLeagueConverter = {
-    provider: 'TEST',
-    from(data) {
-        return rxjs_1.Observable.of({
-            name: data.name,
-            code: data.code,
-            slug: data.slug
-        });
-    }
-};
 let mockLeagueRepo = {
     save$(obj) {
-        return mockLeagueConverter.from(obj)
-            .flatMap(entity => {
-            return rxjs_1.Observable.create((observer) => {
-                observer.next(new league_model_1.LeagueModel(league));
-                observer.complete();
-            });
+        return rxjs_1.Observable.create((observer) => {
+            observer.next(new league_model_1.LeagueModel(league));
+            observer.complete();
         });
     }
 };

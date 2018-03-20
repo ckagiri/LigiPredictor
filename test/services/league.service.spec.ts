@@ -15,26 +15,12 @@ const league = {
   code: 'epl'
 };
 
-let mockLeagueConverter: ILeagueConverter = {
-  provider: 'TEST',
-  from(data: any): Observable<ILeague> {
-    return Observable.of({
-      name: data.name,
-      code: data.code,
-      slug: data.slug
-    })
-  }
-}
-
 let mockLeagueRepo: ILeagueRepository = {
   save$(obj: ILeague): Observable<ILeagueModel> {
-    return mockLeagueConverter.from(obj)
-      .flatMap(entity => {
-      return Observable.create((observer) => {
-        observer.next(new League(league));
-        observer.complete();
-      }); 
-    })
+    return Observable.create((observer) => {
+      observer.next(new League(league));
+      observer.complete();
+    }); 
   }
 }
 
