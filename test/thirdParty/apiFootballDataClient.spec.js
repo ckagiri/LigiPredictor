@@ -9,18 +9,51 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
-const apiClient_1 = require("../../src/thirdParty/footballApi/apiFootballData/apiClient");
-describe('apifootballDataClient', () => {
+const mockery = require("mockery");
+const sinon = require("sinon");
+//import { ApifootballDataClient } from '../../src/thirdParty/footballApi/apiFootballData/apiClient';
+describe.only('apifootballDataClient', () => {
     let apifootballDataClient;
     before(() => {
-        apifootballDataClient = apiClient_1.ApifootballDataClient.getInstance();
+        mockery.enable({
+            warnOnReplace: false,
+            warnOnUnregistered: false,
+            useCleanCache: true
+        });
     });
-    describe('getCompetitions', () => {
+    beforeEach(() => {
+        mockery.registerAllowable();
+    });
+    afterEach(() => {
+        mockery.deregisterAll();
+    });
+    after(() => {
+        mockery.disable();
+    });
+    describe.skip('getCompetitions', () => {
         it('should get competitions by year', () => __awaiter(this, void 0, void 0, function* () {
             const response = yield apifootballDataClient.getCompetitions(2017);
             chai_1.expect(response.data).to.be.an('array');
             chai_1.expect(response.metadata).to.be.an('object');
         })).timeout(0);
+    });
+    describe('geCompetions', () => {
+        let bodyResponse = require('../fixtures/requests/apiFootballData.competitions2017');
+        let response = {
+            body: JSON.stringify(bodyResponse),
+            headers: {
+                'x-requests-available': '49',
+                'x-requestcounter-reset': '60'
+            }
+        };
+        let requestStub = sinon.stub().returns(Promise.resolve(response));
+        mockery.registerMock('request-promise', requestStub);
+        it('should get competitions by year', () => __awaiter(this, void 0, void 0, function* () {
+            let apifootballDataClient = require('../../src/thirdParty/footballApi/apiFootballData/apiClient');
+            const response = yield apifootballDataClient.getCompetitions(2015);
+            chai_1.expect(response.data).to.be.an('array');
+            chai_1.expect(response.metadata).to.be.an('object');
+        }));
     });
 });
 //# sourceMappingURL=apiFootballDataClient.spec.js.map

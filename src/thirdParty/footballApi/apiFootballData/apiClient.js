@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const request = require("request-promise");
+let request = require('request-promise');
 const configPath = '../../../../src/config/environment/index';
 let config = require(configPath);
 let API_KEY = config.API_FOOTBALL_DATA.apiKey;
@@ -22,8 +22,8 @@ class ApifootballDataClient {
     _getOptions(apiKey, resource, queryParams) {
         queryParams = queryParams || {};
         return {
-            method: 'GET',
-            url: BASE_URL + resource,
+            //method: 'GET',
+            uri: BASE_URL + resource,
             headers: {
                 'X-Auth-Token': apiKey,
                 'X-Response-Control': "minified"
@@ -42,5 +42,5 @@ class ApifootballDataClient {
         };
     }
 }
-exports.ApifootballDataClient = ApifootballDataClient;
+module.exports = ApifootballDataClient.getInstance();
 //# sourceMappingURL=apiClient.js.map

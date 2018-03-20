@@ -41,5 +41,5 @@
 //       });
 //     });
 //   })
-// }) 
+// })
 //# sourceMappingURL=league.model.spec.js.map

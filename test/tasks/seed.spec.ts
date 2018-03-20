@@ -10,13 +10,13 @@ import { assert } from 'chai';
 const seedData = require('../../src/db/tasks/seedData/seed-leagues');
 const seeder = require('mongoose-seeder');
 
-console.log(seedData);
+/// console.log(seedData);
 
 // function connect(done) {
 //   mongoose.connect('mongodb://localhost:27017/ligi-predictor-test', done);
 // }
 
-describe.only('Database', () => {
+describe('Database', () => {
   const League = mongoose.model('League', new mongoose.Schema({
     name: {
       type:  String,

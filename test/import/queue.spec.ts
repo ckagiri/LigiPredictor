@@ -177,19 +177,4 @@ describe('Queue', () => {
       sinon.assert.calledWith(spy, q)
     })
   })
-})
-
-// given I have queue with interval & limit
-// when I add a job
-// then it should push job
-// it should schedule to run in interval
-// the schedule runs any pending jobs
-// it should call next job
-// if jobs > 0
-// next job should pop jobs 
-// next job should wrap job and run wrapper
-// clear interval no more jobs
-// wrapper.run should run job passing queue 
-// wrapper run should call next job
-// if tokens finished push to pending
-// clear interval after processing last one
+});

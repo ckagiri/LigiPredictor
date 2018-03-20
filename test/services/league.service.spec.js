@@ -52,5 +52,5 @@
 //       done();
 //     });
 //   })
-// }) 
+// })
 //# sourceMappingURL=league.service.spec.js.map
