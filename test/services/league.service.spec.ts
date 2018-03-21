@@ -8,7 +8,7 @@ import { ILeagueRepository, LeagueRepository } from '../../src/db/repositories/l
 import { ILeagueConverter } from '../../src/db/converters/league.converter';
 
 import { ILeagueService, LeagueService } from '../../src/services/league.service';
-import { ApiProvider } from '../../src/common/apiProvider';
+import { FootballApiProvider as ApiProvider } from '../../src/common/footballApiProvider';
 
 const league = {
   name: 'English Premier League',

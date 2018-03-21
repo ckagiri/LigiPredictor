@@ -5,13 +5,13 @@ const configPath = '../../../../src/config/environment/index';
 let config = require(configPath);
 let API_KEY = config.API_FOOTBALL_DATA.apiKey;
 let BASE_URL = "http://api.football-data.org/v1";
-class ApifootballDataClient {
+module.exports = {
+    getInstance: () => { return new ApiFootballDataClient(API_KEY, BASE_URL); }
+};
+class ApiFootballDataClient {
     constructor(apiKey, baseUrl) {
         this.apiKey = apiKey;
         this.baseUrl = baseUrl;
-    }
-    static getInstance() {
-        return new ApifootballDataClient(API_KEY, BASE_URL);
     }
     getCompetitions(year) {
         let queryParams = year ? { year } : undefined;
@@ -42,5 +42,4 @@ class ApifootballDataClient {
         };
     }
 }
-module.exports = ApifootballDataClient.getInstance();
 //# sourceMappingURL=apiClient.js.map

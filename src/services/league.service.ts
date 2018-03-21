@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { ILeagueRepository, LeagueRepository } from '../db/repositories/league.repo';
 import { ILeagueModel } from '../db/models/league.model';
-import { ApiProvider } from '../common/apiProvider';
+import { FootballApiProvider as ApiProvider } from '../common/footballApiProvider';
 
 export interface ILeagueService {
   save$(data: any): Observable<ILeagueModel> 

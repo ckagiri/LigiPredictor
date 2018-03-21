@@ -1,7 +1,7 @@
 import { assert, expect } from 'chai';
-import { ApiProvider} from '../../src/common/apiProvider'
+import { FootballApiProvider as ApiProvider} from '../../src/common/footballApiProvider'
 
-describe.only('ApiProvider', () => {
+describe('ApiProvider', () => {
   describe('Choice', () => {
     it('should return ApiProvider Type', () => {
       expect(ApiProvider.API_FOOTBALL_DATA).is.an.instanceof(ApiProvider);

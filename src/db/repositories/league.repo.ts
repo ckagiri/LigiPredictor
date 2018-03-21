@@ -4,7 +4,7 @@ import { ILeague, LeagueModel, ILeagueModel } from '../models/league.model';
 import { IBaseProviderRepository, BaseProviderRepository } from './baseProvider.repo';
 import { ILeagueConverter } from '../converters/league.converter';
 import { LeagueConverterFactory } from '../converters/league.converter'
-import { ApiProvider } from '../../common/apiProvider';
+import { FootballApiProvider as ApiProvider } from '../../common/footballApiProvider';
 
 export interface ILeagueRepository extends IBaseProviderRepository<ILeagueModel> {
   save$(league: ILeague): Observable<ILeagueModel>

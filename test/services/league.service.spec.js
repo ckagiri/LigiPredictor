@@ -6,7 +6,7 @@ const sinon = require("sinon");
 const rxjs_1 = require("rxjs");
 const league_model_1 = require("../../src/db/models/league.model");
 const league_service_1 = require("../../src/services/league.service");
-const apiProvider_1 = require("../../src/common/apiProvider");
+const footballApiProvider_1 = require("../../src/common/footballApiProvider");
 const league = {
     name: 'English Premier League',
     slug: 'english_premier_league',
@@ -44,7 +44,7 @@ describe('LeagueService', () => {
         }));
     });
     describe('with real repo', () => {
-        service = league_service_1.LeagueService.getInstance(apiProvider_1.ApiProvider.LIGI);
+        service = league_service_1.LeagueService.getInstance(footballApiProvider_1.FootballApiProvider.LIGI);
         it('should really save a new league', (done) => {
             service.save$(league).subscribe(l => {
                 chai_1.assert.notEqual(l._id, undefined);

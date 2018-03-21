@@ -4,7 +4,7 @@ import { IEntity } from '../models/base.model';
 import { LigiLeagueConverter } from '../converters/ligi/league.converter';
 import { IConverter } from './converter';
 import { ILeague } from '../models/league.model';
-import { ApiProvider } from '../../common/apiProvider';
+import { FootballApiProvider as ApiProvider } from '../../common/footballApiProvider';
 
 export interface ILeagueConverter extends IConverter {
   from(data: any): Observable<ILeague>

@@ -3,10 +3,10 @@ import * as mockery from 'mockery';
 import * as fs from 'fs';
 import * as sinon from 'sinon';
 
-//import { ApifootballDataClient } from '../../src/thirdParty/footballApi/apiFootballData/apiClient';
+import { FootballApiClient } from '../../src/thirdParty/footballApi/apiClient';
+import { FootballApiProvider as ApiProvider } from '../../src/common/footballApiProvider';
 
-describe('apifootballDataClient', () => {
-  let apifootballDataClient;
+describe.only('apifootballDataClient', () => {
   before(() => {
     mockery.enable({
       warnOnReplace: false,
@@ -23,14 +23,15 @@ describe('apifootballDataClient', () => {
   after(() => {
     mockery.disable();
   });
-  describe.skip('getCompetitions', () => {
-    it('should get competitions by year', async () => {
-      const response = await apifootballDataClient.getCompetitions(2017);
+  describe('getCompetitions', () => {
+    it('should get real competitions by year', async () => {
+      let apiClient = FootballApiClient.getInstance(ApiProvider.API_FOOTBALL_DATA);
+      const response = await apiClient.getCompetitions(2017);
       expect(response.data).to.be.an('array');
       expect(response.metadata).to.be.an('object');
     }).timeout(0);
   })
-  describe('getCompetions', () => {
+  describe('getCompetitions', () => {
     let bodyResponse = require('../fixtures/requests/apiFootballData.competitions2017');
 
     let response = {
@@ -44,8 +45,9 @@ describe('apifootballDataClient', () => {
     mockery.registerMock('request-promise', requestStub);
 
     it('should get competitions by year', async () => {
-      let apifootballDataClient = require('../../src/thirdParty/footballApi/apiFootballData/apiClient');
-      const response = await apifootballDataClient.getCompetitions(2015);
+      let ApiFootballDataClient = require('../../src/thirdParty/footballApi/apiFootballData/apiClient');
+      let apiFootballDataClient = ApiFootballDataClient.getInstance();
+      const response = await apiFootballDataClient.getCompetitions(2015);
       expect(response.data).to.be.an('array');
       expect(response.metadata).to.be.an('object');
     })

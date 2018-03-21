@@ -1,16 +1,18 @@
 let request = require('request-promise');
 const configPath = '../../../../src/config/environment/index'
 import {Configurations}  from '../../../../src/config/environment/index';
+import { IFootballApiClient } from '../apiClient';
+
 let config: Configurations = require(configPath);
 
 let API_KEY = config.API_FOOTBALL_DATA.apiKey;
 let BASE_URL = "http://api.football-data.org/v1";
 
-class ApifootballDataClient {
-  static getInstance() {
-    return new ApifootballDataClient(API_KEY, BASE_URL);
-  }
+module.exports = {
+  getInstance: () => { return new ApiFootballDataClient(API_KEY, BASE_URL) }
+}
 
+class ApiFootballDataClient implements IFootballApiClient {
   constructor(private apiKey, private baseUrl) {
   }
 
@@ -46,5 +48,3 @@ class ApifootballDataClient {
 	  } 
   } 
 }
-
-module.exports =  ApifootballDataClient.getInstance();

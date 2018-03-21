@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const league_converter_1 = require("../converters/ligi/league.converter");
-const apiProvider_1 = require("../../common/apiProvider");
+const footballApiProvider_1 = require("../../common/footballApiProvider");
 class LeagueConverterFactory {
     static makeLeagueConverter(provider) {
         switch (provider) {
-            case apiProvider_1.ApiProvider.LIGI:
+            case footballApiProvider_1.FootballApiProvider.LIGI:
                 return new league_converter_1.LigiLeagueConverter();
-            case apiProvider_1.ApiProvider.API_FOOTBALL_DATA:
+            case footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA:
             default:
                 throw new Error('Converter for Provider does not exist');
         }
