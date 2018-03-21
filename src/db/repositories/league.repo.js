@@ -4,8 +4,8 @@ const league_model_1 = require("../models/league.model");
 const baseProvider_repo_1 = require("./baseProvider.repo");
 const league_converter_1 = require("../converters/league.converter");
 class LeagueRepository extends baseProvider_repo_1.BaseProviderRepository {
-    static getInstance() {
-        return new LeagueRepository(league_converter_1.LeagueConverterFactory.makeLeagueConverter());
+    static getInstance(provider) {
+        return new LeagueRepository(league_converter_1.LeagueConverterFactory.makeLeagueConverter(provider));
     }
     constructor(converter) {
         super(league_model_1.LeagueModel, converter);

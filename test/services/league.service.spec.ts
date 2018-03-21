@@ -7,7 +7,8 @@ import { ILeague, ILeagueModel, LeagueModel as League } from '../../src/db/model
 import { ILeagueRepository, LeagueRepository } from '../../src/db/repositories/league.repo';
 import { ILeagueConverter } from '../../src/db/converters/league.converter';
 
-import { ILeagueService, LeagueService } from '../../src/db/services/league.service';
+import { ILeagueService, LeagueService } from '../../src/services/league.service';
+import { ApiProvider } from '../../src/common/apiProvider';
 
 const league = {
   name: 'English Premier League',
@@ -25,7 +26,7 @@ let mockLeagueRepo: ILeagueRepository = {
 }
 
 
-describe.only('LeagueService', () => {
+describe('LeagueService', () => {
   let service: ILeagueService;
   before(() => {
     mongoose.connect('mongodb://localhost:27017/test123-test');
@@ -53,7 +54,7 @@ describe.only('LeagueService', () => {
   })
 
   describe('with real repo', () => {
-    service = LeagueService.getInstance();
+    service = LeagueService.getInstance(ApiProvider.LIGI);
     
     it('should really save a new league', (done) => {
       service.save$(league).subscribe(l => {

@@ -5,7 +5,8 @@ const chai_1 = require("chai");
 const sinon = require("sinon");
 const rxjs_1 = require("rxjs");
 const league_model_1 = require("../../src/db/models/league.model");
-const league_service_1 = require("../../src/db/services/league.service");
+const league_service_1 = require("../../src/services/league.service");
+const apiProvider_1 = require("../../src/common/apiProvider");
 const league = {
     name: 'English Premier League',
     slug: 'english_premier_league',
@@ -19,7 +20,7 @@ let mockLeagueRepo = {
         });
     }
 };
-describe.only('LeagueService', () => {
+describe('LeagueService', () => {
     let service;
     before(() => {
         mongoose.connect('mongodb://localhost:27017/test123-test');
@@ -43,7 +44,7 @@ describe.only('LeagueService', () => {
         }));
     });
     describe('with real repo', () => {
-        service = league_service_1.LeagueService.getInstance();
+        service = league_service_1.LeagueService.getInstance(apiProvider_1.ApiProvider.LIGI);
         it('should really save a new league', (done) => {
             service.save$(league).subscribe(l => {
                 chai_1.assert.notEqual(l._id, undefined);
