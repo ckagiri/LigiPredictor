@@ -6,7 +6,7 @@ import * as sinon from 'sinon';
 import { FootballApiClient } from '../../src/thirdParty/footballApi/apiClient';
 import { FootballApiProvider as ApiProvider } from '../../src/common/footballApiProvider';
 
-describe.only('apifootballDataClient', () => {
+describe('apifootballDataClient', () => {
   before(() => {
     mockery.enable({
       warnOnReplace: false,
