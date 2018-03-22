@@ -10,8 +10,8 @@ export interface ITeamRepository extends IBaseProviderRepository<ITeam> {
 }
 
 export class TeamRepository extends BaseProviderRepository<ITeam> implements ITeamRepository {
-  static getInstance(provider: ApiProvider) {
-    return new TeamRepository(TeamConverter.makeTeamConverter(provider));
+  static getInstance(provider: ApiProvider): ITeamRepository {
+    return new TeamRepository(TeamConverter.getInstance(provider));
   }
 
   constructor(converter: ITeamConverter) {

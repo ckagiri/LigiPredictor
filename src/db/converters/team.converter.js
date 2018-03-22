@@ -4,7 +4,7 @@ const team_converter_1 = require("../converters/ligi/team.converter");
 const team_converter_2 = require("../converters/apiFootballData/team.converter");
 const footballApiProvider_1 = require("../../common/footballApiProvider");
 class TeamConverter {
-    static makeTeamConverter(provider) {
+    static getInstance(provider) {
         switch (provider) {
             case footballApiProvider_1.FootballApiProvider.LIGI:
                 return new team_converter_1.TeamConverter();

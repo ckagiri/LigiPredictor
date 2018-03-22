@@ -12,7 +12,7 @@ export interface ISeasonConverter extends IConverter {
 }
 
 export abstract class SeasonConverter {
-  static makeSeasonConverter(provider: ApiProvider) : ISeasonConverter {
+  static getInstance(provider: ApiProvider) : ISeasonConverter {
     switch(provider) {
       case ApiProvider.LIGI:
         return new LigiSeasonConverter();

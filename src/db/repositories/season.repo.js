@@ -5,7 +5,7 @@ const baseProvider_repo_1 = require("./baseProvider.repo");
 const season_converter_1 = require("../converters/season.converter");
 class SeasonRepository extends baseProvider_repo_1.BaseProviderRepository {
     static getInstance(provider) {
-        return new SeasonRepository(season_converter_1.SeasonConverter.makeSeasonConverter(provider));
+        return new SeasonRepository(season_converter_1.SeasonConverter.getInstance(provider));
     }
     constructor(converter) {
         super(season_model_1.SeasonModel, converter);

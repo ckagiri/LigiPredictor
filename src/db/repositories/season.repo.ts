@@ -9,8 +9,8 @@ export interface ISeasonRepository extends IBaseProviderRepository<ISeason> {
 }
 
 export class SeasonRepository extends BaseProviderRepository<ISeason> implements ISeasonRepository {
-  static getInstance(provider: ApiProvider) {
-    return new SeasonRepository(SeasonConverter.makeSeasonConverter(provider));
+  static getInstance(provider: ApiProvider): ISeasonRepository {
+    return new SeasonRepository(SeasonConverter.getInstance(provider));
   }
 
   constructor(converter: ISeasonConverter) {

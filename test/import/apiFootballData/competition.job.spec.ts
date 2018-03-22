@@ -5,6 +5,8 @@ chai.use(sinonChai);
 const expect = chai.expect;
 
 import { CompetitionJob } from '../../../src/import/apiFootballData/competition.job';
+import { SeasonRepository } from '../../../src/db/repositories/season.repo';
+import { FootballApiProvider } from '../../../src/common/footballApiProvider';
 // teamRepo findByNameAndUpdate
 // seasonRepo findByExternalIdAndUpdate
 

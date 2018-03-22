@@ -12,7 +12,7 @@ export interface ITeamConverter extends IConverter {
 }
 
 export abstract class TeamConverter {
-  static makeTeamConverter(provider: ApiProvider) : ITeamConverter {
+  static getInstance(provider: ApiProvider) : ITeamConverter {
     switch(provider) {
       case ApiProvider.LIGI:
         return new LigiTeamConverter();
