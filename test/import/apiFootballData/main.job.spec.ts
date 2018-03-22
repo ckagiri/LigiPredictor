@@ -21,8 +21,10 @@ let queueStub: any = {
   addJob: (job: any) => {}
 }
 let clientStub: any;
+let seasonRepoStub:any = sinon.stub();
+let teamRepoStub:any = sinon.stub();
 
-describe('ApiFootballData:Main Job', () => {
+describe.only('ApiFootballData:Main Job', () => {
   before(() => {
     mockery.enable({
       warnOnReplace: false,
@@ -41,7 +43,7 @@ describe('ApiFootballData:Main Job', () => {
     it('should call client.getCompetitions', async () => {
       let spy = sinon.spy(clientStub, 'getCompetitions');
 
-      let mainJob = new MainJob(clientStub)     
+      let mainJob = new MainJob(clientStub, seasonRepoStub, teamRepoStub)     
       await mainJob.start(queueStub)   
 
       expect(spy).to.be.called;
@@ -50,7 +52,7 @@ describe('ApiFootballData:Main Job', () => {
     it('should call client.getCompetitions with a given year', async () => {
       let spy = sinon.spy(clientStub, 'getCompetitions');     
 
-      let mainJob = new MainJob(clientStub)     
+      let mainJob = new MainJob(clientStub, seasonRepoStub, teamRepoStub)     
       await mainJob.start(queueStub)   
 
       expect(spy).to.have.been.calledWith(2017);
@@ -61,7 +63,7 @@ describe('ApiFootballData:Main Job', () => {
       it('should add CompetitionJobs to queue', async () => {
         let spy = sinon.spy(queueStub, 'addJob');
 
-        let mainJob = new MainJob(clientStub);      
+        let mainJob = new MainJob(clientStub, seasonRepoStub, teamRepoStub);      
         await mainJob.start(queueStub) 
 
         expect(spy).to.have.been.called;

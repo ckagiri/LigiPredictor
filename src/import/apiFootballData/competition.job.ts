@@ -1,7 +1,7 @@
 import { IJob } from '../jobs/job';
 import { Queue } from '../queue';
 import { FootballApiProvider as ApiProvider } from '../../common/footballApiProvider';
-import { FootballApiClient, IFootballApiClient } from '../../thirdParty/footballApi/apiClient';
+import { IFootballApiClient } from '../../thirdParty/footballApi/apiClient';
 import { ISeasonRepository } from '../../db/repositories/season.repo';
 import { ITeamRepository } from '../../db/repositories/team.repo';
 
@@ -61,9 +61,7 @@ export class CompetitionJob implements IJob {
   }
 
   static get Builder(): Builder {
-    let builder = new Builder();
-    builder.setApiClient(FootballApiClient.getInstance(ApiProvider.API_FOOTBALL_DATA));
-    return builder;
+    return new Builder();
   }
 
   start(queue: Queue) {

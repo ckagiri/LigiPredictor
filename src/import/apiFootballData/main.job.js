@@ -1,14 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const apiClient_1 = require("../../thirdParty/footballApi/apiClient");
 const competition_job_1 = require("./competition.job");
 const footballApiProvider_1 = require("../../common/footballApiProvider");
+const apiClient_1 = require("../../thirdParty/footballApi/apiClient");
+const season_repo_1 = require("../../db/repositories/season.repo");
+const team_repo_1 = require("../../db/repositories/team.repo");
 class MainJob {
-    constructor(apiClient) {
+    constructor(apiClient, seasonRepo, teamRepo) {
         this.apiClient = apiClient;
+        this.seasonRepo = seasonRepo;
+        this.teamRepo = teamRepo;
     }
     static getInstance() {
-        return new MainJob(apiClient_1.FootballApiClient.getInstance(footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA));
+        return new MainJob(apiClient_1.FootballApiClient.getInstance(footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA), season_repo_1.SeasonRepository.getInstance(footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA), team_repo_1.TeamRepository.getInstance(footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA));
     }
     start(queue) {
         return this.apiClient.getCompetitions(2017).then(({ data: competitions }) => {
@@ -18,7 +22,12 @@ class MainJob {
                 }
                 let competition = { id: comp.id, caption: comp.caption };
                 let jobBuilder = competition_job_1.CompetitionJob.Builder;
-                let job = jobBuilder.withCompetition(445).build();
+                let job = jobBuilder
+                    .setApiClient(this.apiClient)
+                    .setSeasonRepo(this.seasonRepo)
+                    .setTeamRepo(this.teamRepo)
+                    .withCompetition(comp.id)
+                    .build();
                 queue.addJob(job);
             }
         }).catch((err) => {
