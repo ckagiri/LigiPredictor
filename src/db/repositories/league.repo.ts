@@ -10,8 +10,8 @@ export interface ILeagueRepository extends IBaseProviderRepository<ILeague> {
 }
 
 export class LeagueRepository extends BaseProviderRepository<ILeague> implements ILeagueRepository {
-  static getInstance(provider: ApiProvider) {
-    return new LeagueRepository(LeagueConverter.makeLeagueConverter(provider));
+  static getInstance(provider: ApiProvider): ILeagueRepository {
+    return new LeagueRepository(LeagueConverter.getInstance(provider));
   }
 
   constructor(converter: ILeagueConverter) {

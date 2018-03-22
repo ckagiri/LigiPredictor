@@ -11,7 +11,7 @@ export interface ILeagueConverter extends IConverter {
 }
 
 export abstract class LeagueConverter {
-  static makeLeagueConverter(provider: ApiProvider) : ILeagueConverter {
+  static getInstance(provider: ApiProvider) : ILeagueConverter {
     switch(provider) {
       case ApiProvider.LIGI:
       case ApiProvider.API_FOOTBALL_DATA:

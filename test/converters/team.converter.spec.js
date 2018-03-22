@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const team_converter_1 = require("../../src/db/converters/ligi/team.converter");
 const team_converter_2 = require("../../src/db/converters/apiFootballData/team.converter");
-describe.only('Team Converter', () => {
+describe('Team Converter', () => {
     describe('Ligi TeamConverter', () => {
         const converter = new team_converter_1.TeamConverter();
         const team = {

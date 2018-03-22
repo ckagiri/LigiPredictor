@@ -5,7 +5,7 @@ import { ISeasonConverter } from '../../src/db/converters/season.converter';
 import { SeasonConverter as LigiSeasonConverter} from '../../src/db/converters/ligi/season.converter';
 import { SeasonConverter as AfdSeasonConverter} from '../../src/db/converters/apiFootballData/season.converter';
 
-describe.only('Season Converter', () => {
+describe('Season Converter', () => {
   describe('Ligi SeasonConverter', () => {
     const converter = new LigiSeasonConverter();
     const season = {

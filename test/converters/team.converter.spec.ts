@@ -5,7 +5,7 @@ import { ITeamConverter } from '../../src/db/converters/team.converter';
 import { TeamConverter as LigiTeamConverter} from '../../src/db/converters/ligi/team.converter';
 import { TeamConverter as AfdTeamConverter} from '../../src/db/converters/apiFootballData/team.converter';
 
-describe.only('Team Converter', () => {
+describe('Team Converter', () => {
   describe('Ligi TeamConverter', () => {
     const converter = new LigiTeamConverter();
     const team = {

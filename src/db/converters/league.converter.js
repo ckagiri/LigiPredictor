@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const league_converter_1 = require("../converters/ligi/league.converter");
 const footballApiProvider_1 = require("../../common/footballApiProvider");
 class LeagueConverter {
-    static makeLeagueConverter(provider) {
+    static getInstance(provider) {
         switch (provider) {
             case footballApiProvider_1.FootballApiProvider.LIGI:
             case footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA:

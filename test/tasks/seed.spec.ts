@@ -8,9 +8,14 @@ const seedData = require('../../src/db/tasks/seedData/seed-leagues');
 const seeder = require('../../src/db/tasks/mongoose-seeder');
 
 describe('Database', () => {
-  before(() => {
+  before((done) => {
     (<any>mongoose).Promise = global.Promise;    
     mongoose.connect('mongodb://localhost:27017/ligi-predictor-test');
+    mongoose.connection
+      .once('open', () => done())
+      .on('error', (error) => {
+        console.warn('Error', error);
+      })
   });
   after((done) => {
     mongoose.connection.db.dropDatabase(() => {

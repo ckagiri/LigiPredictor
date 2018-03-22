@@ -33,8 +33,11 @@ describe('Season', () => {
         })
       })
 
-      it('should require partial league info', () => {
-
+      it('should require partial league info', (done) => {
+        s.validate((err) => {
+          expect(err.errors['league.id']).to.exist;
+          done();
+        })
       })
     })
 
@@ -42,12 +45,16 @@ describe('Season', () => {
       const season = {
         name: '2017-2018',
         slug: '17-18',
-        year: 2017
+        year: 2017,
+        league: {
+          name: 'English Premier League',
+          slug: 'english_premier_league',
+          id: '4edd40c86762e0fb12000003'
+        }
       };
       const s = new Season(season);
       it('should have 0 errors', (done) => {
         s.validate((err) => {
-          console.log(err);
           expect(err).to.not.exist;
           done();
         });
