@@ -1,4 +1,4 @@
-import { Document, Schema, Model, model } from 'mongoose';
+import { Schema, Model, model } from 'mongoose';
 
 import { IEntity } from './base.model';
 
@@ -8,24 +8,10 @@ export interface ILeague extends IEntity {
   code: string;
 }
 
-export interface ILeagueModel extends ILeague, Document {  
-}
-
 export const leagueSchema = new Schema({
-  name: {
-    type:  String,
-    required: true
-  },
-  slug: {
-    type: String,
-    required: true
-  },
-  code: {
-    type: String,
-    default: ''
-  }
+  name: { type:  Schema.Types.String, required: true },
+  slug: { type: Schema.Types.String, required: true },
+  code: { type: Schema.Types.String, default: '' }
 });
 
-// add try-catch
-
-export const LeagueModel: Model<ILeagueModel> = model<ILeagueModel>('League', leagueSchema);
+export const LeagueModel = model('League', leagueSchema);

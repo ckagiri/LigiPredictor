@@ -2,15 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const rxjs_1 = require("rxjs");
 const footballApiProvider_1 = require("../../../common/footballApiProvider");
-class LigiLeagueConverter {
+class LigiSeasonConverter {
     constructor() { this.provider = footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA; }
     from(data) {
-        return rxjs_1.Observable.of({
-            name: data.name,
-            code: data.code,
-            slug: data.slug
-        });
+        return rxjs_1.Observable.of({});
     }
 }
-exports.LigiLeagueConverter = LigiLeagueConverter;
-//# sourceMappingURL=league.converter.js.map
+exports.LigiSeasonConverter = LigiSeasonConverter;
+//# sourceMappingURL=season.converter.js.map

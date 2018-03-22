@@ -5,7 +5,7 @@ const chai_1 = require("chai");
 const sinon = require("sinon");
 const rxjs_1 = require("rxjs");
 const league_model_1 = require("../../src/db/models/league.model");
-const league_service_1 = require("../../src/services/league.service");
+const league_repo_1 = require("../../src/db/repositories/league.repo");
 const footballApiProvider_1 = require("../../src/common/footballApiProvider");
 const league = {
     name: 'English Premier League',
@@ -20,8 +20,8 @@ let mockLeagueRepo = {
         });
     }
 };
-describe('LeagueService', () => {
-    let service;
+describe('LeagueRepo', () => {
+    let repo;
     before(() => {
         mongoose.connect('mongodb://localhost:27017/test123-test');
         mongoose.Promise = global.Promise;
@@ -34,8 +34,8 @@ describe('LeagueService', () => {
     });
     it('should save a new league', (done) => {
         let saveSpy = sinon.spy(mockLeagueRepo, 'save$');
-        service = new league_service_1.LeagueService(mockLeagueRepo);
-        service.save$(league).subscribe((obj => {
+        repo = mockLeagueRepo;
+        repo.save$(league).subscribe((obj => {
             chai_1.assert.isTrue(saveSpy.calledOnce);
             chai_1.assert.equal(saveSpy.firstCall.args[0].name, 'English Premier League');
             chai_1.assert.equal(obj['name'], 'English Premier League');
@@ -44,10 +44,10 @@ describe('LeagueService', () => {
         }));
     });
     describe('with real repo', () => {
-        service = league_service_1.LeagueService.getInstance(footballApiProvider_1.FootballApiProvider.LIGI);
-        it('should really save a new league', (done) => {
-            service.save$(league).subscribe(l => {
-                chai_1.assert.notEqual(l._id, undefined);
+        let repo = league_repo_1.LeagueRepository.getInstance(footballApiProvider_1.FootballApiProvider.LIGI);
+        it('should save a new league', (done) => {
+            repo.save$(league).subscribe(l => {
+                chai_1.assert.notEqual(l['_id'], undefined);
                 chai_1.assert.equal(l.name, league.name);
                 chai_1.assert.equal(l.slug, league.slug);
                 chai_1.assert.equal(l.code, league.code);
@@ -56,4 +56,4 @@ describe('LeagueService', () => {
         });
     });
 });
-//# sourceMappingURL=league.service.spec.js.map
+//# sourceMappingURL=league.repo.spec.js.map

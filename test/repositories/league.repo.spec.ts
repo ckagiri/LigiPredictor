@@ -3,11 +3,9 @@ import { assert } from 'chai';
 import * as sinon from 'sinon';
 import { Observable } from 'rxjs';
 
-import { ILeague, ILeagueModel, LeagueModel as League } from '../../src/db/models/league.model';
+import { ILeague, LeagueModel as League } from '../../src/db/models/league.model';
 import { ILeagueRepository, LeagueRepository } from '../../src/db/repositories/league.repo';
 import { ILeagueConverter } from '../../src/db/converters/league.converter';
-
-import { ILeagueService, LeagueService } from '../../src/services/league.service';
 import { FootballApiProvider as ApiProvider } from '../../src/common/footballApiProvider';
 
 const league = {
@@ -17,7 +15,7 @@ const league = {
 };
 
 let mockLeagueRepo: ILeagueRepository = {
-  save$(obj: ILeague): Observable<ILeagueModel> {
+  save$(obj: ILeague): Observable<ILeague> {
     return Observable.create((observer) => {
       observer.next(new League(league));
       observer.complete();
@@ -25,9 +23,8 @@ let mockLeagueRepo: ILeagueRepository = {
   }
 }
 
-
-describe('LeagueService', () => {
-  let service: ILeagueService;
+describe('LeagueRepo', () => {
+  let repo: ILeagueRepository;
   before(() => {
     mongoose.connect('mongodb://localhost:27017/test123-test');
     (<any>mongoose).Promise = global.Promise;
@@ -42,9 +39,9 @@ describe('LeagueService', () => {
   
   it('should save a new league', (done) => {
     let saveSpy = sinon.spy(mockLeagueRepo, 'save$');
-    service = new LeagueService(mockLeagueRepo,);
+    repo = mockLeagueRepo;
    
-    service.save$(league).subscribe((obj => {
+    repo.save$(league).subscribe((obj => {
       assert.isTrue(saveSpy.calledOnce);
       assert.equal(saveSpy.firstCall.args[0].name, 'English Premier League');
       assert.equal(obj['name'], 'English Premier League');
@@ -54,11 +51,11 @@ describe('LeagueService', () => {
   })
 
   describe('with real repo', () => {
-    service = LeagueService.getInstance(ApiProvider.LIGI);
+    let repo = LeagueRepository.getInstance(ApiProvider.LIGI);
     
-    it('should really save a new league', (done) => {
-      service.save$(league).subscribe(l => {
-        assert.notEqual(l._id, undefined);
+    it('should save a new league', (done) => {
+      repo.save$(league).subscribe(l => {
+        assert.notEqual(l['_id'], undefined);
         assert.equal(l.name, league.name);
         assert.equal(l.slug, league.slug);
         assert.equal(l.code, league.code);

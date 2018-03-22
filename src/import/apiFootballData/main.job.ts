@@ -19,7 +19,8 @@ export class MainJob implements IJob {
           continue;
         }  
         let competition = {id: comp.id, caption: comp.caption}
-        let job = new CompetitionJob(competition, this.apiClient);             
+        let jobBuilder = CompetitionJob.Builder;
+        let job = jobBuilder.withCompetition(445).build();
         queue.addJob(job);
       }
     }).catch((err: any) => {

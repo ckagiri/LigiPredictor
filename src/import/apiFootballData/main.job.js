@@ -17,7 +17,8 @@ class MainJob {
                     continue;
                 }
                 let competition = { id: comp.id, caption: comp.caption };
-                let job = new competition_job_1.CompetitionJob(competition, this.apiClient);
+                let jobBuilder = competition_job_1.CompetitionJob.Builder;
+                let job = jobBuilder.withCompetition(445).build();
                 queue.addJob(job);
             }
         }).catch((err) => {

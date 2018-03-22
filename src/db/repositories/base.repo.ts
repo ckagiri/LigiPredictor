@@ -4,7 +4,7 @@ import { Model, Document, Query, SaveOptions } from 'mongoose';
 import { DocumentRepository } from '../repositories/document.repo';
 import { IEntity } from '../models/base.model';
 
-export interface IBaseRepository<T extends Document> {
+export interface IBaseRepository<T extends IEntity> {
   save$(obj: IEntity): Observable<T>;
 }
 
