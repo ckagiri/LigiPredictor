@@ -2,7 +2,15 @@ import { Schema, Model, model } from 'mongoose';
 
 import { IEntity } from './base.model';
 
-export interface ITeam extends IEntity {}
+export interface ITeam extends IEntity {
+  name: string;
+  slug?: string;
+  shortName?: string;
+  code?: string;
+  aliases?: string[]; 
+  crestUrl?: string;
+  externalReference?: any
+}
 
 export const teamSchema = new Schema({
   name: { type: Schema.Types.String, required: true },

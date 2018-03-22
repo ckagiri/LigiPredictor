@@ -6,8 +6,8 @@ class LeagueConverter {
     static makeLeagueConverter(provider) {
         switch (provider) {
             case footballApiProvider_1.FootballApiProvider.LIGI:
-                return new league_converter_1.LigiLeagueConverter();
             case footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA:
+                return new league_converter_1.LeagueConverter();
             default:
                 throw new Error('Converter for Provider does not exist');
         }

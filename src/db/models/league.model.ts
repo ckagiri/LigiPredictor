@@ -4,8 +4,8 @@ import { IEntity } from './base.model';
 
 export interface ILeague extends IEntity {
   name: string;
-  slug: string;
-  code: string;
+  slug?: string;
+  code?: string;
 }
 
 export const leagueSchema = new Schema({

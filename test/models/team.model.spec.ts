@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { TeamModel as Team } from '../../src/db/models/team.model';
 
-describe.only('Team', () => {
+describe('Team', () => {
   describe('schema', () => {
 
     describe('an empty team', () => {

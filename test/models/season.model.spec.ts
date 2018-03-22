@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { SeasonModel as Season } from '../../src/db/models/season.model';
 
-describe.only('Season', () => {
+describe('Season', () => {
   describe('schema', () => {
 
     describe('an empty season', () => {
@@ -32,6 +32,10 @@ describe.only('Season', () => {
           done();
         })
       })
+
+      it('should require partial league info', () => {
+
+      })
     })
 
     describe('a partial season', () => {
@@ -43,6 +47,7 @@ describe.only('Season', () => {
       const s = new Season(season);
       it('should have 0 errors', (done) => {
         s.validate((err) => {
+          console.log(err);
           expect(err).to.not.exist;
           done();
         });

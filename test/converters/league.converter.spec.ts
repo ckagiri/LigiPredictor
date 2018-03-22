@@ -1,34 +1,29 @@
 import { Observable } from 'rxjs';
-import { expect, assert } from 'chai';
+import { expect } from 'chai';
 
 import { ILeagueConverter } from '../../src/db/converters/league.converter';
-import { LigiLeagueConverter} from '../../src/db/converters/ligi/league.converter';
+import { LeagueConverter as LigiLeagueConverter } from '../../src/db/converters/ligi/league.converter';
 
-describe('League Converter', () => {
-  let converter: ILeagueConverter;
-  let afdLeague;
-  before(() => {
-    afdLeague = {
-      name: 'English Premier League',
-      slug: 'english_premier_league',
-      code: 'epl'
+describe('League Converter', () => { 
+  describe('Ligi LeagueConverter', () => {
+    const converter: ILeagueConverter = new LigiLeagueConverter();
+    const league = {
+        name: 'English Premier League',
+        slug: 'english_premier_league',
+        code: 'epl'
     };
-  });
-
-  describe('Ligi Converter', () => {
-    converter = new LigiLeagueConverter();
     
     it('should return an observable when converting', () => {
-      let conversion = converter.from({});
+      let conversion = converter.from(league);
       expect(conversion instanceof Observable).to.equal(true);
     });
 
     it('should convert correctly', (done) => {
-      let conversion = converter.from(afdLeague);
+      let conversion = converter.from(league);
       conversion.subscribe(l => {
-        assert.equal(l.name, afdLeague.name);
-        assert.equal(l.slug, afdLeague.slug);
-        assert.equal(l.code, afdLeague.code);
+        expect(l.name).to.equal(league.name);
+        expect(l.slug).to.equal(league.slug);
+        expect(l.code).to.equal(league.code);
 
         done();
       });

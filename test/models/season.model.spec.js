@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const season_model_1 = require("../../src/db/models/season.model");
-describe.only('Season', () => {
+describe('Season', () => {
     describe('schema', () => {
         describe('an empty season', () => {
             const s = new season_model_1.SeasonModel();
@@ -27,6 +27,8 @@ describe.only('Season', () => {
                     done();
                 });
             });
+            it('should require partial league info', () => {
+            });
         });
         describe('a partial season', () => {
             const season = {
@@ -37,6 +39,7 @@ describe.only('Season', () => {
             const s = new season_model_1.SeasonModel(season);
             it('should have 0 errors', (done) => {
                 s.validate((err) => {
+                    console.log(err);
                     chai_1.expect(err).to.not.exist;
                     done();
                 });
