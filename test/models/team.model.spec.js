@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
-const season_model_1 = require("../../src/db/models/season.model");
-describe.only('Season', () => {
+const team_model_1 = require("../../src/db/models/team.model");
+describe.only('Team', () => {
     describe('schema', () => {
-        describe('an empty season', () => {
-            const s = new season_model_1.SeasonModel();
+        describe('an empty team', () => {
+            const s = new team_model_1.TeamModel();
             it('should have a mongoose schema', function () {
                 chai_1.expect(s.schema).to.not.be.undefined;
             });
@@ -21,22 +21,19 @@ describe.only('Season', () => {
                     done();
                 });
             });
-            it('should require year', (done) => {
-                s.validate((err) => {
-                    chai_1.expect(err.errors.year).to.exist;
-                    done();
-                });
-            });
         });
-        describe('a partial season', () => {
-            const season = {
-                name: '2017-2018',
-                slug: '17-18',
-                year: 2017
+        describe('a team', () => {
+            const team = {
+                name: 'Manchester United FC',
+                shortName: 'Man United',
+                code: 'MUN',
+                slug: 'man_united',
+                crestUrl: 'http://upload.wikimedia.org/wikipedia/de/d/da/Manchester_United_FC.svg',
+                aliases: ['ManU', 'ManUtd']
             };
-            const s = new season_model_1.SeasonModel(season);
+            const t = new team_model_1.TeamModel(team);
             it('should have 0 errors', (done) => {
-                s.validate((err) => {
+                t.validate((err) => {
                     chai_1.expect(err).to.not.exist;
                     done();
                 });
@@ -44,4 +41,4 @@ describe.only('Season', () => {
         });
     });
 });
-//# sourceMappingURL=season.model.spec.js.map
+//# sourceMappingURL=team.model.spec.js.map

@@ -9,7 +9,7 @@ exports.seasonSchema = new mongoose_1.Schema({
     // },
     name: { type: mongoose_1.Schema.Types.String, required: true },
     slug: { type: mongoose_1.Schema.Types.String, required: true, trim: true },
-    year: { type: mongoose_1.Schema.Types.String, required: true },
+    year: { type: mongoose_1.Schema.Types.Number, required: true },
     caption: { type: mongoose_1.Schema.Types.String },
     currentMatchRound: { type: mongoose_1.Schema.Types.Number },
     currentGameRound: { type: mongoose_1.Schema.Types.Number },

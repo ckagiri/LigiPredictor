@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { ILeague, LeagueModel as League } from '../../src/db/models/league.model';
+import { LeagueModel as League } from '../../src/db/models/league.model';
 
 describe('League', () => {
   describe('schema', () => {
@@ -35,7 +35,7 @@ describe('League', () => {
     })
 
     describe('a non-empty league', () => {
-      const league: ILeague = {
+      const league = {
         name: 'English Premier League',
         slug: 'english_premier_league',
         code: 'epl'

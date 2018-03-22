@@ -12,7 +12,7 @@ export const seasonSchema = new Schema({
   // },
   name: { type: Schema.Types.String, required: true },
   slug: { type: Schema.Types.String, required: true, trim: true },
-  year: { type: Schema.Types.String, required: true },
+  year: { type: Schema.Types.Number, required: true },
   caption: { type: Schema.Types.String },
   currentMatchRound: { type: Schema.Types.Number },
   currentGameRound: { type: Schema.Types.Number },

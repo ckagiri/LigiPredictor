@@ -1,12 +1,12 @@
 import { expect } from 'chai';
 
-import { SeasonModel as Season } from '../../src/db/models/season.model';
+import { TeamModel as Team } from '../../src/db/models/team.model';
 
-describe.only('Season', () => {
+describe.only('Team', () => {
   describe('schema', () => {
 
-    describe('an empty season', () => {
-      const s = new Season();
+    describe('an empty team', () => {
+      const s = new Team();
 
       it('should have a mongoose schema', function(){
         expect(s.schema).to.not.be.undefined
@@ -25,24 +25,20 @@ describe.only('Season', () => {
           done();
         })
       })
-
-      it('should require year', (done) => {
-        s.validate((err) => {
-          expect(err.errors.year).to.exist;
-          done();
-        })
-      })
     })
 
-    describe('a partial season', () => {
-      const season = {
-        name: '2017-2018',
-        slug: '17-18',
-        year: 2017
+    describe('a team', () => {
+      const team = {
+        name: 'Manchester United FC',
+        shortName: 'Man United',
+        code: 'MUN',
+        slug: 'man_united',
+        crestUrl: 'http://upload.wikimedia.org/wikipedia/de/d/da/Manchester_United_FC.svg',
+        aliases: ['ManU', 'ManUtd']
       };
-      const s = new Season(season);
+      const t = new Team(team);
       it('should have 0 errors', (done) => {
-        s.validate((err) => {
+        t.validate((err) => {
           expect(err).to.not.exist;
           done();
         });
