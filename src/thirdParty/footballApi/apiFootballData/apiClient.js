@@ -15,8 +15,18 @@ class ApiFootballDataClient {
     }
     getCompetitions(year) {
         let queryParams = year ? { year } : undefined;
-        let apiResource = "/competitions";
-        return request(this._getOptions(this.apiKey, '/competitions', queryParams))
+        let apiResource = '/competitions';
+        return request(this._getOptions(this.apiKey, apiResource, queryParams))
+            .then(this._mergeResponse);
+    }
+    getCompetition(competitionId) {
+        let apiResource = `/competitions/${competitionId}`;
+        return request(this._getOptions(this.apiKey, apiResource))
+            .then(this._mergeResponse);
+    }
+    getTeams(competitionId) {
+        let apiResource = `/competitions/${competitionId}/teams`;
+        return request(this._getOptions(this.apiKey, apiResource))
             .then(this._mergeResponse);
     }
     _getOptions(apiKey, resource, queryParams) {
