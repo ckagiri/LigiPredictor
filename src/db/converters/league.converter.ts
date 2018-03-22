@@ -10,7 +10,7 @@ export interface ILeagueConverter extends IConverter {
   from(data: any): Observable<ILeague>
 }
 
-export abstract class LeagueConverterFactory {
+export abstract class LeagueConverter {
   static makeLeagueConverter(provider: ApiProvider) : ILeagueConverter {
     switch(provider) {
       case ApiProvider.LIGI:

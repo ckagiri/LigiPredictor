@@ -5,7 +5,7 @@ const baseProvider_repo_1 = require("./baseProvider.repo");
 const league_converter_1 = require("../converters/league.converter");
 class LeagueRepository extends baseProvider_repo_1.BaseProviderRepository {
     static getInstance(provider) {
-        return new LeagueRepository(league_converter_1.LeagueConverterFactory.makeLeagueConverter(provider));
+        return new LeagueRepository(league_converter_1.LeagueConverter.makeLeagueConverter(provider));
     }
     constructor(converter) {
         super(league_model_1.LeagueModel, converter);

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const league_converter_1 = require("../converters/ligi/league.converter");
 const footballApiProvider_1 = require("../../common/footballApiProvider");
-class LeagueConverterFactory {
+class LeagueConverter {
     static makeLeagueConverter(provider) {
         switch (provider) {
             case footballApiProvider_1.FootballApiProvider.LIGI:
@@ -13,5 +13,5 @@ class LeagueConverterFactory {
         }
     }
 }
-exports.LeagueConverterFactory = LeagueConverterFactory;
+exports.LeagueConverter = LeagueConverter;
 //# sourceMappingURL=league.converter.js.map
