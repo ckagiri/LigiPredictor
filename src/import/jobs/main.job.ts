@@ -1,9 +1,9 @@
-import { FootballApiClient } from '../../thirdParty/footballApi/apiClient';
-import { Queue } from '../queue';
 import { IJob } from './job';
+import { FootballApiProvider as ApiProvider } from '../../common/footballApiProvider';
+import {  MainJob as ApiFootballDataMainJob } from '../apiFootballData/main.job';
 
-export class MainJob implements IJob {  
-  start(queue: Queue) {
-    throw new Error("Method not implemented.");
+export abstract class MainJob {  
+  static getInstance(provider: ApiProvider): IJob {
+    return ApiFootballDataMainJob.getInstance();
   }
 }
