@@ -46,7 +46,21 @@ class CompetitionJob {
         return new Builder();
     }
     start(queue) {
-        rxjs_1.Observable.fromPromise(this.apiClient.getCompetition(this.competitionId));
+        let competitionObs = rxjs_1.Observable.fromPromise(this.apiClient.getCompetition(this.competitionId))
+            .flatMap((competitionRes) => {
+            let competition = competitionRes.data;
+            return this.seasonRepo.findByExternalIdAndUpdate$(competition);
+        });
+        let teamsObs = rxjs_1.Observable.fromPromise(this.apiClient.getTeams(this.competitionId))
+            .flatMap((teamsRes) => {
+            let teams = teamsRes.data.teams;
+            return this.teamRepo.findByNameAndUpdate$(teams);
+        });
+        rxjs_1.Observable.zip(competitionObs, teamsObs)
+            .subscribe({
+            next: result => {
+            }
+        });
     }
 }
 exports.CompetitionJob = CompetitionJob;

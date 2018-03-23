@@ -13,33 +13,71 @@ const chai = require("chai");
 const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 const expect = chai.expect;
+const rxjs_1 = require("rxjs");
 const competition_job_1 = require("../../../src/import/apiFootballData/competition.job");
 const ApiFootballDataClient = require('../../../src/thirdParty/footballApi/apiFootballData/apiClient');
 const apiFootballDataClient = ApiFootballDataClient.getInstance();
+let competition = require('../../fixtures/requests/apiFootballData.epl2017');
+let teams = require('../../fixtures/requests/apiFootballData.epl2017Teams');
 let queueStub = {
     addJob: (job) => { }
 };
-let clientStub;
-let seasonRepoStub;
-let teamRepoStub;
+let clientStub = {
+    getCompetition: () => {
+        return Promise.resolve({
+            data: competition,
+            metadata: {}
+        });
+    },
+    getTeams: () => {
+        return Promise.resolve({
+            data: teams,
+            metadata: {}
+        });
+    }
+};
+let seasonRepoStub = {
+    findByExternalIdAndUpdate$: () => {
+        return rxjs_1.Observable.of(competition);
+    }
+};
+let teamRepoStub = {
+    findByNameAndUpdate$: () => {
+        return rxjs_1.Observable.of(teams.teams);
+    }
+};
+let competitionId = 445;
+let jobBuilder = competition_job_1.CompetitionJob.Builder;
+let job = jobBuilder
+    .setApiClient(clientStub)
+    .setSeasonRepo(seasonRepoStub)
+    .setTeamRepo(teamRepoStub)
+    .withCompetition(competitionId)
+    .build();
 describe.only('start', () => {
-    it('should call client.getTeams', () => __awaiter(this, void 0, void 0, function* () {
-        clientStub = {
-            getCompetition: sinon.spy()
-        };
-        seasonRepoStub = sinon.stub();
-        teamRepoStub = sinon.stub();
-        let competitionId = 445;
-        let jobBuilder = competition_job_1.CompetitionJob.Builder;
-        let job = jobBuilder
-            .setApiClient(clientStub)
-            .setSeasonRepo(seasonRepoStub)
-            .setTeamRepo(teamRepoStub)
-            .withCompetition(competitionId)
-            .build();
+    xit('should call client.getCompetition', () => __awaiter(this, void 0, void 0, function* () {
+        let spy = sinon.spy(clientStub, 'getCompetition');
         yield job.start(queueStub);
-        expect(clientStub.getCompetition).to.have.been.calledOnce.and
-            .to.have.been.calledWith(competitionId);
+        expect(spy).to.have.been.calledOnce
+            .and.to.have.been.calledWith(competitionId);
+    }));
+    xit('should call client.getTeams', () => __awaiter(this, void 0, void 0, function* () {
+        let spy = sinon.spy(clientStub, 'getTeams');
+        yield job.start(queueStub);
+        expect(spy).to.have.been.calledOnce
+            .and.to.have.been.calledWith(competitionId);
+    }));
+    it('should call teamRepo.findByNameAndUpdate$', () => __awaiter(this, void 0, void 0, function* () {
+        let spy = sinon.spy(teamRepoStub, 'findByNameAndUpdate$');
+        yield job.start(queueStub);
+        expect(spy).to.have.been.calledOnce
+            .and.to.have.been.calledWith(sinon.match.array);
+    }));
+    it('should call seasonRepo.findByExternalIdAndUpdate$', () => __awaiter(this, void 0, void 0, function* () {
+        let spy = sinon.spy(seasonRepoStub, 'findByExternalIdAndUpdate$');
+        yield job.start(queueStub);
+        expect(spy).to.have.been.calledOnce
+            .and.to.have.been.calledWith(sinon.match.array);
     }));
 });
 // teamRepo findByNameAndUpdate

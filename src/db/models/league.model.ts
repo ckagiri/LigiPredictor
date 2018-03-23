@@ -1,4 +1,4 @@
-import { Schema, Model, model } from 'mongoose';
+import { Schema, Model, model, Document } from 'mongoose';
 
 import { IEntity } from './base.model';
 
@@ -8,10 +8,12 @@ export interface ILeague extends IEntity {
   code?: string;
 }
 
+interface ILeagueModel extends ILeague, Document { }
+
 export const leagueSchema = new Schema({
   name: { type:  Schema.Types.String, required: true },
   slug: { type: Schema.Types.String, required: true },
   code: { type: Schema.Types.String, default: '' }
 });
 
-export const LeagueModel = model('League', leagueSchema);
+export const LeagueModel = model<ILeagueModel>('League', leagueSchema);

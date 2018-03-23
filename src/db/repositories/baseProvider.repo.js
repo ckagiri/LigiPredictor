@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const rxjs_1 = require("rxjs");
 const base_repo_1 = require("../repositories/base.repo");
 class BaseProviderRepository {
     constructor(schemaModel, converter, baseRepo) {
@@ -15,6 +16,9 @@ class BaseProviderRepository {
                 return obj;
             });
         });
+    }
+    findByExternalIdAndUpdate$(obj) {
+        return rxjs_1.Observable.of({});
     }
 }
 exports.BaseProviderRepository = BaseProviderRepository;

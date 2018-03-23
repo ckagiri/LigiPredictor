@@ -71,6 +71,20 @@ export class CompetitionJob implements IJob {
   }
 
   start(queue: Queue) {
-    Observable.fromPromise(this.apiClient.getCompetition(this.competitionId))
+    let competitionObs =  Observable.fromPromise(this.apiClient.getCompetition(this.competitionId))
+      .flatMap((competitionRes: any) => {
+        let competition = competitionRes.data;
+        return this.seasonRepo.findByExternalIdAndUpdate$(competition);
+      }) 
+    let teamsObs = Observable.fromPromise(this.apiClient.getTeams(this.competitionId))
+      .flatMap((teamsRes: any) => {
+        let teams = teamsRes.data.teams;
+        return this.teamRepo.findByNameAndUpdate$(teams);
+      })
+    Observable.zip(competitionObs, teamsObs)
+    .subscribe({
+      next: result => {
+        }
+      })
   }
 }

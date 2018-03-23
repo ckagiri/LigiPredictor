@@ -20,7 +20,10 @@ let mockLeagueRepo: ILeagueRepository = {
       observer.next(new League(league));
       observer.complete();
     }); 
-  }
+  },
+  findByExternalIdAndUpdate$(obj: ILeague): Observable<ILeague> {
+    return Observable.of(new League());
+  }  
 }
 
 describe('LeagueRepo', () => {

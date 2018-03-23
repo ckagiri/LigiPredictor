@@ -7,6 +7,7 @@ import { IConverter } from '../converters/converter';
 
 export interface IBaseProviderRepository<T extends IEntity> {
   save$(obj: IEntity): Observable<T>;
+  findByExternalIdAndUpdate$(obj: IEntity): Observable<T>
 }
 
 export class BaseProviderRepository<T extends IEntity> implements IBaseProviderRepository<T> {
@@ -29,4 +30,8 @@ export class BaseProviderRepository<T extends IEntity> implements IBaseProviderR
         })
       });
   }
+
+  findByExternalIdAndUpdate$(obj: IEntity): Observable<T> {
+    return Observable.of(<T>{})
+  }  
 }
