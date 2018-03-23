@@ -28,9 +28,14 @@ let mockLeagueRepo: ILeagueRepository = {
 
 describe('LeagueRepo', () => {
   let repo: ILeagueRepository;
-  before(() => {
+  before((done) => {
+    (<any>mongoose).Promise = global.Promise;    
     mongoose.connect('mongodb://localhost:27017/test123-test');
-    (<any>mongoose).Promise = global.Promise;
+    mongoose.connection
+    .once('open', () => done())
+    .on('error', (error) => {
+      console.warn('Error', error);
+    })
   });
   
   after((done) => {

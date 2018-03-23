@@ -1,4 +1,4 @@
-import { Schema, Model, model } from 'mongoose';
+import { Schema, Model, model, Document } from 'mongoose';
 
 import { IEntity } from './base.model';
 
@@ -12,6 +12,8 @@ export interface ITeam extends IEntity {
   externalReference?: any
 }
 
+interface ITeamModel extends ITeam, Document { }
+
 export const teamSchema = new Schema({
   name: { type: Schema.Types.String, required: true },
   slug: { type: Schema.Types.String, required: true, trim: true },
@@ -22,4 +24,4 @@ export const teamSchema = new Schema({
   externalReference: { type: Schema.Types.Mixed }  
 });
 
-export const TeamModel = model('Team', teamSchema);
+export const TeamModel = model<ITeamModel>('Team', teamSchema);

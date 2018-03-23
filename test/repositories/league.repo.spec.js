@@ -25,9 +25,14 @@ let mockLeagueRepo = {
 };
 describe('LeagueRepo', () => {
     let repo;
-    before(() => {
-        mongoose.connect('mongodb://localhost:27017/test123-test');
+    before((done) => {
         mongoose.Promise = global.Promise;
+        mongoose.connect('mongodb://localhost:27017/test123-test');
+        mongoose.connection
+            .once('open', () => done())
+            .on('error', (error) => {
+            console.warn('Error', error);
+        });
     });
     after((done) => {
         league_model_1.LeagueModel.remove({}, (err) => {

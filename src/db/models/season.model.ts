@@ -1,4 +1,4 @@
-import { Schema, Model, model } from 'mongoose';
+import { Schema, Model, model, Document } from 'mongoose';
 
 import { IEntity } from './base.model';
 
@@ -19,6 +19,8 @@ export interface ISeason extends IEntity {
   externalReference?: any
 }
 
+interface ISeasonModel extends ISeason, Document { }
+
 export const seasonSchema = new Schema({
   league: {
     name: { type: Schema.Types.String, required: true },
@@ -38,4 +40,4 @@ export const seasonSchema = new Schema({
   externalReference: { type: Schema.Types.Mixed }
 });
 
-export const SeasonModel = model('Season', seasonSchema);
+export const SeasonModel = model<ISeasonModel>('Season', seasonSchema);
