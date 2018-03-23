@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const season_scheduler_1 = require("./season.scheduler");
-class ApiFootballDataSchedulerFactory {
+class ApiFootballDataSchedulers {
     static getInstance() {
-        return new ApiFootballDataSchedulerFactory();
+        return new ApiFootballDataSchedulers();
     }
-    makeSeasonScheduler() {
-        return new season_scheduler_1.SeasonScheduler();
+    run() {
+        season_scheduler_1.SeasonScheduler.getInstance().run();
     }
 }
-exports.ApiFootballDataSchedulerFactory = ApiFootballDataSchedulerFactory;
+exports.ApiFootballDataSchedulers = ApiFootballDataSchedulers;
 //# sourceMappingURL=index.js.map

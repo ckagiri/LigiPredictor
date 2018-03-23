@@ -1,12 +1,12 @@
-import { IFootballApiSchedulerFactory } from '../../footballApi';
+import { IFootballApiSchedulers} from '../../footballApi';
 import { SeasonScheduler } from './season.scheduler';
 
-export class ApiFootballDataSchedulerFactory {
-  static getInstance(): IFootballApiSchedulerFactory {
-    return new ApiFootballDataSchedulerFactory();
+export class ApiFootballDataSchedulers implements IFootballApiSchedulers {
+  static getInstance() {
+    return new ApiFootballDataSchedulers();
   }
 
-  makeSeasonScheduler() {
-    return new SeasonScheduler();
+  run() {
+    SeasonScheduler.getInstance().run();
   }
 }
