@@ -24,7 +24,7 @@ let clientStub: any;
 let seasonRepoStub:any = sinon.stub();
 let teamRepoStub:any = sinon.stub();
 
-describe.only('ApiFootballData:Main Job', () => {
+describe('ApiFootballData:Main Job', () => {
   before(() => {
     mockery.enable({
       warnOnReplace: false,

@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { IJob } from '../jobs/job';
 import { Queue } from '../queue';
 import { FootballApiProvider as ApiProvider } from '../../common/footballApiProvider';
@@ -46,6 +47,10 @@ class Builder {
      this.competitionId = competitionId;
      return this;
   }
+
+  get CompetitionId() {
+    return this.competitionId;
+  }
 }
 
 export class CompetitionJob implements IJob {
@@ -58,6 +63,7 @@ export class CompetitionJob implements IJob {
     this.apiClient = builder.ApiClient;
     this.seasonRepo = builder.SeasonRepo;
     this.teamRepo = builder.TeamRepo;
+    this.competitionId = builder.CompetitionId;
   }
 
   static get Builder(): Builder {
@@ -65,6 +71,6 @@ export class CompetitionJob implements IJob {
   }
 
   start(queue: Queue) {
-    throw new Error("Method not implemented.");
+    Observable.fromPromise(this.apiClient.getCompetition(this.competitionId))
   }
 }

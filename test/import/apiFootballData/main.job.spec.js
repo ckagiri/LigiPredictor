@@ -32,7 +32,7 @@ let queueStub = {
 let clientStub;
 let seasonRepoStub = sinon.stub();
 let teamRepoStub = sinon.stub();
-describe.only('ApiFootballData:Main Job', () => {
+describe('ApiFootballData:Main Job', () => {
     before(() => {
         mockery.enable({
             warnOnReplace: false,
