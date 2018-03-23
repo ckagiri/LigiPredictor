@@ -15,6 +15,7 @@ chai.use(sinonChai);
 const expect = chai.expect;
 const rxjs_1 = require("rxjs");
 const competition_job_1 = require("../../../src/import/apiFootballData/competition.job");
+const fixtures_job_1 = require("../../../src/import/apiFootballData/fixtures.job");
 const ApiFootballDataClient = require('../../../src/thirdParty/footballApi/apiFootballData/apiClient');
 const apiFootballDataClient = ApiFootballDataClient.getInstance();
 let competition = require('../../fixtures/requests/apiFootballData.epl2017');
@@ -55,13 +56,13 @@ let job = jobBuilder
     .withCompetition(competitionId)
     .build();
 describe.only('start', () => {
-    xit('should call client.getCompetition', () => __awaiter(this, void 0, void 0, function* () {
+    it('should call client.getCompetition', () => __awaiter(this, void 0, void 0, function* () {
         let spy = sinon.spy(clientStub, 'getCompetition');
         yield job.start(queueStub);
         expect(spy).to.have.been.calledOnce
             .and.to.have.been.calledWith(competitionId);
     }));
-    xit('should call client.getTeams', () => __awaiter(this, void 0, void 0, function* () {
+    it('should call client.getTeams', () => __awaiter(this, void 0, void 0, function* () {
         let spy = sinon.spy(clientStub, 'getTeams');
         yield job.start(queueStub);
         expect(spy).to.have.been.calledOnce
@@ -77,11 +78,13 @@ describe.only('start', () => {
         let spy = sinon.spy(seasonRepoStub, 'findByExternalIdAndUpdate$');
         yield job.start(queueStub);
         expect(spy).to.have.been.calledOnce
-            .and.to.have.been.calledWith(sinon.match.array);
+            .and.to.have.been.calledWith(sinon.match.object);
+    }));
+    it('should add fixturesJob to queue', () => __awaiter(this, void 0, void 0, function* () {
+        let spy = sinon.spy(queueStub, 'addJob');
+        yield job.start(queueStub);
+        expect(spy).to.have.been.called
+            .and.to.have.been.calledWith(sinon.match.instanceOf(fixtures_job_1.FixturesJob));
     }));
 });
-// teamRepo findByNameAndUpdate
-// seasonRepo findByExternalIdAndUpdate
-// builds 2 repos and compId;
-// start zips 2 above; adds fixturesJob to queue; Consolelog
 //# sourceMappingURL=competition.job.spec.js.map

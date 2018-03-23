@@ -5,6 +5,7 @@ import { FootballApiProvider as ApiProvider } from '../../common/footballApiProv
 import { IFootballApiClient } from '../../thirdParty/footballApi/apiClient';
 import { ISeasonRepository } from '../../db/repositories/season.repo';
 import { ITeamRepository } from '../../db/repositories/team.repo';
+import { FixturesJob } from './fixtures.job';
 
 class Builder {
   private competitionId: number|string;  
@@ -75,15 +76,18 @@ export class CompetitionJob implements IJob {
       .flatMap((competitionRes: any) => {
         let competition = competitionRes.data;
         return this.seasonRepo.findByExternalIdAndUpdate$(competition);
-      }) 
+      })
     let teamsObs = Observable.fromPromise(this.apiClient.getTeams(this.competitionId))
       .flatMap((teamsRes: any) => {
         let teams = teamsRes.data.teams;
         return this.teamRepo.findByNameAndUpdate$(teams);
       })
-    Observable.zip(competitionObs, teamsObs)
+    Observable.zip(competitionObs, teamsObs, (competition, teams) => {
+      return { competition, teams }
+    })
     .subscribe({
       next: result => {
+          queue.addJob(new FixturesJob());
         }
       })
   }

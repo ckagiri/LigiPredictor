@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const rxjs_1 = require("rxjs");
+const fixtures_job_1 = require("./fixtures.job");
 class Builder {
     constructor() { }
     build() {
@@ -56,9 +57,12 @@ class CompetitionJob {
             let teams = teamsRes.data.teams;
             return this.teamRepo.findByNameAndUpdate$(teams);
         });
-        rxjs_1.Observable.zip(competitionObs, teamsObs)
+        rxjs_1.Observable.zip(competitionObs, teamsObs, (competition, teams) => {
+            return { competition, teams };
+        })
             .subscribe({
             next: result => {
+                queue.addJob(new fixtures_job_1.FixturesJob());
             }
         });
     }

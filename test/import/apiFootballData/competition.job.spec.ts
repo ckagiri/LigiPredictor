@@ -6,6 +6,7 @@ const expect = chai.expect;
 import { Observable } from 'rxjs';
 
 import { CompetitionJob } from '../../../src/import/apiFootballData/competition.job';
+import { FixturesJob } from '../../../src/import/apiFootballData/fixtures.job';
 import { SeasonRepository } from '../../../src/db/repositories/season.repo';
 import { TeamRepository } from '../../../src/db/repositories/team.repo';
 import { FootballApiProvider } from '../../../src/common/footballApiProvider';
@@ -87,7 +88,12 @@ describe.only('start', () => {
       .and.to.have.been.calledWith(sinon.match.object);
   })
 
-  it('should add fixturesJob to queue', () => {
+  it('should add fixturesJob to queue', async () => {
+    let spy = sinon.spy(queueStub, 'addJob');
     
+    await job.start(queueStub) 
+    
+    expect(spy).to.have.been.called
+      .and.to.have.been.calledWith(sinon.match.instanceOf(FixturesJob))
   })
 })
