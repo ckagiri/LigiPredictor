@@ -17,10 +17,10 @@ class BaseProviderRepository {
             });
         });
     }
-    findOneByExternalIdAndUpdate$(obj) {
+    findByExternalIdAndUpdate$(obj) {
         return rxjs_1.Observable.of({});
     }
-    findByExternalIdAndUpdate$(obj) {
+    findEachByExternalIdAndUpdate$(obj) {
         return rxjs_1.Observable.of([{}]);
     }
     getByExternalId$(id) {

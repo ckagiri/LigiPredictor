@@ -26,7 +26,7 @@ describe('SimpleScheduler', () => {
       scheduler.on('end', spy);
       
       scheduler.start({
-        whenToExecute: 10        
+        whenToExecute: 15        
       });    
       setTimeout(() => {
         expect(spy.called).to.be.false;          

@@ -29,7 +29,7 @@ let clientStub: any = {
   }
 }
 let seasonRepoStub: any = {
-  findOneByExternalIdAndUpdate$: () => {
+  findByExternalIdAndUpdate$: () => {
     return Observable.of(competition)
   }
 }
@@ -47,48 +47,50 @@ let job = jobBuilder
   .withCompetition(competitionId)
   .build();
 
-describe('start', () => {  
-  it('should call client.getCompetition', async () => {
-    let spy = sinon.spy(clientStub, 'getCompetition');
-    await job.start(queueStub)   
-          
-    expect(spy).to.have.been.calledOnce
-      .and.to.have.been.calledWith(competitionId);
-  })
+describe('ApiFootballData:Competition Job', () => {    
+  describe('start', () => {  
+    it('should call client.getCompetition', async () => {
+      let spy = sinon.spy(clientStub, 'getCompetition');
+      await job.start(queueStub)   
+            
+      expect(spy).to.have.been.calledOnce
+        .and.to.have.been.calledWith(competitionId);
+    })
 
-  it('should call client.getTeams', async () => {
-    let spy = sinon.spy(clientStub, 'getTeams');
+    it('should call client.getTeams', async () => {
+      let spy = sinon.spy(clientStub, 'getTeams');
 
-    await job.start(queueStub)   
-          
-    expect(spy).to.have.been.calledOnce
-      .and.to.have.been.calledWith(competitionId);
-  })
+      await job.start(queueStub)   
+            
+      expect(spy).to.have.been.calledOnce
+        .and.to.have.been.calledWith(competitionId);
+    })
 
-  it('should call teamRepo.findByNameAndUpdate$', async () => {
-    let spy = sinon.spy(teamRepoStub, 'findByNameAndUpdate$');
+    it('should call teamRepo.findByNameAndUpdate$', async () => {
+      let spy = sinon.spy(teamRepoStub, 'findByNameAndUpdate$');
 
-    await job.start(queueStub)   
-          
-    expect(spy).to.have.been.calledOnce
-      .and.to.have.been.calledWith(sinon.match.array);
-  })
+      await job.start(queueStub)   
+            
+      expect(spy).to.have.been.calledOnce
+        .and.to.have.been.calledWith(sinon.match.array);
+    })
 
-  it('should call seasonRepo.findOneByExternalIdAndUpdate$', async () => {
-    let spy = sinon.spy(seasonRepoStub, 'findOneByExternalIdAndUpdate$');   
+    it('should call seasonRepo.findByExternalIdAndUpdate$', async () => {
+      let spy = sinon.spy(seasonRepoStub, 'findByExternalIdAndUpdate$');   
 
-    await job.start(queueStub)   
-          
-    expect(spy).to.have.been.calledOnce
-      .and.to.have.been.calledWith(sinon.match.object);
-  })
+      await job.start(queueStub)   
+            
+      expect(spy).to.have.been.calledOnce
+        .and.to.have.been.calledWith(sinon.match.object);
+    })
 
-  it('should add fixturesJob to queue', async () => {
-    let spy = sinon.spy(queueStub, 'addJob');
-    
-    await job.start(queueStub) 
-    
-    expect(spy).to.have.been.called
-      .and.to.have.been.calledWith(sinon.match.instanceOf(FixturesJob))
+    it('should add fixturesJob to queue', async () => {
+      let spy = sinon.spy(queueStub, 'addJob');
+      
+      await job.start(queueStub) 
+      
+      expect(spy).to.have.been.called
+        .and.to.have.been.calledWith(sinon.match.instanceOf(FixturesJob))
+    })
   })
 })

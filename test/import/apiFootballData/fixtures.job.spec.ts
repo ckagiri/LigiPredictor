@@ -15,7 +15,7 @@ let clientStub: any = {
   }
 }
 let fixtureRepoStub: any = {
-  findByExternalIdAndUpdate$: () => {
+  findEachByExternalIdAndUpdate$: () => {
     return Observable.of(fixtures.fixtures)
   }
 }
@@ -27,23 +27,25 @@ let job = jobBuilder
   .withCompetition(competitionId)
   .build()
 let queueStub:any = sinon.stub();
-  
-describe.only('start', () => {
-  it('should call client.getFixtures', async () => {
-    let spy = sinon.spy(clientStub, 'getFixtures');
 
-    await job.start(queueStub)   
-          
-    expect(spy).to.have.been.calledOnce
-      .and.to.have.been.calledWith(competitionId);
-  })
+describe('ApiFootballData:Fixtures Job', () => {    
+  describe('start', () => {
+    it('should call client.getFixtures', async () => {
+      let spy = sinon.spy(clientStub, 'getFixtures');
 
-  it('should call fixtureRepo.findByExternalIdAndUpdate$', async () => {
-    let spy = sinon.spy(fixtureRepoStub, 'findByExternalIdAndUpdate$');
-    
-    await job.start(queueStub)   
-          
-    expect(spy).to.have.been.calledOnce
-      .and.to.have.been.calledWith(sinon.match.array);
+      await job.start(queueStub)   
+            
+      expect(spy).to.have.been.calledOnce
+        .and.to.have.been.calledWith(competitionId);
+    })
+
+    it('should call fixtureRepo.findEachByExternalIdAndUpdate$', async () => {
+      let spy = sinon.spy(fixtureRepoStub, 'findEachByExternalIdAndUpdate$');
+      
+      await job.start(queueStub)   
+            
+      expect(spy).to.have.been.calledOnce
+        .and.to.have.been.calledWith(sinon.match.array);
+    })
   })
 })

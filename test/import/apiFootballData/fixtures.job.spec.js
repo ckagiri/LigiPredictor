@@ -24,7 +24,7 @@ let clientStub = {
     }
 };
 let fixtureRepoStub = {
-    findByExternalIdAndUpdate$: () => {
+    findEachByExternalIdAndUpdate$: () => {
         return rxjs_1.Observable.of(fixtures.fixtures);
     }
 };
@@ -36,18 +36,20 @@ let job = jobBuilder
     .withCompetition(competitionId)
     .build();
 let queueStub = sinon.stub();
-describe.only('start', () => {
-    it('should call client.getFixtures', () => __awaiter(this, void 0, void 0, function* () {
-        let spy = sinon.spy(clientStub, 'getFixtures');
-        yield job.start(queueStub);
-        expect(spy).to.have.been.calledOnce
-            .and.to.have.been.calledWith(competitionId);
-    }));
-    it('should call fixtureRepo.findByExternalIdAndUpdate$', () => __awaiter(this, void 0, void 0, function* () {
-        let spy = sinon.spy(fixtureRepoStub, 'findByExternalIdAndUpdate$');
-        yield job.start(queueStub);
-        expect(spy).to.have.been.calledOnce
-            .and.to.have.been.calledWith(sinon.match.array);
-    }));
+describe('ApiFootballData:Fixtures Job', () => {
+    describe('start', () => {
+        it('should call client.getFixtures', () => __awaiter(this, void 0, void 0, function* () {
+            let spy = sinon.spy(clientStub, 'getFixtures');
+            yield job.start(queueStub);
+            expect(spy).to.have.been.calledOnce
+                .and.to.have.been.calledWith(competitionId);
+        }));
+        it('should call fixtureRepo.findEachByExternalIdAndUpdate$', () => __awaiter(this, void 0, void 0, function* () {
+            let spy = sinon.spy(fixtureRepoStub, 'findEachByExternalIdAndUpdate$');
+            yield job.start(queueStub);
+            expect(spy).to.have.been.calledOnce
+                .and.to.have.been.calledWith(sinon.match.array);
+        }));
+    });
 });
 //# sourceMappingURL=fixtures.job.spec.js.map

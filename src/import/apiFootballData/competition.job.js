@@ -57,27 +57,25 @@ class CompetitionJob {
         let competitionObs = rxjs_1.Observable.fromPromise(this.apiClient.getCompetition(this.competitionId))
             .flatMap((competitionRes) => {
             let competition = competitionRes.data;
-            return this.seasonRepo.findOneByExternalIdAndUpdate$(competition);
+            return this.seasonRepo.findByExternalIdAndUpdate$(competition);
         });
         let teamsObs = rxjs_1.Observable.fromPromise(this.apiClient.getTeams(this.competitionId))
             .flatMap((teamsRes) => {
             let teams = teamsRes.data.teams;
             return this.teamRepo.findByNameAndUpdate$(teams);
         });
-        rxjs_1.Observable.zip(competitionObs, teamsObs, (competition, teams) => {
+        return rxjs_1.Observable.zip(competitionObs, teamsObs, (competition, teams) => {
             return { competition, teams };
         })
-            .subscribe({
-            next: result => {
-                let jobBuilder = fixtures_job_1.FixturesJob.Builder;
-                let job = jobBuilder
-                    .setApiClient(this.apiClient)
-                    .setFixtureRepo(this.fixtureRepo)
-                    .withCompetition(this.competitionId)
-                    .build();
-                queue.addJob(job);
-            }
-        });
+            .map(_ => {
+            let jobBuilder = fixtures_job_1.FixturesJob.Builder;
+            let job = jobBuilder
+                .setApiClient(this.apiClient)
+                .setFixtureRepo(this.fixtureRepo)
+                .withCompetition(this.competitionId)
+                .build();
+            queue.addJob(job);
+        }).toPromise();
     }
 }
 exports.CompetitionJob = CompetitionJob;
