@@ -6,7 +6,7 @@ const expect = chai.expect;
 
 import { SimpleScheduler  } from '../../src/app/schedulers/simple.scheduler';
 
-describe('SimpleScheduler', () => {
+describe.only('SimpleScheduler', () => {
   let scheduler = new SimpleScheduler();
 
   describe('start', () => {
@@ -86,7 +86,7 @@ describe('SimpleScheduler', () => {
       setTimeout(() => {
         expect(spy.called).to.be.true;          
         done();
-      }, 15);
+      }, 20);
     })
 
     it('should call data after taskExecution', (done) => {

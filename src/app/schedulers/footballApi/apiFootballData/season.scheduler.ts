@@ -5,8 +5,15 @@ export class SeasonScheduler extends SimpleScheduler implements IFootballApiSche
   static getInstance() {
     return new SeasonScheduler();
   }
-  
-  run() {
-    throw new Error("Method not implemented.");
+
+  constructor() {
+    super()
+    this.run = this.run.bind(this)
   }
+  
+  async run() {
+    
+  }
+
+
 }

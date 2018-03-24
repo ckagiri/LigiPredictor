@@ -15,7 +15,7 @@ export class SimpleScheduler extends EventEmitter  {
     try {
       await setTimeoutPromise(whenToExecute || 0); 
       console.time('execute');               
-      const data = await task.call(context);
+      const data = await Promise.resolve().then(() => task.call(context));
       if (callback) callback(data)
       console.timeEnd('execute');
       this.emit('end');

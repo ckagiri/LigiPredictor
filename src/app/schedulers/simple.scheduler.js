@@ -24,7 +24,7 @@ class SimpleScheduler extends events_1.EventEmitter {
             try {
                 yield setTimeoutPromise(whenToExecute || 0);
                 console.time('execute');
-                const data = yield task.call(context);
+                const data = yield Promise.resolve().then(() => task.call(context));
                 if (callback)
                     callback(data);
                 console.timeEnd('execute');

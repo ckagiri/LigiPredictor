@@ -6,7 +6,7 @@ const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 const expect = chai.expect;
 const simple_scheduler_1 = require("../../src/app/schedulers/simple.scheduler");
-describe('SimpleScheduler', () => {
+describe.only('SimpleScheduler', () => {
     let scheduler = new simple_scheduler_1.SimpleScheduler();
     describe('start', () => {
         it('should call begin', () => {
@@ -73,7 +73,7 @@ describe('SimpleScheduler', () => {
             setTimeout(() => {
                 expect(spy.called).to.be.true;
                 done();
-            }, 15);
+            }, 20);
         });
         it('should call data after taskExecution', (done) => {
             let spy = sinon.spy();

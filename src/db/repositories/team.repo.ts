@@ -6,7 +6,6 @@ import { ITeamConverter, TeamConverter } from '../converters/team.converter';
 import { FootballApiProvider as ApiProvider } from '../../common/footballApiProvider';
 
 export interface ITeamRepository extends IBaseProviderRepository<ITeam> {
-  save$(team: ITeam): Observable<ITeam>;
   findByNameAndUpdate$(teams: ITeam[]): Observable<ITeam[]>;
   getByName$(name: string): Observable<ITeam>;
 }
