@@ -10,8 +10,6 @@ export class FixtureConverter implements IFixtureConverter {
   constructor() { this. provider = ApiProvider.API_FOOTBALL_DATA }
   
   from(data: any): Observable<IFixture> {
-    return Observable.of({
-      name: data.name
-     })
+    return Observable.of()
   }
 }

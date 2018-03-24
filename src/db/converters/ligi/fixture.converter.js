@@ -5,9 +5,7 @@ const footballApiProvider_1 = require("../../../common/footballApiProvider");
 class FixtureConverter {
     constructor() { this.provider = footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA; }
     from(data) {
-        return rxjs_1.Observable.of({
-            name: data.name
-        });
+        return rxjs_1.Observable.of();
     }
 }
 exports.FixtureConverter = FixtureConverter;
