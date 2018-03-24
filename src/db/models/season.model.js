@@ -1,23 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
+const { String, Number, ObjectId, Mixed } = mongoose_1.Schema.Types;
 exports.seasonSchema = new mongoose_1.Schema({
     league: {
-        name: { type: mongoose_1.Schema.Types.String, required: true },
-        slug: { type: mongoose_1.Schema.Types.String, required: true },
-        id: { type: mongoose_1.Schema.Types.ObjectId, ref: 'League', index: true, required: true }
+        name: { type: String, required: true },
+        slug: { type: String, required: true },
+        id: { type: ObjectId, ref: 'League', index: true, required: true }
     },
-    name: { type: mongoose_1.Schema.Types.String, required: true },
-    slug: { type: mongoose_1.Schema.Types.String, required: true, trim: true },
-    year: { type: mongoose_1.Schema.Types.Number, required: true },
-    currentMatchRound: { type: mongoose_1.Schema.Types.Number },
-    currentGameRound: { type: mongoose_1.Schema.Types.Number },
-    numberOfRounds: { type: mongoose_1.Schema.Types.Number },
-    numberOfTeams: { type: mongoose_1.Schema.Types.Number },
-    numberOfGames: { type: mongoose_1.Schema.Types.Number },
-    seasonStart: { type: mongoose_1.Schema.Types.Date },
-    seasonEnd: { type: mongoose_1.Schema.Types.Date },
-    externalReference: { type: mongoose_1.Schema.Types.Mixed }
+    name: { type: String, required: true },
+    slug: { type: String, required: true, trim: true },
+    year: { type: Number, required: true },
+    seasonStart: { type: Date, required: true },
+    seasonEnd: { type: Date, required: true },
+    currentMatchRound: { type: Number },
+    currentGameRound: { type: Number },
+    numberOfRounds: { type: Number },
+    numberOfTeams: { type: Number },
+    numberOfGames: { type: Number },
+    externalReference: { type: Mixed }
 });
 exports.SeasonModel = mongoose_1.model('Season', exports.seasonSchema);
 //# sourceMappingURL=season.model.js.map

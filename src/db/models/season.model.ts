@@ -21,23 +21,25 @@ export interface ISeason extends IEntity {
 
 interface ISeasonModel extends ISeason, Document { }
 
+const { String, Number, ObjectId, Mixed } = Schema.Types;
+
 export const seasonSchema = new Schema({
   league: {
-    name: { type: Schema.Types.String, required: true },
-    slug: { type: Schema.Types.String, required: true },
-    id: { type: Schema.Types.ObjectId, ref: 'League', index: true, required: true }
+    name: { type: String, required: true },
+    slug: { type: String, required: true },
+    id: { type: ObjectId, ref: 'League', index: true, required: true }
   },
-  name: { type: Schema.Types.String, required: true },
-  slug: { type: Schema.Types.String, required: true, trim: true },
-  year: { type: Schema.Types.Number, required: true },
-  currentMatchRound: { type: Schema.Types.Number },
-  currentGameRound: { type: Schema.Types.Number },
-	numberOfRounds: { type: Schema.Types.Number },
-	numberOfTeams: { type: Schema.Types.Number },
-	numberOfGames: { type: Schema.Types.Number },
-	seasonStart: { type: Schema.Types.Date },
-	seasonEnd: { type: Schema.Types.Date },
-  externalReference: { type: Schema.Types.Mixed }
+  name: { type: String, required: true },
+  slug: { type: String, required: true, trim: true },
+  year: { type: Number, required: true },
+  seasonStart: { type: Date, required: true },
+	seasonEnd: { type: Date, required: true },
+  currentMatchRound: { type: Number },
+  currentGameRound: { type: Number },
+	numberOfRounds: { type: Number },
+	numberOfTeams: { type: Number },
+	numberOfGames: { type: Number },
+  externalReference: { type: Mixed }
 });
 
 export const SeasonModel = model<ISeasonModel>('Season', seasonSchema);
