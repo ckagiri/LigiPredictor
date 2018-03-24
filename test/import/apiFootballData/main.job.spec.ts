@@ -1,4 +1,3 @@
-import * as mockery from 'mockery';
 import * as sinon from 'sinon';
 import * as chai from 'chai';
 const sinonChai = require("sinon-chai");
@@ -7,38 +6,23 @@ const expect = chai.expect;
 
 import { MainJob } from '../../../src/import/apiFootballData/main.job';
 import { CompetitionJob } from '../../../src/import/apiFootballData/competition.job';
+
 let competitions = require('../../fixtures/requests/apiFootballData.competitions2017');
-let response = {
-  body: JSON.stringify(competitions),
-  headers: {         
-    'x-requests-available': '49',
-    'x-requestcounter-reset': '60'
-  }
-}
-let requestStub = sinon.stub().returns(Promise.resolve(response));
-mockery.registerMock('request-promise', requestStub);
 let queueStub: any = {
   addJob: (job: any) => {}
 }
-let clientStub: any;
+let clientStub: any = {
+  getCompetitions: () => {
+    return Promise.resolve({
+      data: competitions,
+      metadata: { }
+    })
+  }
+}  
 let seasonRepoStub:any = sinon.stub();
 let teamRepoStub:any = sinon.stub();
 
 describe('ApiFootballData:Main Job', () => {
-  before(() => {
-    mockery.enable({
-      warnOnReplace: false,
-      warnOnUnregistered: false,
-      useCleanCache: true
-    })
-  })
-  beforeEach(() => {
-    let ApiFootballDataClient = require('../../../src/thirdParty/footballApi/apiFootballData/apiClient');
-    clientStub = ApiFootballDataClient.getInstance();  
-  })
-  after(() => {
-    mockery.disable();
-  });
   describe('start', () => {  
     it('should call client.getCompetitions', async () => {
       let spy = sinon.spy(clientStub, 'getCompetitions');
@@ -47,6 +31,7 @@ describe('ApiFootballData:Main Job', () => {
       await mainJob.start(queueStub)   
 
       expect(spy).to.be.called;
+      clientStub.getCompetitions.restore();
     })
 
     it('should call client.getCompetitions with a given year', async () => {

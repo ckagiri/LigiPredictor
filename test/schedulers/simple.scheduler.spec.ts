@@ -6,7 +6,7 @@ const expect = chai.expect;
 
 import { SimpleScheduler  } from '../../src/app/schedulers/simple.scheduler';
 
-describe.only('SimpleScheduler', () => {
+describe('SimpleScheduler', () => {
   let scheduler = new SimpleScheduler();
 
   describe('start', () => {

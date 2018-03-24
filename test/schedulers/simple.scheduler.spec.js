@@ -6,7 +6,7 @@ const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 const expect = chai.expect;
 const simple_scheduler_1 = require("../../src/app/schedulers/simple.scheduler");
-describe.only('SimpleScheduler', () => {
+describe('SimpleScheduler', () => {
     let scheduler = new simple_scheduler_1.SimpleScheduler();
     describe('start', () => {
         it('should call begin', () => {

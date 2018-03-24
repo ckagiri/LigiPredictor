@@ -8,7 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mockery = require("mockery");
 const sinon = require("sinon");
 const chai = require("chai");
 const sinonChai = require("sinon-chai");
@@ -17,42 +16,27 @@ const expect = chai.expect;
 const main_job_1 = require("../../../src/import/apiFootballData/main.job");
 const competition_job_1 = require("../../../src/import/apiFootballData/competition.job");
 let competitions = require('../../fixtures/requests/apiFootballData.competitions2017');
-let response = {
-    body: JSON.stringify(competitions),
-    headers: {
-        'x-requests-available': '49',
-        'x-requestcounter-reset': '60'
-    }
-};
-let requestStub = sinon.stub().returns(Promise.resolve(response));
-mockery.registerMock('request-promise', requestStub);
 let queueStub = {
     addJob: (job) => { }
 };
-let clientStub;
+let clientStub = {
+    getCompetitions: () => {
+        return Promise.resolve({
+            data: competitions,
+            metadata: {}
+        });
+    }
+};
 let seasonRepoStub = sinon.stub();
 let teamRepoStub = sinon.stub();
 describe('ApiFootballData:Main Job', () => {
-    before(() => {
-        mockery.enable({
-            warnOnReplace: false,
-            warnOnUnregistered: false,
-            useCleanCache: true
-        });
-    });
-    beforeEach(() => {
-        let ApiFootballDataClient = require('../../../src/thirdParty/footballApi/apiFootballData/apiClient');
-        clientStub = ApiFootballDataClient.getInstance();
-    });
-    after(() => {
-        mockery.disable();
-    });
     describe('start', () => {
         it('should call client.getCompetitions', () => __awaiter(this, void 0, void 0, function* () {
             let spy = sinon.spy(clientStub, 'getCompetitions');
             let mainJob = new main_job_1.MainJob(clientStub, seasonRepoStub, teamRepoStub);
             yield mainJob.start(queueStub);
             expect(spy).to.be.called;
+            clientStub.getCompetitions.restore();
         }));
         it('should call client.getCompetitions with a given year', () => __awaiter(this, void 0, void 0, function* () {
             let spy = sinon.spy(clientStub, 'getCompetitions');
