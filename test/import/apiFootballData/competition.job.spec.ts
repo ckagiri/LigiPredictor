@@ -52,7 +52,7 @@ let job = jobBuilder
   .withCompetition(competitionId)
   .build();
 
-describe('start', () => {  
+describe.only('start', () => {  
   it('should call client.getCompetition', async () => {
     let spy = sinon.spy(clientStub, 'getCompetition');
     await job.start(queueStub)   

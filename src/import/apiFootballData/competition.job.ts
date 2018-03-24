@@ -5,6 +5,7 @@ import { FootballApiProvider as ApiProvider } from '../../common/footballApiProv
 import { IFootballApiClient } from '../../thirdParty/footballApi/apiClient';
 import { ISeasonRepository } from '../../db/repositories/season.repo';
 import { ITeamRepository } from '../../db/repositories/team.repo';
+import { IFixtureRepository } from '../../db/repositories/fixture.repo';
 import { FixturesJob } from './fixtures.job';
 
 class Builder {
@@ -12,7 +13,8 @@ class Builder {
   private apiClient: IFootballApiClient;
   private seasonRepo: ISeasonRepository;
   private teamRepo: ITeamRepository;
-  constructor() {}
+  private fixtureRepo: IFixtureRepository;
+
   build() {
      return new CompetitionJob(this);
   }
@@ -43,6 +45,15 @@ class Builder {
     this.teamRepo = value;
     return this;
   }
+
+  get FixtureRepo() {
+    return this.fixtureRepo;
+  }
+
+  setFixtureRepo(value: IFixtureRepository): Builder {
+    this.fixtureRepo = value;
+    return this;
+  }
   
   withCompetition(competitionId): Builder {
      this.competitionId = competitionId;
@@ -59,11 +70,13 @@ export class CompetitionJob implements IJob {
   private apiClient: IFootballApiClient;
   private seasonRepo: ISeasonRepository;
   private teamRepo: ITeamRepository;
+  private fixtureRepo: IFixtureRepository;
 
   constructor(builder: Builder) { 
     this.apiClient = builder.ApiClient;
     this.seasonRepo = builder.SeasonRepo;
     this.teamRepo = builder.TeamRepo;
+    this.fixtureRepo = builder.FixtureRepo;
     this.competitionId = builder.CompetitionId;
   }
 
@@ -87,8 +100,14 @@ export class CompetitionJob implements IJob {
     })
     .subscribe({
       next: result => {
-          queue.addJob(new FixturesJob());
-        }
-      })
+        let jobBuilder = FixturesJob.Builder;
+        let job = jobBuilder
+          .setApiClient(this.apiClient)
+          .setFixtureRepo(this.fixtureRepo)
+          .withCompetition(this.competitionId)
+          .build();
+        queue.addJob(job);
+      }
+    })
   }
 }

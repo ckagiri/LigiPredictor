@@ -55,7 +55,7 @@ let job = jobBuilder
     .setTeamRepo(teamRepoStub)
     .withCompetition(competitionId)
     .build();
-describe('start', () => {
+describe.only('start', () => {
     it('should call client.getCompetition', () => __awaiter(this, void 0, void 0, function* () {
         let spy = sinon.spy(clientStub, 'getCompetition');
         yield job.start(queueStub);

@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const rxjs_1 = require("rxjs");
 const fixtures_job_1 = require("./fixtures.job");
 class Builder {
-    constructor() { }
     build() {
         return new CompetitionJob(this);
     }
@@ -28,6 +27,13 @@ class Builder {
         this.teamRepo = value;
         return this;
     }
+    get FixtureRepo() {
+        return this.fixtureRepo;
+    }
+    setFixtureRepo(value) {
+        this.fixtureRepo = value;
+        return this;
+    }
     withCompetition(competitionId) {
         this.competitionId = competitionId;
         return this;
@@ -41,6 +47,7 @@ class CompetitionJob {
         this.apiClient = builder.ApiClient;
         this.seasonRepo = builder.SeasonRepo;
         this.teamRepo = builder.TeamRepo;
+        this.fixtureRepo = builder.FixtureRepo;
         this.competitionId = builder.CompetitionId;
     }
     static get Builder() {
@@ -62,7 +69,13 @@ class CompetitionJob {
         })
             .subscribe({
             next: result => {
-                queue.addJob(new fixtures_job_1.FixturesJob());
+                let jobBuilder = fixtures_job_1.FixturesJob.Builder;
+                let job = jobBuilder
+                    .setApiClient(this.apiClient)
+                    .setFixtureRepo(this.fixtureRepo)
+                    .withCompetition(this.competitionId)
+                    .build();
+                queue.addJob(job);
             }
         });
     }

@@ -29,25 +29,26 @@ let clientStub = {
 };
 let seasonRepoStub = sinon.stub();
 let teamRepoStub = sinon.stub();
+let fixtureRepoStub = sinon.stub();
 describe('ApiFootballData:Main Job', () => {
     describe('start', () => {
         it('should call client.getCompetitions', () => __awaiter(this, void 0, void 0, function* () {
             let spy = sinon.spy(clientStub, 'getCompetitions');
-            let mainJob = new main_job_1.MainJob(clientStub, seasonRepoStub, teamRepoStub);
+            let mainJob = new main_job_1.MainJob(clientStub, seasonRepoStub, teamRepoStub, fixtureRepoStub);
             yield mainJob.start(queueStub);
             expect(spy).to.be.called;
             clientStub.getCompetitions.restore();
         }));
         it('should call client.getCompetitions with a given year', () => __awaiter(this, void 0, void 0, function* () {
             let spy = sinon.spy(clientStub, 'getCompetitions');
-            let mainJob = new main_job_1.MainJob(clientStub, seasonRepoStub, teamRepoStub);
+            let mainJob = new main_job_1.MainJob(clientStub, seasonRepoStub, teamRepoStub, fixtureRepoStub);
             yield mainJob.start(queueStub);
             expect(spy).to.have.been.calledWith(2017);
         }));
         describe('with given year', () => {
             it('should add CompetitionJobs to queue', () => __awaiter(this, void 0, void 0, function* () {
                 let spy = sinon.spy(queueStub, 'addJob');
-                let mainJob = new main_job_1.MainJob(clientStub, seasonRepoStub, teamRepoStub);
+                let mainJob = new main_job_1.MainJob(clientStub, seasonRepoStub, teamRepoStub, fixtureRepoStub);
                 yield mainJob.start(queueStub);
                 expect(spy).to.have.been.called;
                 expect(spy).to.have.been.calledWith(sinon.match.instanceOf(competition_job_1.CompetitionJob));
