@@ -88,7 +88,7 @@ export class CompetitionJob implements IJob {
     let competitionObs =  Observable.fromPromise(this.apiClient.getCompetition(this.competitionId))
       .flatMap((competitionRes: any) => {
         let competition = competitionRes.data;
-        return this.seasonRepo.findByExternalIdAndUpdate$(competition);
+        return this.seasonRepo.findOneByExternalIdAndUpdate$(competition);
       })
     let teamsObs = Observable.fromPromise(this.apiClient.getTeams(this.competitionId))
       .flatMap((teamsRes: any) => {

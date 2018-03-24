@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const rxjs_1 = require("rxjs");
 class Builder {
     build() {
         return new FixturesJob(this);
@@ -36,7 +37,11 @@ class FixturesJob {
         return new Builder();
     }
     start(queue) {
-        throw new Error("Method not implemented.");
+        return rxjs_1.Observable.fromPromise(this.apiClient.getFixtures(this.competitionId))
+            .flatMap((fixturesRes) => {
+            let fixtures = fixturesRes.data.fixtures;
+            return this.fixtureRepo.findByExternalIdAndUpdate$(fixtures);
+        }).toPromise();
     }
 }
 exports.FixturesJob = FixturesJob;

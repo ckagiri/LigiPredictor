@@ -57,7 +57,7 @@ class CompetitionJob {
         let competitionObs = rxjs_1.Observable.fromPromise(this.apiClient.getCompetition(this.competitionId))
             .flatMap((competitionRes) => {
             let competition = competitionRes.data;
-            return this.seasonRepo.findByExternalIdAndUpdate$(competition);
+            return this.seasonRepo.findOneByExternalIdAndUpdate$(competition);
         });
         let teamsObs = rxjs_1.Observable.fromPromise(this.apiClient.getTeams(this.competitionId))
             .flatMap((teamsRes) => {

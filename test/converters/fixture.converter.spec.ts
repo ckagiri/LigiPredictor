@@ -7,7 +7,7 @@ import { FixtureConverter as LigiFixtureConverter} from '../../src/db/converters
 import { FixtureConverter as AfdFixtureConverter} from '../../src/db/converters/apiFootballData/fixture.converter';
 import { FixtureStatus } from '../../src/db/models/fixture.model';
 
-describe.only('Fixture Converter', () => {
+describe('Fixture Converter', () => {
   describe('Ligi FixtureConverter', () => {
     const converter = new LigiFixtureConverter();
     const fixture = {

@@ -18,9 +18,6 @@ let mockLeagueRepo = {
             observer.next(new league_model_1.LeagueModel(league));
             observer.complete();
         });
-    },
-    findByExternalIdAndUpdate$(obj) {
-        return rxjs_1.Observable.of(new league_model_1.LeagueModel());
     }
 };
 describe('LeagueRepo', () => {

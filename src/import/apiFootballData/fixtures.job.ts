@@ -58,6 +58,10 @@ export class FixturesJob implements IJob {
   }
 
   start(queue: Queue) {
-    throw new Error("Method not implemented.");
+    return Observable.fromPromise(this.apiClient.getFixtures(this.competitionId))
+      .flatMap((fixturesRes: any) => {
+        let fixtures = fixturesRes.data.fixtures;
+        return this.fixtureRepo.findByExternalIdAndUpdate$(fixtures);
+      }).toPromise();
   }
 }

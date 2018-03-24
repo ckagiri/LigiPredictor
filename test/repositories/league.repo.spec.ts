@@ -14,16 +14,13 @@ const league = {
   code: 'epl'
 };
 
-let mockLeagueRepo = {
+let mockLeagueRepo: any = {
   save$(obj: ILeague): Observable<ILeague> {
     return Observable.create((observer) => {
       observer.next(new League(league));
       observer.complete();
     }); 
-  },
-  findByExternalIdAndUpdate$(obj: ILeague): Observable<ILeague> {
-    return Observable.of(new League());
-  }  
+  }
 }
 
 describe('LeagueRepo', () => {

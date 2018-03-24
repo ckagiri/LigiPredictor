@@ -16,8 +16,6 @@ const expect = chai.expect;
 const rxjs_1 = require("rxjs");
 const competition_job_1 = require("../../../src/import/apiFootballData/competition.job");
 const fixtures_job_1 = require("../../../src/import/apiFootballData/fixtures.job");
-const ApiFootballDataClient = require('../../../src/thirdParty/footballApi/apiFootballData/apiClient');
-const apiFootballDataClient = ApiFootballDataClient.getInstance();
 let competition = require('../../fixtures/requests/apiFootballData.epl2017');
 let teams = require('../../fixtures/requests/apiFootballData.epl2017Teams');
 let queueStub = {
@@ -38,7 +36,7 @@ let clientStub = {
     }
 };
 let seasonRepoStub = {
-    findByExternalIdAndUpdate$: () => {
+    findOneByExternalIdAndUpdate$: () => {
         return rxjs_1.Observable.of(competition);
     }
 };
@@ -74,8 +72,8 @@ describe('start', () => {
         expect(spy).to.have.been.calledOnce
             .and.to.have.been.calledWith(sinon.match.array);
     }));
-    it('should call seasonRepo.findByExternalIdAndUpdate$', () => __awaiter(this, void 0, void 0, function* () {
-        let spy = sinon.spy(seasonRepoStub, 'findByExternalIdAndUpdate$');
+    it('should call seasonRepo.findOneByExternalIdAndUpdate$', () => __awaiter(this, void 0, void 0, function* () {
+        let spy = sinon.spy(seasonRepoStub, 'findOneByExternalIdAndUpdate$');
         yield job.start(queueStub);
         expect(spy).to.have.been.calledOnce
             .and.to.have.been.calledWith(sinon.match.object);

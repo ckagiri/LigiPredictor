@@ -7,11 +7,6 @@ import { Observable } from 'rxjs';
 
 import { CompetitionJob } from '../../../src/import/apiFootballData/competition.job';
 import { FixturesJob } from '../../../src/import/apiFootballData/fixtures.job';
-import { SeasonRepository } from '../../../src/db/repositories/season.repo';
-import { TeamRepository } from '../../../src/db/repositories/team.repo';
-import { FootballApiProvider } from '../../../src/common/footballApiProvider';
-const ApiFootballDataClient = require('../../../src/thirdParty/footballApi/apiFootballData/apiClient');
-const apiFootballDataClient = ApiFootballDataClient.getInstance();
 
 let competition = require('../../fixtures/requests/apiFootballData.epl2017');
 let teams = require('../../fixtures/requests/apiFootballData.epl2017Teams');
@@ -34,7 +29,7 @@ let clientStub: any = {
   }
 }
 let seasonRepoStub: any = {
-  findByExternalIdAndUpdate$: () => {
+  findOneByExternalIdAndUpdate$: () => {
     return Observable.of(competition)
   }
 }
@@ -79,8 +74,8 @@ describe('start', () => {
       .and.to.have.been.calledWith(sinon.match.array);
   })
 
-  it('should call seasonRepo.findByExternalIdAndUpdate$', async () => {
-    let spy = sinon.spy(seasonRepoStub, 'findByExternalIdAndUpdate$');   
+  it('should call seasonRepo.findOneByExternalIdAndUpdate$', async () => {
+    let spy = sinon.spy(seasonRepoStub, 'findOneByExternalIdAndUpdate$');   
 
     await job.start(queueStub)   
           
