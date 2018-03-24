@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const rxjs_1 = require("rxjs");
+const sinon = require("sinon");
 const chai_1 = require("chai");
 const fixture_converter_1 = require("../../src/db/converters/ligi/fixture.converter");
 const fixture_converter_2 = require("../../src/db/converters/apiFootballData/fixture.converter");
@@ -48,11 +49,17 @@ describe.only('Fixture Converter', () => {
             slug: 'arsenal',
             crestUrl: 'http://upload.wikimedia.org/wikipedia/de/d/da/Arsenal_FC.svg'
         };
-        let teamRepoStub = {
-            getByName$: () => {
-                return rxjs_1.Observable.of(homeTeam);
-            }
+        let awayTeam = {
+            _id: '4edd40c86762e0fb12000002',
+            name: 'Chelsea',
+            slug: 'chelsea',
+            crestUrl: 'http://upload.wikimedia.org/wikipedia/de/d/da/Chelsea.svg'
         };
+        let teamRepoStub = {
+            getByName$: sinon.stub()
+        };
+        teamRepoStub.getByName$.withArgs(sinon.match('Arsenal')).returns(rxjs_1.Observable.of(homeTeam));
+        teamRepoStub.getByName$.withArgs(sinon.match('Chelsea')).returns(rxjs_1.Observable.of(awayTeam));
         const converter = new fixture_converter_2.FixtureConverter(seasonRepoStub, teamRepoStub);
         const fixture = {
             id: 158952,
@@ -74,7 +81,9 @@ describe.only('Fixture Converter', () => {
             let conversion = converter.from(fixture);
             conversion.subscribe(f => {
                 chai_1.expect(f.homeTeam.name).to.equal(homeTeam.name);
+                chai_1.expect(f.awayTeam.name).to.equal(awayTeam.name);
                 chai_1.expect(f.matchRound).to.equal(fixture.matchday);
+                chai_1.expect(f.slug).to.equal(`${homeTeam.slug}-${awayTeam.slug}`);
                 chai_1.expect(f.externalReference).to.deep.equal({ API_FOOTBALL_DATA: { id: 158952 } });
                 done();
             });

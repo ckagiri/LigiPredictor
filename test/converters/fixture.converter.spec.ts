@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import * as sinon from 'sinon';
 import { expect } from 'chai';
 
 import { IFixtureConverter } from '../../src/db/converters/fixture.converter';
@@ -51,11 +52,17 @@ describe.only('Fixture Converter', () => {
       slug: 'arsenal',
       crestUrl: 'http://upload.wikimedia.org/wikipedia/de/d/da/Arsenal_FC.svg'
     }
-    let teamRepoStub:any = {
-      getByName$: () => {
-        return Observable.of(homeTeam)
-      }
+    let awayTeam = {
+      _id: '4edd40c86762e0fb12000002',
+      name: 'Chelsea',
+      slug: 'chelsea',
+      crestUrl: 'http://upload.wikimedia.org/wikipedia/de/d/da/Chelsea.svg'
     }
+    let teamRepoStub:any = {
+      getByName$: sinon.stub()
+    }
+    teamRepoStub.getByName$.withArgs(sinon.match('Arsenal')).returns(Observable.of(homeTeam));
+    teamRepoStub.getByName$.withArgs(sinon.match('Chelsea')).returns(Observable.of(awayTeam));
     const converter = new AfdFixtureConverter(seasonRepoStub, teamRepoStub);
     const fixture = {
         id: 158952,
@@ -77,7 +84,9 @@ describe.only('Fixture Converter', () => {
       let conversion = converter.from(fixture);
       conversion.subscribe(f => {
         expect(f.homeTeam.name).to.equal(homeTeam.name);
+        expect(f.awayTeam.name).to.equal(awayTeam.name);
         expect(f.matchRound).to.equal(fixture.matchday);
+        expect(f.slug).to.equal( `${homeTeam.slug}-${awayTeam.slug}`);
         expect(f.externalReference).to.deep.equal({ API_FOOTBALL_DATA: { id: 158952 } })
         
         done();
