@@ -17,7 +17,7 @@ class ApiFootballDataClient implements IFootballApiClient {
   }
 
   getCompetitions(year: number){
-    let queryParams = year ? {year} : undefined;
+    let queryParams = year ? { year } : undefined;
 		let apiResource = '/competitions';
 
     return request(this._getOptions(this.apiKey, apiResource, queryParams))
@@ -33,8 +33,17 @@ class ApiFootballDataClient implements IFootballApiClient {
 
   getTeams(competitionId: number|string) {
     let apiResource = `/competitions/${competitionId}/teams`;
+    
     return request(this._getOptions(this.apiKey, apiResource))
       .then(this._mergeResponse);  
+  }
+
+  getFixtures(competitionId: number|string, options?: any) {
+		let queryParams = options ? options : undefined;
+		let apiResource = `/competitions/${competitionId}/fixtures`;
+
+    return request(this._getOptions(this.apiKey, apiResource, options))
+    .then(this._mergeResponse);
   }
 
   _getOptions(apiKey: string, resource: string, queryParams?: any) {

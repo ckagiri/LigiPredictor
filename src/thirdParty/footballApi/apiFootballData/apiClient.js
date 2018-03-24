@@ -29,6 +29,12 @@ class ApiFootballDataClient {
         return request(this._getOptions(this.apiKey, apiResource))
             .then(this._mergeResponse);
     }
+    getFixtures(competitionId, options) {
+        let queryParams = options ? options : undefined;
+        let apiResource = `/competitions/${competitionId}/fixtures`;
+        return request(this._getOptions(this.apiKey, apiResource, options))
+            .then(this._mergeResponse);
+    }
     _getOptions(apiKey, resource, queryParams) {
         queryParams = queryParams || {};
         return {
