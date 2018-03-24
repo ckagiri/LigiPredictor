@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const season_model_1 = require("../../src/db/models/season.model");
-describe.only('Season', () => {
+describe('Season', () => {
     describe('schema', () => {
         describe('an empty season', () => {
             const s = new season_model_1.SeasonModel();

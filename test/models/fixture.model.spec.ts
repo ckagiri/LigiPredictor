@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { FixtureStatus, FixtureModel as Fixture } from '../../src/db/models/fixture.model';
 
-describe.only('Fixture', () => {
+describe('Fixture', () => {
   describe('schema', () => {
 
     describe('an empty fixture', () => {

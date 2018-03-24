@@ -14,6 +14,9 @@ class TeamRepository extends baseProvider_repo_1.BaseProviderRepository {
     findByNameAndUpdate$(teams) {
         return rxjs_1.Observable.of([{}]);
     }
+    getByName$(name) {
+        return rxjs_1.Observable.of({});
+    }
 }
 exports.TeamRepository = TeamRepository;
 //# sourceMappingURL=team.repo.js.map

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const fixture_model_1 = require("../../src/db/models/fixture.model");
-describe.only('Fixture', () => {
+describe('Fixture', () => {
     describe('schema', () => {
         describe('an empty fixture', () => {
             const s = new fixture_model_1.FixtureModel();

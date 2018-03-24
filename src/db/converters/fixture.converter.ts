@@ -15,9 +15,9 @@ export abstract class FixtureConverter {
   static getInstance(provider: ApiProvider) : IFixtureConverter {
     switch(provider) {
       case ApiProvider.LIGI:
-        return new LigiFixtureConverter();
+        return LigiFixtureConverter.getInstance();
       case ApiProvider.API_FOOTBALL_DATA:
-        return new AfdFixtureConverter();
+        return AfdFixtureConverter.getInstance();
       default: 
         throw new Error('Converter for Provider does not exist');
     }

@@ -14,7 +14,7 @@ const league = {
   code: 'epl'
 };
 
-let mockLeagueRepo: ILeagueRepository = {
+let mockLeagueRepo = {
   save$(obj: ILeague): Observable<ILeague> {
     return Observable.create((observer) => {
       observer.next(new League(league));
@@ -27,7 +27,6 @@ let mockLeagueRepo: ILeagueRepository = {
 }
 
 describe('LeagueRepo', () => {
-  let repo: ILeagueRepository;
   before((done) => {
     (<any>mongoose).Promise = global.Promise;    
     mongoose.connect('mongodb://localhost:27017/test123-test');
@@ -47,7 +46,7 @@ describe('LeagueRepo', () => {
   
   it('should save a new league', (done) => {
     let saveSpy = sinon.spy(mockLeagueRepo, 'save$');
-    repo = mockLeagueRepo;
+    let repo = mockLeagueRepo;
    
     repo.save$(league).subscribe((obj => {
       assert.isTrue(saveSpy.calledOnce);

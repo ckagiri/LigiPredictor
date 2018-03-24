@@ -24,7 +24,6 @@ let mockLeagueRepo = {
     }
 };
 describe('LeagueRepo', () => {
-    let repo;
     before((done) => {
         mongoose.Promise = global.Promise;
         mongoose.connect('mongodb://localhost:27017/test123-test');
@@ -42,7 +41,7 @@ describe('LeagueRepo', () => {
     });
     it('should save a new league', (done) => {
         let saveSpy = sinon.spy(mockLeagueRepo, 'save$');
-        repo = mockLeagueRepo;
+        let repo = mockLeagueRepo;
         repo.save$(league).subscribe((obj => {
             chai_1.assert.isTrue(saveSpy.calledOnce);
             chai_1.assert.equal(saveSpy.firstCall.args[0].name, 'English Premier League');

@@ -7,7 +7,8 @@ import { FootballApiProvider as ApiProvider } from '../../common/footballApiProv
 
 export interface ITeamRepository extends IBaseProviderRepository<ITeam> {
   save$(team: ITeam): Observable<ITeam>;
-  findByNameAndUpdate$(teams: ITeam[]): Observable<ITeam[]>
+  findByNameAndUpdate$(teams: ITeam[]): Observable<ITeam[]>;
+  getByName$(name: string): Observable<ITeam>;
 }
 
 export class TeamRepository extends BaseProviderRepository<ITeam> implements ITeamRepository {
@@ -21,5 +22,9 @@ export class TeamRepository extends BaseProviderRepository<ITeam> implements ITe
 
   findByNameAndUpdate$(teams: ITeam[]): Observable<ITeam[]> {
     return Observable.of([<ITeam>{}])
+  }  
+
+  getByName$(name: string): Observable<ITeam> {
+    return Observable.of(<ITeam>{})
   }  
 }

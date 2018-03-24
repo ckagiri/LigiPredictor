@@ -7,9 +7,9 @@ class FixtureConverter {
     static getInstance(provider) {
         switch (provider) {
             case footballApiProvider_1.FootballApiProvider.LIGI:
-                return new fixture_converter_1.FixtureConverter();
+                return fixture_converter_1.FixtureConverter.getInstance();
             case footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA:
-                return new fixture_converter_2.FixtureConverter();
+                return fixture_converter_2.FixtureConverter.getInstance();
             default:
                 throw new Error('Converter for Provider does not exist');
         }

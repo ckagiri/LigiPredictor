@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { SeasonModel as Season } from '../../src/db/models/season.model';
 
-describe.only('Season', () => {
+describe('Season', () => {
   describe('schema', () => {
 
     describe('an empty season', () => {
