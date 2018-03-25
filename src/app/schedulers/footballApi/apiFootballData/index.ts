@@ -1,4 +1,5 @@
 import { IFootballApiSchedulers} from '../../footballApi';
+import { FootballApiProvider as ApiProvider } from '../../../../common/footballApiProvider';
 import { SeasonScheduler } from './season.scheduler';
 
 export class ApiFootballDataSchedulers implements IFootballApiSchedulers {
@@ -6,7 +7,7 @@ export class ApiFootballDataSchedulers implements IFootballApiSchedulers {
     return new ApiFootballDataSchedulers();
   }
 
-  run() {
-    SeasonScheduler.getInstance().run();
+  start() {
+    SeasonScheduler.getInstance(ApiProvider.API_FOOTBALL_DATA).start();
   }
 }

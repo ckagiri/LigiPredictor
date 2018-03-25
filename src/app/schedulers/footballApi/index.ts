@@ -1,7 +1,7 @@
 export interface IFootballApiScheduler {
-  run();
+  start();
 }
 
 export interface IFootballApiSchedulers extends IFootballApiScheduler {
-  run();
+  start();
 }

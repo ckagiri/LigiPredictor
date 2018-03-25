@@ -11,8 +11,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = require("events");
 const promisify = require("util-promisify");
 const setTimeoutPromise = promisify(setTimeout);
-class SimpleScheduler extends events_1.EventEmitter {
-    start({ whenToExecute, task = () => { }, context, callback }) {
+class TaskRunner extends events_1.EventEmitter {
+    run({ whenToExecute, task = () => { }, context, callback }) {
         return __awaiter(this, void 0, void 0, function* () {
             if (task && typeof task !== 'function') {
                 throw new Error('Task must be a function');
@@ -23,11 +23,9 @@ class SimpleScheduler extends events_1.EventEmitter {
             this.emit('begin');
             try {
                 yield setTimeoutPromise(whenToExecute || 0);
-                console.time('execute');
                 const data = yield Promise.resolve().then(() => task.call(context));
                 if (callback)
                     callback(data);
-                console.timeEnd('execute');
                 this.emit('end');
                 this.emit('data', data);
             }
@@ -39,5 +37,5 @@ class SimpleScheduler extends events_1.EventEmitter {
         });
     }
 }
-exports.SimpleScheduler = SimpleScheduler;
-//# sourceMappingURL=simple.scheduler.js.map
+exports.TaskRunner = TaskRunner;
+//# sourceMappingURL=taskRunner.js.map

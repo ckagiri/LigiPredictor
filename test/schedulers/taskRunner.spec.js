@@ -5,22 +5,22 @@ const chai = require("chai");
 const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 const expect = chai.expect;
-const simple_scheduler_1 = require("../../src/app/schedulers/simple.scheduler");
-describe.only('SimpleScheduler', () => {
-    let scheduler = new simple_scheduler_1.SimpleScheduler();
-    describe('start', () => {
+const taskRunner_1 = require("../../src/app/schedulers/taskRunner");
+describe('TaskRunner', () => {
+    let taskRunner = new taskRunner_1.TaskRunner();
+    describe('run', () => {
         it('should call begin', () => {
             let spy = sinon.spy();
-            scheduler.on('begin', spy);
+            taskRunner.on('begin', spy);
             expect(spy.called).to.be.false;
-            scheduler.start({});
+            taskRunner.run({});
             expect(spy.calledOnce).to.be.true;
             expect(spy.callCount).to.equal(1);
         });
         it('should not call end before waiting delay', (done) => {
             let spy = sinon.spy();
-            scheduler.on('end', spy);
-            scheduler.start({
+            taskRunner.on('end', spy);
+            taskRunner.run({
                 whenToExecute: 15
             });
             setTimeout(() => {
@@ -30,8 +30,8 @@ describe.only('SimpleScheduler', () => {
         });
         it('should call end after waiting delay', (done) => {
             let spy = sinon.spy();
-            scheduler.on('end', spy);
-            scheduler.start({
+            taskRunner.on('end', spy);
+            taskRunner.run({
                 whenToExecute: 5
             });
             setTimeout(() => {
@@ -41,8 +41,8 @@ describe.only('SimpleScheduler', () => {
         });
         it('should not call end before executing task', (done) => {
             let spy = sinon.spy();
-            scheduler.on('end', spy);
-            scheduler.start({
+            taskRunner.on('end', spy);
+            taskRunner.run({
                 whenToExecute: 5,
                 task: () => {
                     return new Promise((resolve, reject) => {
@@ -60,8 +60,8 @@ describe.only('SimpleScheduler', () => {
         });
         it('should call end after executing task', (done) => {
             let spy = sinon.spy();
-            scheduler.on('end', spy);
-            scheduler.start({
+            taskRunner.on('end', spy);
+            taskRunner.run({
                 whenToExecute: 5,
                 task: () => {
                     return new Promise((resolve, reject) => {
@@ -77,8 +77,8 @@ describe.only('SimpleScheduler', () => {
         });
         it('should call data after taskExecution', (done) => {
             let spy = sinon.spy();
-            scheduler.on('data', spy);
-            scheduler.start({
+            taskRunner.on('data', spy);
+            taskRunner.run({
                 whenToExecute: 5,
                 task: () => {
                     return new Promise((resolve, reject) => {
@@ -97,4 +97,4 @@ describe.only('SimpleScheduler', () => {
         });
     });
 });
-//# sourceMappingURL=simple.scheduler.spec.js.map
+//# sourceMappingURL=taskRunner.spec.js.map
