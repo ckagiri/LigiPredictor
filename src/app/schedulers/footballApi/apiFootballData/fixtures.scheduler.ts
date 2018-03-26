@@ -29,6 +29,7 @@ export class FixturesScheduler extends EventEmitter implements IFootballApiSched
     private fixturesUpdater: IFixturesUpdater,
     private finishedFixturesUpdater: IFinishedFixturesProcessor) {
       super();
+      this.processFixtures = this.processFixtures.bind(this);
       this.on('process:fixtures', this.processFixtures)
   }
 
@@ -62,8 +63,8 @@ export class FixturesScheduler extends EventEmitter implements IFootballApiSched
           let changedDbFixtures = await this.fixturesUpdater.updateFixtures(fixtures)
           this._previousUpdate = this._nextUpdate
           this._nextUpdate = this.calculateNextUpdate(fixtures)
-          this.emit('process:fixtures', changedDbFixtures)
-          this.onTaskExecuted();          
+          this.processFixtures(changedDbFixtures);
+          this.onTaskExecuted();
         }
       })
     }
@@ -84,7 +85,13 @@ export class FixturesScheduler extends EventEmitter implements IFootballApiSched
     return 10*60*60*1000;
   }
 
-  processFixtures = async (changedDbFixtures: any[]) => {
-    await Promise.resolve();
+  processFixtures = (changedDbFixtures: any[]) => {
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        console.log('*** Executing task 123 ***')
+        let res = Math.floor(Math.random() * 2);
+        resolve(res);
+      }, 2000);           
+    });
   }
 }

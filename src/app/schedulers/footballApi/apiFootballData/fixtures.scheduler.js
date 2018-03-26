@@ -42,7 +42,7 @@ class FixturesScheduler extends events_1.EventEmitter {
                         let changedDbFixtures = yield this.fixturesUpdater.updateFixtures(fixtures);
                         this._previousUpdate = this._nextUpdate;
                         this._nextUpdate = this.calculateNextUpdate(fixtures);
-                        this.emit('process:fixtures', changedDbFixtures);
+                        this.processFixtures(changedDbFixtures);
                         this.onTaskExecuted();
                     })
                 });
@@ -60,9 +60,16 @@ class FixturesScheduler extends events_1.EventEmitter {
         this.calculateNextUpdate = (fixtures) => {
             return 10 * 60 * 60 * 1000;
         };
-        this.processFixtures = (changedDbFixtures) => __awaiter(this, void 0, void 0, function* () {
-            yield Promise.resolve();
-        });
+        this.processFixtures = (changedDbFixtures) => {
+            new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    console.log('*** Executing task 123 ***');
+                    let res = Math.floor(Math.random() * 2);
+                    resolve(res);
+                }, 2000);
+            });
+        };
+        this.processFixtures = this.processFixtures.bind(this);
         this.on('process:fixtures', this.processFixtures);
     }
     static getInstance(provider) {

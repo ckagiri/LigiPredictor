@@ -35,7 +35,7 @@ describe.only('ApiFootballData: Fixtures scheduler', () => {
     beforeEach(() => {
         fixturesScheduler = new fixtures_scheduler_1.FixturesScheduler(taskRunnerStub, apiClientStub, fixturesUpdaterStub, finishedFixturesProcessorStub);
     });
-    it('should set polling true/false when started/stopped respectively', (done) => {
+    xit('should set polling true/false when started/stopped respectively', (done) => {
         fixturesScheduler.start();
         expect(fixturesScheduler.IsPolling).to.be.true;
         fixturesScheduler.stop();
@@ -44,7 +44,7 @@ describe.only('ApiFootballData: Fixtures scheduler', () => {
             done();
         });
     });
-    it('should run again after polling interval', (done) => {
+    xit('should run again after polling interval', (done) => {
         let clock = sinon.useFakeTimers();
         let spy = sinon.spy(fixturesScheduler, 'onTaskExecuted');
         let count = 0;
@@ -57,6 +57,19 @@ describe.only('ApiFootballData: Fixtures scheduler', () => {
         });
         fixturesScheduler.on('stopped', () => {
             expect(spy).to.have.callCount(2);
+            done();
+        });
+        clock.restore();
+    });
+    it('should call processFixtures', (done) => {
+        let clock = sinon.useFakeTimers();
+        let spy = sinon.spy(fixturesScheduler, 'processFixtures');
+        fixturesScheduler.start();
+        fixturesScheduler.on('task:executed', () => {
+            fixturesScheduler.stop();
+        });
+        fixturesScheduler.on('stopped', () => {
+            expect(spy).to.have.been.called;
             done();
         });
         clock.restore();
