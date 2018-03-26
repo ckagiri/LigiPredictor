@@ -46,6 +46,18 @@ class ApiFootballDataClient implements IFootballApiClient {
     .then(this._mergeResponse);
   }
 
+  getTodaysFixtures() {
+    throw new Error("Method not implemented.");
+  }
+
+  getTomorrowsFixtures() {
+    throw new Error("Method not implemented.");
+  }
+
+  getYesterdaysFixtures() {
+      throw new Error("Method not implemented.");
+  }
+
   _getOptions(apiKey: string, resource: string, queryParams?: any) {
     queryParams = queryParams || {};    
       return {

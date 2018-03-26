@@ -2,7 +2,7 @@ import { IFixtureRepository, FixtureRepository }  from '../../../../db/repositor
 import { FootballApiProvider as ApiProvider } from '../../../../common/footballApiProvider';
 
 export interface IFixturesUpdater {
-  updateMatchResult(fixtures: any[]);
+  updateFixtures(fixtures: any[]);
 }
 
 export class FixturesUpdater implements IFixturesUpdater {
@@ -13,7 +13,7 @@ export class FixturesUpdater implements IFixturesUpdater {
   constructor(private fixtureRepo: IFixtureRepository) {
   }
 
-  updateMatchResult(fixtures: any[]) {
+  updateFixtures(fixtures: any[]) {
     throw new Error("Method not implemented.");
   }
 }

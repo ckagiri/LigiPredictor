@@ -8,7 +8,7 @@ class FixturesUpdater {
     static getInstance(provider) {
         return new FixturesUpdater(fixture_repo_1.FixtureRepository.getInstance(provider));
     }
-    updateMatchResult(fixtures) {
+    updateFixtures(fixtures) {
         throw new Error("Method not implemented.");
     }
 }
