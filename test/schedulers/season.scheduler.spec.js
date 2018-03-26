@@ -26,7 +26,7 @@ let seasonUpdaterStub = {
     updateSeasons: () => { return Promise.resolve(); }
 };
 let seasonScheduler;
-describe.only('ApiFootballData: Season scheduler', () => {
+describe('ApiFootballData: Season scheduler', () => {
     beforeEach(() => {
         seasonScheduler = new season_scheduler_1.SeasonScheduler(taskRunnerStub, apiClientStub, seasonUpdaterStub);
     });

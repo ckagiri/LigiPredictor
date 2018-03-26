@@ -2,7 +2,7 @@ import { ISeasonRepository, SeasonRepository }  from '../../../../db/repositorie
 import { FootballApiProvider as ApiProvider } from '../../../../common/footballApiProvider';
 
 export interface ISeasonUpdater {
-  updateSeasons(seasons: any[]);
+  updateCurrentMatchRound(seasons: any[]);
 }
 
 export class SeasonUpdater implements ISeasonUpdater {
@@ -13,7 +13,7 @@ export class SeasonUpdater implements ISeasonUpdater {
   constructor(private seasonRepo: ISeasonRepository) {
   }
 
-  updateSeasons(seasons: any[]) {
+  updateCurrentMatchRound(seasons: any[]) {
     throw new Error("Method not implemented.");
   }
 }

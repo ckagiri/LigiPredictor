@@ -41,7 +41,7 @@ export class SeasonScheduler extends EventEmitter implements IFootballApiSchedul
         context: this,
         task: async () => {
           let competitions = await this.apiClient.getCompetitions(2017);
-          await this.seasonUpdater.updateSeasons(competitions);
+          await this.seasonUpdater.updateCurrentMatchRound(competitions);
           this._pollingInterval = this.POLLING_INTERVAL;
           this.onTaskEnd();
         }

@@ -20,7 +20,7 @@ let seasonUpdaterStub:any = {
 }
 let seasonScheduler: any;
 
-describe.only('ApiFootballData: Season scheduler', () => {   
+describe('ApiFootballData: Season scheduler', () => {   
   beforeEach(() => {
     seasonScheduler = new SeasonScheduler(taskRunnerStub, apiClientStub, seasonUpdaterStub);
   }) 
