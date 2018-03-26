@@ -8,7 +8,7 @@ class SeasonUpdater {
     static getInstance(provider) {
         return new SeasonUpdater(season_repo_1.SeasonRepository.getInstance(provider));
     }
-    updateSeasons(seasons) {
+    updateCurrentMatchRound(seasons) {
         throw new Error("Method not implemented.");
     }
 }

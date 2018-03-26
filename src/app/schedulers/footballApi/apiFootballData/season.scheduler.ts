@@ -43,7 +43,7 @@ export class SeasonScheduler extends EventEmitter implements IFootballApiSchedul
           let competitions = await this.apiClient.getCompetitions(2017);
           await this.seasonUpdater.updateCurrentMatchRound(competitions);
           this._pollingInterval = this.POLLING_INTERVAL;
-          this.onTaskEnd();
+          this.onTaskExecuted();
         }
       })
     }
@@ -56,7 +56,7 @@ export class SeasonScheduler extends EventEmitter implements IFootballApiSchedul
     })
   }
 
-  onTaskEnd = () => {
-    this.emit('task:end')
+  onTaskExecuted = () => {
+    this.emit('task:executed')
   }
 }

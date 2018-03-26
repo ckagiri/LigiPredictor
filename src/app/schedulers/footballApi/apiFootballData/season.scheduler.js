@@ -29,9 +29,9 @@ class SeasonScheduler extends events_1.EventEmitter {
                     context: this,
                     task: () => __awaiter(this, void 0, void 0, function* () {
                         let competitions = yield this.apiClient.getCompetitions(2017);
-                        yield this.seasonUpdater.updateSeasons(competitions);
+                        yield this.seasonUpdater.updateCurrentMatchRound(competitions);
                         this._pollingInterval = this.POLLING_INTERVAL;
-                        this.onTaskEnd();
+                        this.onTaskExecuted();
                     })
                 });
             }
@@ -42,8 +42,8 @@ class SeasonScheduler extends events_1.EventEmitter {
                 this.emit('stopped');
             });
         });
-        this.onTaskEnd = () => {
-            this.emit('task:end');
+        this.onTaskExecuted = () => {
+            this.emit('task:executed');
         };
     }
     static getInstance(provider) {

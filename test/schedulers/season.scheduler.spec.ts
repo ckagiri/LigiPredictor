@@ -16,7 +16,7 @@ let apiClientStub:any = {
   getCompetitions: () => { return Promise.resolve() }
 }
 let seasonUpdaterStub:any = {
-  updateSeasons: () => { return Promise.resolve() }
+  updateCurrentMatchRound: () => { return Promise.resolve() }
 }
 let seasonScheduler: any;
 
@@ -39,10 +39,10 @@ describe('ApiFootballData: Season scheduler', () => {
 
     it('should run again after polling interval', (done) => {
       let clock = sinon.useFakeTimers();
-      let spy = sinon.spy(seasonScheduler, 'onTaskEnd');      
+      let spy = sinon.spy(seasonScheduler, 'onTaskExecuted');      
       let count = 0;
       seasonScheduler.start();  
-      seasonScheduler.on('task:end', () => {
+      seasonScheduler.on('task:executed', () => {
         count += 1;
         if(count == 2) {
           seasonScheduler.stop();
@@ -60,7 +60,7 @@ describe('ApiFootballData: Season scheduler', () => {
       let clock = sinon.useFakeTimers();
       let spy = sinon.spy(apiClientStub, 'getCompetitions');      
       seasonScheduler.start();  
-      seasonScheduler.on('task:end', () => {
+      seasonScheduler.on('task:executed', () => {
           seasonScheduler.stop();
       });
       seasonScheduler.on('stopped', () => {
@@ -72,9 +72,9 @@ describe('ApiFootballData: Season scheduler', () => {
 
     it('should update seasons', (done) => {
       let clock = sinon.useFakeTimers();
-      let spy = sinon.spy(seasonUpdaterStub, 'updateSeasons');      
+      let spy = sinon.spy(seasonUpdaterStub, 'updateCurrentMatchRound');      
       seasonScheduler.start();  
-      seasonScheduler.on('task:end', () => {
+      seasonScheduler.on('task:executed', () => {
           seasonScheduler.stop();
       });
       seasonScheduler.on('stopped', () => {
