@@ -50,7 +50,7 @@ export class FixtureConverter implements IFixtureConverter {
 					},
           odds: data.odds,
           externalReference: {
-            [this.provider.toString()]: {
+            [this.provider]: {
               id: data.id
             }
           }

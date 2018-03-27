@@ -15,7 +15,7 @@ export class SeasonConverter implements ISeasonConverter {
       year: data.year,
       currentMatchRound: data.currentMatchday,
       externalReference: {
-        [this.provider.toString()]: {
+        [this.provider]: {
           id: data.id
         }
       }

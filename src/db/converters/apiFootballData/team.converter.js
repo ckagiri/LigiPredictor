@@ -9,7 +9,7 @@ class TeamConverter {
             name: data.name,
             crestUrl: data.crestUrl,
             externalReference: {
-                [this.provider.toString()]: {
+                [this.provider]: {
                     id: data.id
                 }
             }

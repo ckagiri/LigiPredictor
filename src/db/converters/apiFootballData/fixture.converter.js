@@ -38,7 +38,7 @@ class FixtureConverter {
                 },
                 odds: data.odds,
                 externalReference: {
-                    [this.provider.toString()]: {
+                    [this.provider]: {
                         id: data.id
                     }
                 }

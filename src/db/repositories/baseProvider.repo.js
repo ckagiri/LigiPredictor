@@ -26,6 +26,15 @@ class BaseProviderRepository {
     getByExternalId$(id) {
         return rxjs_1.Observable.of({});
     }
+    getByExternalIds$() {
+        return rxjs_1.Observable.of([{}]);
+    }
+    findByIdAndUpdate$(id, update) {
+        return rxjs_1.Observable.of({});
+    }
+    findOneAndUpdate$(conditions, update) {
+        return rxjs_1.Observable.of({});
+    }
 }
 exports.BaseProviderRepository = BaseProviderRepository;
 //# sourceMappingURL=baseProvider.repo.js.map
