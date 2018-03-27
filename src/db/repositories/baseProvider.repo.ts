@@ -10,7 +10,7 @@ export interface IBaseProviderRepository<T extends IEntity> {
   findByExternalIdAndUpdate$(obj: IEntity): Observable<T>;
   findEachByExternalIdAndUpdate$(obj: IEntity[]): Observable<T[]>;
   getByExternalId$(id: string|number): Observable<T>;  
-  getByExternalIds$(): Observable<T[]>;
+  getByExternalIds$(ids: Array<string|number>): Observable<T[]>;
   findByIdAndUpdate$(id: string|number, update: any): Observable<T>;
   findOneAndUpdate$(conditions: any, update: any): Observable<T>;
 }

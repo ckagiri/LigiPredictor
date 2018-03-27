@@ -9,7 +9,13 @@ class SeasonUpdater {
         return new SeasonUpdater(season_repo_1.SeasonRepository.getInstance(provider));
     }
     updateCurrentMatchRound(seasons) {
-        throw new Error("Method not implemented.");
+        let map = new Map();
+        let externalIds = [];
+        for (let season of seasons) {
+            map[season.id] = season;
+            externalIds.push(season.id);
+        }
+        return this.seasonRepo.getByExternalIds$(externalIds).toPromise();
     }
 }
 exports.SeasonUpdater = SeasonUpdater;

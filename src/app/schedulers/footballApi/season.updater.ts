@@ -14,6 +14,12 @@ export class SeasonUpdater implements ISeasonUpdater {
   }
 
   updateCurrentMatchRound(seasons: any[]) {
-    throw new Error("Method not implemented.");
+    let map = new Map<string|number, any>();
+    let externalIds: Array<string|number> = [];
+    for (let season of seasons) {
+      map[season.id] = season;
+      externalIds.push(season.id);      
+    }
+    return this.seasonRepo.getByExternalIds$(externalIds).toPromise();
   }
 }

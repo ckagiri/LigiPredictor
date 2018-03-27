@@ -4,7 +4,7 @@ import { FootballApiProvider as ApiProvider} from '../../src/common/footballApiP
 describe('ApiProvider', () => {
   describe('Choice', () => {
     it('should return correct string representation' ,() => {
-      expect(ApiProvider.API_FOOTBALL_DATA.toString()).to.equal('API_FOOTBALL_DATA')
+      expect(ApiProvider.API_FOOTBALL_DATA).to.equal('API_FOOTBALL_DATA')      
     })
   })
 })

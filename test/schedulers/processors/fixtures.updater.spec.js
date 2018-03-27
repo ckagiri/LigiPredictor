@@ -25,4 +25,4 @@ describe('FixturesUpdater', () => {
         });
     });
 });
-//# sourceMappingURL=fixtures.updater.js.map
+//# sourceMappingURL=fixtures.updater.spec.js.map
