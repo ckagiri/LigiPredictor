@@ -45,6 +45,9 @@ class FixtureConverter {
             };
         });
     }
+    map(data) {
+        return data;
+    }
 }
 exports.FixtureConverter = FixtureConverter;
 //# sourceMappingURL=fixture.converter.js.map

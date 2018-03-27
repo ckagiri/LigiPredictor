@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const season_repo_1 = require("../../../../db/repositories/season.repo");
+const season_repo_1 = require("../../../db/repositories/season.repo");
 class SeasonUpdater {
     constructor(seasonRepo) {
         this.seasonRepo = seasonRepo;

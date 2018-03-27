@@ -57,4 +57,8 @@ export class FixtureConverter implements IFixtureConverter {
 				}
       })
   }
+  
+  map(data: any[]): any[] {
+    return data;
+  }
 }

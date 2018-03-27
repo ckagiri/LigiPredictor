@@ -9,6 +9,7 @@ import { FootballApiProvider as ApiProvider } from '../../common/footballApiProv
 
 export interface IFixtureConverter extends IConverter {
   from(data: any): Observable<IFixture>
+  map(data: any[]): any[] 
 }
 
 export abstract class FixtureConverter {

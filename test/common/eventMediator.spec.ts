@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import { IEventMediator, EventMediator } from '../../src/common/eventMediator';
 
-describe.only('EventMediator', () => {
+describe('EventMediator', () => {
   let mediator: IEventMediator;  
 
   beforeEach(() => {
@@ -29,5 +29,4 @@ describe.only('EventMediator', () => {
     mediator.removeAllListeners();
 		assert.deepEqual(mediator.eventNames(), []);
 	});
-
 });

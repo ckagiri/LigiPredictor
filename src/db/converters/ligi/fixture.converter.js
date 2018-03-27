@@ -12,6 +12,9 @@ class FixtureConverter {
             slug: data.slug
         });
     }
+    map(data) {
+        return data;
+    }
 }
 exports.FixtureConverter = FixtureConverter;
 //# sourceMappingURL=fixture.converter.js.map

@@ -4,7 +4,7 @@ class FinishedFixturesProcessor {
     static getInstance() {
         return new FinishedFixturesProcessor();
     }
-    processFixtures(fixtures) {
+    processPredictions(fixtures) {
         throw new Error("Method not implemented.");
     }
 }

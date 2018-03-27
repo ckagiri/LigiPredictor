@@ -13,29 +13,37 @@ const chai = require("chai");
 const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 const expect = chai.expect;
-const fixtures_scheduler_1 = require("../../src/app/schedulers/footballApi/apiFootballData/fixtures.scheduler");
+const fixtures_scheduler_1 = require("../../src/app/schedulers/footballApi/fixtures.scheduler");
 let taskRunnerStub = {
     run: ({ whenToExecute, task = () => { }, context }) => __awaiter(this, void 0, void 0, function* () {
         yield task.call(context);
     })
 };
+let newFixture = (homeTeam, awayTeam, status = 'FINISHED') => { return { homeTeam, awayTeam, status }; };
+let ars_che_td = newFixture('Arsenal', 'Chelsea');
+let liv_sou_td = newFixture('Liverpool', 'Southampton');
+let eve_bur_yd = newFixture('Everton', 'Burnley');
+let bou_wat_tm = newFixture('Bournemouth', 'Watford');
 let apiClientStub = {
-    getTomorrowsFixtures: () => { return Promise.resolve([1]); },
-    getYesterdaysFixtures: () => { return Promise.resolve([2]); },
-    getTodaysFixtures: () => { return Promise.resolve([3]); }
+    getTomorrowsFixtures: () => { return Promise.resolve({ data: { fixtures: [bou_wat_tm] } }); },
+    getYesterdaysFixtures: () => { return Promise.resolve({ data: { fixtures: [eve_bur_yd] } }); },
+    getTodaysFixtures: () => { return Promise.resolve({ data: { fixtures: [ars_che_td, liv_sou_td] } }); },
+};
+let fixtureConverterStub = {
+    map: (data) => { return data; }
 };
 let fixturesUpdaterStub = {
-    updateFixtures: (fixtures) => { return Promise.resolve(fixtures); }
+    updateGameDetails: (fixtures) => { return Promise.resolve(fixtures); }
 };
-let finishedFixturesProcessorStub = {
-    processFixtures: (fixtures) => { return Promise.resolve(fixtures); }
+let eventMediatorStub = {
+    publish(event, ...args) { }
 };
 let fixturesScheduler;
 describe.only('ApiFootballData: Fixtures scheduler', () => {
     beforeEach(() => {
-        fixturesScheduler = new fixtures_scheduler_1.FixturesScheduler(taskRunnerStub, apiClientStub, fixturesUpdaterStub, finishedFixturesProcessorStub);
+        fixturesScheduler = new fixtures_scheduler_1.FixturesScheduler(taskRunnerStub, apiClientStub, fixtureConverterStub, fixturesUpdaterStub, eventMediatorStub);
     });
-    xit('should set polling true/false when started/stopped respectively', (done) => {
+    it('should set polling true/false when started/stopped respectively', (done) => {
         fixturesScheduler.start();
         expect(fixturesScheduler.IsPolling).to.be.true;
         fixturesScheduler.stop();
@@ -44,7 +52,7 @@ describe.only('ApiFootballData: Fixtures scheduler', () => {
             done();
         });
     });
-    xit('should run again after polling interval', (done) => {
+    it('should run again after polling interval', (done) => {
         let clock = sinon.useFakeTimers();
         let spy = sinon.spy(fixturesScheduler, 'onTaskExecuted');
         let count = 0;
@@ -61,9 +69,9 @@ describe.only('ApiFootballData: Fixtures scheduler', () => {
         });
         clock.restore();
     });
-    it('should call processFixtures', (done) => {
+    it('should call publish process:predictions', (done) => {
         let clock = sinon.useFakeTimers();
-        let spy = sinon.spy(fixturesScheduler, 'processFixtures');
+        let spy = sinon.spy(eventMediatorStub, 'publish');
         fixturesScheduler.start();
         fixturesScheduler.on('task:executed', () => {
             fixturesScheduler.stop();
@@ -72,6 +80,7 @@ describe.only('ApiFootballData: Fixtures scheduler', () => {
             expect(spy).to.have.been.called;
             done();
         });
+        //todo: tohave been called with first arg, second arg
         clock.restore();
     });
 });

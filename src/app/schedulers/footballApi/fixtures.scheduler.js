@@ -10,17 +10,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = require("events");
 let Moment = require('moment');
-const taskRunner_1 = require("../../taskRunner");
-const apiClient_1 = require("../../../../thirdParty/footballApi/apiClient");
-const fixtures_updater_1 = require("../processors/fixtures.updater");
-const finishedFixtures_processor_1 = require("../processors/finishedFixtures.processor");
+const taskRunner_1 = require("../taskRunner");
+const apiClient_1 = require("../../../thirdParty/footballApi/apiClient");
+const eventMediator_1 = require("../../../common/eventMediator");
+const fixture_converter_1 = require("../../../db/converters/fixture.converter");
+const fixture_model_1 = require("../../../db/models/fixture.model");
+const fixtures_updater_1 = require("./fixtures.updater");
 class FixturesScheduler extends events_1.EventEmitter {
-    constructor(taskRunner, apiClient, fixturesUpdater, finishedFixturesUpdater) {
+    constructor(taskRunner, apiClient, fixtureConverter, fixturesUpdater, eventMedidatior) {
         super();
         this.taskRunner = taskRunner;
         this.apiClient = apiClient;
+        this.fixtureConverter = fixtureConverter;
         this.fixturesUpdater = fixturesUpdater;
-        this.finishedFixturesUpdater = finishedFixturesUpdater;
+        this.eventMedidatior = eventMedidatior;
         this._nextUpdate = 0;
         this._previousUpdate = 0;
         this._polling = false;
@@ -33,16 +36,20 @@ class FixturesScheduler extends events_1.EventEmitter {
                     task: () => __awaiter(this, void 0, void 0, function* () {
                         let fixtures = [];
                         if (this._nextUpdate > (6 * 60 * 60 * 1000)) {
-                            let tommorowsFixtures = yield this.apiClient.getTomorrowsFixtures();
-                            let yesterdaysFixtures = yield this.apiClient.getYesterdaysFixtures();
+                            let tommorowsFixturesRes = yield this.apiClient.getTomorrowsFixtures();
+                            let tommorowsFixtures = this.fixtureConverter.map(tommorowsFixturesRes.data.fixtures);
+                            let yesterdaysFixturesRes = yield this.apiClient.getYesterdaysFixtures();
+                            let yesterdaysFixtures = this.fixtureConverter.map(yesterdaysFixturesRes.data.fixtures);
                             fixtures = [].concat(...[tommorowsFixtures, yesterdaysFixtures]);
                         }
-                        let todaysFixtures = yield this.apiClient.getTodaysFixtures();
+                        let todaysFixturesRes = yield this.apiClient.getTodaysFixtures();
+                        let todaysFixtures = this.fixtureConverter.map(todaysFixturesRes.data.fixtures);
                         fixtures = fixtures.concat(todaysFixtures);
-                        let changedDbFixtures = yield this.fixturesUpdater.updateFixtures(fixtures);
+                        let changedDbFixtures = yield this.fixturesUpdater.updateGameDetails(fixtures);
                         this._previousUpdate = this._nextUpdate;
                         this._nextUpdate = this.calculateNextUpdate(fixtures);
-                        this.processFixtures(changedDbFixtures);
+                        let finishedFixtures = [].filter.call(changedDbFixtures, n => n.status == fixture_model_1.FixtureStatus.FINISHED);
+                        this.eventMedidatior.publish('process:predictions', finishedFixtures);
                         this.onTaskExecuted();
                     })
                 });
@@ -60,20 +67,9 @@ class FixturesScheduler extends events_1.EventEmitter {
         this.calculateNextUpdate = (fixtures) => {
             return 10 * 60 * 60 * 1000;
         };
-        this.processFixtures = (changedDbFixtures) => {
-            new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    console.log('*** Executing task 123 ***');
-                    let res = Math.floor(Math.random() * 2);
-                    resolve(res);
-                }, 2000);
-            });
-        };
-        this.processFixtures = this.processFixtures.bind(this);
-        this.on('process:fixtures', this.processFixtures);
     }
     static getInstance(provider) {
-        return new FixturesScheduler(new taskRunner_1.TaskRunner(), apiClient_1.FootballApiClient.getInstance(provider), fixtures_updater_1.FixturesUpdater.getInstance(provider), finishedFixtures_processor_1.FinishedFixturesProcessor.getInstance());
+        return new FixturesScheduler(new taskRunner_1.TaskRunner(), apiClient_1.FootballApiClient.getInstance(provider), fixture_converter_1.FixtureConverter.getInstance(provider), fixtures_updater_1.FixturesUpdater.getInstance(provider), eventMediator_1.EventMediator.getInstance());
     }
     get IsPolling() {
         return this._polling;

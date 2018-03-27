@@ -1,5 +1,5 @@
-import { ISeasonRepository, SeasonRepository }  from '../../../../db/repositories/season.repo'
-import { FootballApiProvider as ApiProvider } from '../../../../common/footballApiProvider';
+import { ISeasonRepository, SeasonRepository }  from '../../../db/repositories/season.repo'
+import { FootballApiProvider as ApiProvider } from '../../../common/footballApiProvider';
 
 export interface ISeasonUpdater {
   updateCurrentMatchRound(seasons: any[]);

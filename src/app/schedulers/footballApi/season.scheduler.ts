@@ -1,17 +1,21 @@
 import { EventEmitter } from 'events';
-import { IFootballApiScheduler } from '../../footballApi';
-import { ITaskRunner, TaskRunner } from '../../taskRunner';
-import { IFootballApiClient, FootballApiClient as ApiClient } from '../../../../thirdParty/footballApi/apiClient';
-import { FootballApiProvider as ApiProvider } from '../../../../common/footballApiProvider';
-import { IEventEmitter } from '../../../../common/eventEmitter';
-import { ISeasonUpdater, SeasonUpdater } from '../processors/season.updater';
+import { IScheduler } from '../../schedulers';
+import { ITaskRunner, TaskRunner } from '../taskRunner';
+import { IFootballApiClient, FootballApiClient as ApiClient } from '../../../thirdParty/footballApi/apiClient';
+import { FootballApiProvider as ApiProvider } from '../../../common/footballApiProvider';
+import { IEventEmitter } from '../../../common/eventEmitter';
+import { ISeasonUpdater, SeasonUpdater } from './season.updater';
+import { IEventMediator, EventMediator } from '../../../common/eventMediator';
+import { ISeasonConverter, SeasonConverter } from '../../../db/converters/season.converter';
 
-export class SeasonScheduler extends EventEmitter implements IFootballApiScheduler {
+export class SeasonScheduler extends EventEmitter implements IScheduler {
   static getInstance(provider: ApiProvider) {
     return new SeasonScheduler(
       new TaskRunner(), 
       ApiClient.getInstance(provider),
-      SeasonUpdater.getInstance(provider)
+      SeasonConverter.getInstance(provider),
+      SeasonUpdater.getInstance(provider),
+      EventMediator.getInstance()
     );
   }
   private POLLING_INTERVAL = 24 * 60 * 60 * 1000;
@@ -21,7 +25,9 @@ export class SeasonScheduler extends EventEmitter implements IFootballApiSchedul
   constructor(
     private taskRunner: ITaskRunner, 
     private apiClient: IFootballApiClient, 
-    private seasonUpdater: ISeasonUpdater) {
+    private seasonConverter: ISeasonConverter,
+    private seasonUpdater: ISeasonUpdater,
+    private eventMediator: IEventMediator) {
       super();
   }
 

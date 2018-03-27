@@ -5,7 +5,7 @@ chai.use(sinonChai);
 const expect = chai.expect;
 import { Observable } from 'rxjs';
 
-import { SeasonScheduler } from '../../src/app/schedulers/footballApi/apiFootballData/season.scheduler';
+import { SeasonScheduler } from '../../src/app/schedulers/footballApi/season.scheduler';
 
 let taskRunnerStub:any = {
   run: async ({whenToExecute, task = () => {}, context}: any) => {
@@ -15,14 +15,19 @@ let taskRunnerStub:any = {
 let apiClientStub:any = {
   getCompetitions: () => { return Promise.resolve() }
 }
+let seasonConverterStub:any = {
+  map: (data) => { return data }
+}
 let seasonUpdaterStub:any = {
   updateCurrentMatchRound: () => { return Promise.resolve() }
 }
+let eventMediatorStub:any = sinon.stub();
+
 let seasonScheduler: any;
 
 describe('ApiFootballData: Season scheduler', () => {   
   beforeEach(() => {
-    seasonScheduler = new SeasonScheduler(taskRunnerStub, apiClientStub, seasonUpdaterStub);
+    seasonScheduler = new SeasonScheduler(taskRunnerStub, apiClientStub, seasonConverterStub, seasonUpdaterStub, eventMediatorStub);
   }) 
   describe('start', () => {
     const POLLING_INTERVAL = 24 * 60 * 60 * 1000;

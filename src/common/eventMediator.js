@@ -2,6 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = require("events");
 class EventMediator {
+    static getInstance() {
+        if (EventMediator.classInstance == null) {
+            EventMediator.classInstance = new EventMediator();
+        }
+        return EventMediator.classInstance;
+    }
     constructor() {
         this.emitter = new events_1.EventEmitter();
     }

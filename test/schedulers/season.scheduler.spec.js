@@ -13,7 +13,7 @@ const chai = require("chai");
 const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 const expect = chai.expect;
-const season_scheduler_1 = require("../../src/app/schedulers/footballApi/apiFootballData/season.scheduler");
+const season_scheduler_1 = require("../../src/app/schedulers/footballApi/season.scheduler");
 let taskRunnerStub = {
     run: ({ whenToExecute, task = () => { }, context }) => __awaiter(this, void 0, void 0, function* () {
         yield task.call(context);
@@ -22,13 +22,17 @@ let taskRunnerStub = {
 let apiClientStub = {
     getCompetitions: () => { return Promise.resolve(); }
 };
+let seasonConverterStub = {
+    map: (data) => { return data; }
+};
 let seasonUpdaterStub = {
     updateCurrentMatchRound: () => { return Promise.resolve(); }
 };
+let eventMediatorStub = sinon.stub();
 let seasonScheduler;
-describe('ApiFootballData: Season scheduler', () => {
+describe.only('ApiFootballData: Season scheduler', () => {
     beforeEach(() => {
-        seasonScheduler = new season_scheduler_1.SeasonScheduler(taskRunnerStub, apiClientStub, seasonUpdaterStub);
+        seasonScheduler = new season_scheduler_1.SeasonScheduler(taskRunnerStub, apiClientStub, seasonConverterStub, seasonUpdaterStub, eventMediatorStub);
     });
     describe('start', () => {
         const POLLING_INTERVAL = 24 * 60 * 60 * 1000;

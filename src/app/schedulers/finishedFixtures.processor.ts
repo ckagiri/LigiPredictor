@@ -1,5 +1,5 @@
 export interface IFinishedFixturesProcessor {
-  processFixtures(fixtures: any[])
+  processPredictions(fixtures: any[])
 }
 
 export class FinishedFixturesProcessor implements IFinishedFixturesProcessor {
@@ -7,7 +7,7 @@ export class FinishedFixturesProcessor implements IFinishedFixturesProcessor {
     return new FinishedFixturesProcessor()
   }
 
-  processFixtures(fixtures: any[]) {
+  processPredictions(fixtures: any[]) {
     throw new Error("Method not implemented.");
   }
 }

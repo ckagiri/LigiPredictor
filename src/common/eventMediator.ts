@@ -9,7 +9,16 @@ export interface IEventMediator {
 }
 
 export class EventMediator implements IEventMediator {
+  private static classInstance: EventMediator;
+
   emitter: EventEmitter;
+
+  static getInstance() {
+    if (EventMediator.classInstance == null) {
+      EventMediator.classInstance = new EventMediator();
+    }
+    return EventMediator.classInstance;
+  }
 
 	constructor() {
     this.emitter = new EventEmitter();

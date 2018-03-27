@@ -20,4 +20,8 @@ export class FixtureConverter implements IFixtureConverter {
       slug: data.slug
     })
   }
+
+  map(data: any[]): any[] {
+    return data;
+  }
 }

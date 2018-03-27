@@ -9,15 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = require("events");
-const taskRunner_1 = require("../../taskRunner");
-const apiClient_1 = require("../../../../thirdParty/footballApi/apiClient");
-const season_updater_1 = require("../processors/season.updater");
+const taskRunner_1 = require("../taskRunner");
+const apiClient_1 = require("../../../thirdParty/footballApi/apiClient");
+const season_updater_1 = require("./season.updater");
+const eventMediator_1 = require("../../../common/eventMediator");
+const season_converter_1 = require("../../../db/converters/season.converter");
 class SeasonScheduler extends events_1.EventEmitter {
-    constructor(taskRunner, apiClient, seasonUpdater) {
+    constructor(taskRunner, apiClient, seasonConverter, seasonUpdater, eventMediator) {
         super();
         this.taskRunner = taskRunner;
         this.apiClient = apiClient;
+        this.seasonConverter = seasonConverter;
         this.seasonUpdater = seasonUpdater;
+        this.eventMediator = eventMediator;
         this.POLLING_INTERVAL = 24 * 60 * 60 * 1000;
         this._pollingInterval = 0;
         this._polling = false;
@@ -47,7 +51,7 @@ class SeasonScheduler extends events_1.EventEmitter {
         };
     }
     static getInstance(provider) {
-        return new SeasonScheduler(new taskRunner_1.TaskRunner(), apiClient_1.FootballApiClient.getInstance(provider), season_updater_1.SeasonUpdater.getInstance(provider));
+        return new SeasonScheduler(new taskRunner_1.TaskRunner(), apiClient_1.FootballApiClient.getInstance(provider), season_converter_1.SeasonConverter.getInstance(provider), season_updater_1.SeasonUpdater.getInstance(provider), eventMediator_1.EventMediator.getInstance());
     }
     get IsPolling() {
         return this._polling;
