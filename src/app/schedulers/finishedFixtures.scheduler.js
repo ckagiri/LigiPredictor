@@ -26,6 +26,7 @@ class FinishedFixturesScheduler extends events_1.EventEmitter {
                     context: this,
                     task: () => __awaiter(this, void 0, void 0, function* () {
                         yield Promise.resolve();
+                        this.emit('task:executed');
                     })
                 });
             }
@@ -37,13 +38,17 @@ class FinishedFixturesScheduler extends events_1.EventEmitter {
             });
         });
         this.processPredictions = (finishedFixtures) => __awaiter(this, void 0, void 0, function* () {
-            yield this.finishedFixturesProcessor.processPredictions(finishedFixtures);
-            this.emit('predictions:processed');
+            yield Promise.resolve().then(() => {
+                if (Array.isArray(finishedFixtures) && finishedFixtures.length) {
+                    this.finishedFixturesProcessor.processPredictions(finishedFixtures);
+                }
+            });
+            this.eventMediator.publish('predictions:processed');
         });
         this.eventMediator.addListener('process:predictions', this.processPredictions);
     }
     get IsRunning() {
-        return this._isProcessing;
+        return this._isRunning;
     }
 }
 exports.FinishedFixturesScheduler = FinishedFixturesScheduler;

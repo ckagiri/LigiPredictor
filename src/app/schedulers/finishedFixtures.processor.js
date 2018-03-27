@@ -5,7 +5,6 @@ class FinishedFixturesProcessor {
         return new FinishedFixturesProcessor();
     }
     processPredictions(fixtures) {
-        throw new Error("Method not implemented.");
     }
 }
 exports.FinishedFixturesProcessor = FinishedFixturesProcessor;

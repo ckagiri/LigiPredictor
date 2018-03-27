@@ -18,7 +18,7 @@ export class FinishedFixturesScheduler extends EventEmitter implements ISchedule
   }
 
   get IsRunning() {
-    return this._isProcessing;
+    return this._isRunning;
   }
 
   start = async () => {
@@ -29,6 +29,7 @@ export class FinishedFixturesScheduler extends EventEmitter implements ISchedule
         context: this,
         task: async () => {
           await Promise.resolve();
+          this.emit('task:executed')               
         }
       })
     }
@@ -36,13 +37,17 @@ export class FinishedFixturesScheduler extends EventEmitter implements ISchedule
 
   stop = async () => {
     await Promise.resolve().then(() => {
-      this._isRunning = false
+      this._isRunning = false      
       this.emit('stopped')
     })
   }
 
   processPredictions = async (finishedFixtures: any[]) => {
-    await this.finishedFixturesProcessor.processPredictions(finishedFixtures)
-    this.emit('predictions:processed')
+    await Promise.resolve().then(() => {
+      if(Array.isArray(finishedFixtures) && finishedFixtures.length) {
+        this.finishedFixturesProcessor.processPredictions(finishedFixtures)
+      }
+    });
+    this.eventMediator.publish('predictions:processed')
   }
 }

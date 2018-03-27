@@ -39,7 +39,7 @@ let eventMediatorStub = {
     publish(event, ...args) { }
 };
 let fixturesScheduler;
-describe.only('ApiFootballData: Fixtures scheduler', () => {
+describe('ApiFootballData: Fixtures scheduler', () => {
     beforeEach(() => {
         fixturesScheduler = new fixtures_scheduler_1.FixturesScheduler(taskRunnerStub, apiClientStub, fixtureConverterStub, fixturesUpdaterStub, eventMediatorStub);
     });

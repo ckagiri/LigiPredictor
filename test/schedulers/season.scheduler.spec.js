@@ -30,7 +30,7 @@ let seasonUpdaterStub = {
 };
 let eventMediatorStub = sinon.stub();
 let seasonScheduler;
-describe.only('ApiFootballData: Season scheduler', () => {
+describe('ApiFootballData: Season scheduler', () => {
     beforeEach(() => {
         seasonScheduler = new season_scheduler_1.SeasonScheduler(taskRunnerStub, apiClientStub, seasonConverterStub, seasonUpdaterStub, eventMediatorStub);
     });

@@ -8,6 +8,5 @@ export class FinishedFixturesProcessor implements IFinishedFixturesProcessor {
   }
 
   processPredictions(fixtures: any[]) {
-    throw new Error("Method not implemented.");
   }
 }
