@@ -15,14 +15,20 @@ let taskRunnerStub:any = {
   }
 }
 let fixturesProcessorStub: any = {
-  processPredictions: (fixtures: any[]) => {  }
+  processPredictions: (fixtures: any[]) => {  
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      }, 5)});
+  }
 }
+let eventMediator: IEventMediator = EventMediator.getInstance();
 let finishedFixturesScheduler: any;
+
 describe('ApiFootballData: FinishedFixtures scheduler', () => {
   beforeEach(() => {
-    let eventMediator: IEventMediator = EventMediator.getInstance();
     eventMediator.removeAllListeners(); 
-    finishedFixturesScheduler = new FinishedFixturesScheduler(taskRunnerStub, fixturesProcessorStub, EventMediator.getInstance());
+    finishedFixturesScheduler = new FinishedFixturesScheduler(taskRunnerStub, fixturesProcessorStub, eventMediator);
   })
   it('should set polling true/false when started/stopped respectively', (done) => {
     finishedFixturesScheduler.start();
@@ -33,7 +39,7 @@ describe('ApiFootballData: FinishedFixtures scheduler', () => {
       done();
     });
   })
-  describe('finished fixtures updated', () => {
+  describe('on finished fixtures updated', () => {
     let newFixture = (homeTeam, awayTeam, status = 'FINISHED') => { return {homeTeam, awayTeam, status}}
     let ars_che_td = newFixture('Arsenal', 'Chelsea'); 
     let liv_sou_td = newFixture('Liverpool', 'Southampton');
@@ -51,7 +57,7 @@ describe('ApiFootballData: FinishedFixtures scheduler', () => {
     let fixturesScheduler: any;
     
     beforeEach(() => {
-      fixturesScheduler = new FixturesScheduler(taskRunnerStub, apiClientStub, fixtureConverterStub, fixturesUpdaterStub, EventMediator.getInstance());    
+      fixturesScheduler = new FixturesScheduler(taskRunnerStub, apiClientStub, fixtureConverterStub, fixturesUpdaterStub, eventMediator);    
     })
 
     it('should processPredictions', (done) => {
@@ -65,7 +71,7 @@ describe('ApiFootballData: FinishedFixtures scheduler', () => {
       finishedFixturesScheduler.on('task:executed', () => {
         finishedFixturesScheduler.stop();
       })
-      EventMediator.getInstance().addListener('predictions:processed', () => {
+      eventMediator.addListener('predictions:processed', () => {
         expect(spy).to.have.been.called;   
         done();  
       })

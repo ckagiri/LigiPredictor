@@ -38,11 +38,9 @@ class FinishedFixturesScheduler extends events_1.EventEmitter {
             });
         });
         this.processPredictions = (finishedFixtures) => __awaiter(this, void 0, void 0, function* () {
-            yield Promise.resolve().then(() => {
-                if (Array.isArray(finishedFixtures) && finishedFixtures.length) {
-                    this.finishedFixturesProcessor.processPredictions(finishedFixtures);
-                }
-            });
+            if (Array.isArray(finishedFixtures) && finishedFixtures.length) {
+                yield this.finishedFixturesProcessor.processPredictions(finishedFixtures);
+            }
             this.eventMediator.publish('predictions:processed');
         });
         this.eventMediator.addListener('process:predictions', this.processPredictions);

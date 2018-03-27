@@ -22,14 +22,20 @@ let taskRunnerStub = {
     })
 };
 let fixturesProcessorStub = {
-    processPredictions: (fixtures) => { }
+    processPredictions: (fixtures) => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve();
+            }, 5);
+        });
+    }
 };
+let eventMediator = eventMediator_1.EventMediator.getInstance();
 let finishedFixturesScheduler;
 describe('ApiFootballData: FinishedFixtures scheduler', () => {
     beforeEach(() => {
-        let eventMediator = eventMediator_1.EventMediator.getInstance();
         eventMediator.removeAllListeners();
-        finishedFixturesScheduler = new finishedFixtures_scheduler_1.FinishedFixturesScheduler(taskRunnerStub, fixturesProcessorStub, eventMediator_1.EventMediator.getInstance());
+        finishedFixturesScheduler = new finishedFixtures_scheduler_1.FinishedFixturesScheduler(taskRunnerStub, fixturesProcessorStub, eventMediator);
     });
     it('should set polling true/false when started/stopped respectively', (done) => {
         finishedFixturesScheduler.start();
@@ -40,7 +46,7 @@ describe('ApiFootballData: FinishedFixtures scheduler', () => {
             done();
         });
     });
-    describe('finished fixtures updated', () => {
+    describe('on finished fixtures updated', () => {
         let newFixture = (homeTeam, awayTeam, status = 'FINISHED') => { return { homeTeam, awayTeam, status }; };
         let ars_che_td = newFixture('Arsenal', 'Chelsea');
         let liv_sou_td = newFixture('Liverpool', 'Southampton');
@@ -57,7 +63,7 @@ describe('ApiFootballData: FinishedFixtures scheduler', () => {
         };
         let fixturesScheduler;
         beforeEach(() => {
-            fixturesScheduler = new fixtures_scheduler_1.FixturesScheduler(taskRunnerStub, apiClientStub, fixtureConverterStub, fixturesUpdaterStub, eventMediator_1.EventMediator.getInstance());
+            fixturesScheduler = new fixtures_scheduler_1.FixturesScheduler(taskRunnerStub, apiClientStub, fixtureConverterStub, fixturesUpdaterStub, eventMediator);
         });
         it('should processPredictions', (done) => {
             let clock = sinon.useFakeTimers();
@@ -70,7 +76,7 @@ describe('ApiFootballData: FinishedFixtures scheduler', () => {
             finishedFixturesScheduler.on('task:executed', () => {
                 finishedFixturesScheduler.stop();
             });
-            eventMediator_1.EventMediator.getInstance().addListener('predictions:processed', () => {
+            eventMediator.addListener('predictions:processed', () => {
                 expect(spy).to.have.been.called;
                 done();
             });

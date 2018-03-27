@@ -43,11 +43,9 @@ export class FinishedFixturesScheduler extends EventEmitter implements ISchedule
   }
 
   processPredictions = async (finishedFixtures: any[]) => {
-    await Promise.resolve().then(() => {
-      if(Array.isArray(finishedFixtures) && finishedFixtures.length) {
-        this.finishedFixturesProcessor.processPredictions(finishedFixtures)
-      }
-    });
+    if(Array.isArray(finishedFixtures) && finishedFixtures.length) {
+      await this.finishedFixturesProcessor.processPredictions(finishedFixtures)
+    }
     this.eventMediator.publish('predictions:processed')
   }
 }
