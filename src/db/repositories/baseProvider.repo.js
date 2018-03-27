@@ -7,6 +7,9 @@ class BaseProviderRepository {
         this._baseRepo = baseRepo || new base_repo_1.BaseRepository(schemaModel);
         this._converter = converter;
     }
+    get Converter() {
+        return this._converter;
+    }
     save$(obj) {
         return this._converter.from(obj)
             .flatMap(entity => {

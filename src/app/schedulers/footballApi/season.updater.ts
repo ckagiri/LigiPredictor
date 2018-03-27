@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { ISeasonRepository, SeasonRepository }  from '../../../db/repositories/season.repo'
 import { FootballApiProvider as ApiProvider } from '../../../common/footballApiProvider';
 
@@ -14,12 +15,28 @@ export class SeasonUpdater implements ISeasonUpdater {
   }
 
   updateCurrentMatchRound(seasons: any[]) {
-    let map = new Map<string|number, any>();
+    let externalIdToSeasonMap = new Map<string|number, any>();
     let externalIds: Array<string|number> = [];
     for (let season of seasons) {
-      map[season.id] = season;
+      externalIdToSeasonMap[season.id] = season;
       externalIds.push(season.id);      
     }
-    return this.seasonRepo.getByExternalIds$(externalIds).toPromise();
+    return this.seasonRepo.getByExternalIds$(externalIds)
+      .flatMap((dbSeasons) => {
+        return Observable.from(dbSeasons);
+      })
+      .flatMap((dbSeason) => {
+        let provider = this.seasonRepo.Converter.provider;
+        let extId = dbSeason['externalReference'][provider]['id'];
+        let extCurrentRound = externalIdToSeasonMap[extId].currentMatchRound;
+        
+        if (dbSeason.currentMatchRound !== extCurrentRound) {          
+          let id = dbSeason['_id'];
+          let update = { $set: {currentMatchRound: extCurrentRound} };
+          return this.seasonRepo.findByIdAndUpdate$(id, update);
+        } else {          
+          return Observable.of(dbSeason);
+        }
+      }).toPromise();
   }
 }

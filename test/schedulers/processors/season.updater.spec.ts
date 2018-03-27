@@ -9,41 +9,73 @@ import { SeasonUpdater } from '../../../src/app/schedulers/footballApi/season.up
 import { FootballApiProvider as ApiProvider } from '../../../src/common/footballApiProvider'
 
 let provider = ApiProvider.API_FOOTBALL_DATA;
-let newSeason = () => { 
+let newDbSeason = () => { 
   return { 
+    _id: 'a',
     currentMatchRound: 1,
-    id: 1 
+    externalReference: {
+      [provider]: { id: 1
+      }
+    }
   }
 }
-let dbSeason = newSeason();
-let apiSeason = newSeason();
-apiSeason.currentMatchRound = 2;
+let newApiSeason = () => { 
+  return { 
+    id: 1,     
+    currentMatchRound: 2,
+  }
+}
+let dbSeason = newDbSeason();
+let apiSeason = newApiSeason();
 let dbSeasons = [dbSeason]
 let apiSeasons = [apiSeason]
-let seasonRepoStub:any = {
-  provider,
-  findByIdAndUpdate$: () => {},
-  getByExternalIds$: () => {
-    return Observable.of(apiSeasons);
-  }
-}
-let seasonUpdater = new SeasonUpdater(seasonRepoStub);
+
+let seasonConverterStub: any;
+let seasonRepoStub: any;
+let seasonUpdater: any;
 
 describe.only('SeasonUpdater', () => {  
+  beforeEach(() => {
+    seasonConverterStub = {
+      provider,
+      from: () => {}
+    }
+    seasonRepoStub = {
+      Converter: seasonConverterStub,
+      findByIdAndUpdate$: () => { return Observable.of(dbSeason) },
+      getByExternalIds$: () => {
+        return Observable.of(dbSeasons);
+      }
+    }
+    seasonUpdater = new SeasonUpdater(seasonRepoStub);
+  })
+
   describe('updateCurrentMatchRound', () => {    
     it('should get seasons by externalId', async () => {
       let spy = sinon.spy(seasonRepoStub, 'getByExternalIds$')
+
       await seasonUpdater.updateCurrentMatchRound(apiSeasons);
       let externalIds = [].map.call(apiSeasons, n => n.id);     
       expect(spy).to.have.been.calledOnce
-        .and.to.have.been.calledWith(sinon.match.array)
         .and.to.have.been.calledWith(sinon.match(externalIds));
     })
-    it('should update currentRound of season if different from stored', () => {
+    it('should update currentRound of season if different from stored', async () => {
+      let spy = sinon.spy(seasonRepoStub, 'findByIdAndUpdate$');      
+  
+      let res = await seasonUpdater.updateCurrentMatchRound(apiSeasons);
 
-    })
-    it('should not update currentRound if similar', () => {
+      expect(spy).to.have.been.calledOnce;
       
+      expect(spy).to.have.been.calledWith(sinon.match(dbSeason._id))      
+    })
+    it('should not update currentRound if similar', async () => {
+      let apiSeason = newApiSeason();
+      apiSeason.currentMatchRound = 1;
+      let spy = sinon.spy(seasonRepoStub, 'findByIdAndUpdate$');      
+
+      await seasonUpdater.updateCurrentMatchRound([apiSeason]);
+
+      expect(spy).not.to.have.been.called;
     })
   })
 })

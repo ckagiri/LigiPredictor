@@ -17,39 +17,65 @@ const rxjs_1 = require("rxjs");
 const season_updater_1 = require("../../../src/app/schedulers/footballApi/season.updater");
 const footballApiProvider_1 = require("../../../src/common/footballApiProvider");
 let provider = footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA;
-let newSeason = () => {
+let newDbSeason = () => {
     return {
+        _id: 'a',
         currentMatchRound: 1,
-        id: 1
+        externalReference: {
+            [provider]: { id: 1
+            }
+        }
     };
 };
-let dbSeason = newSeason();
-let apiSeason = newSeason();
-apiSeason.currentMatchRound = 2;
+let newApiSeason = () => {
+    return {
+        id: 1,
+        currentMatchRound: 2,
+    };
+};
+let dbSeason = newDbSeason();
+let apiSeason = newApiSeason();
 let dbSeasons = [dbSeason];
 let apiSeasons = [apiSeason];
-let seasonRepoStub = {
-    provider,
-    findByIdAndUpdate$: () => { },
-    getByExternalIds$: () => {
-        return rxjs_1.Observable.of(apiSeasons);
-    }
-};
-let seasonUpdater = new season_updater_1.SeasonUpdater(seasonRepoStub);
+let seasonConverterStub;
+let seasonRepoStub;
+let seasonUpdater;
 describe.only('SeasonUpdater', () => {
+    beforeEach(() => {
+        seasonConverterStub = {
+            provider,
+            from: () => { }
+        };
+        seasonRepoStub = {
+            Converter: seasonConverterStub,
+            findByIdAndUpdate$: () => { return rxjs_1.Observable.of(dbSeason); },
+            getByExternalIds$: () => {
+                return rxjs_1.Observable.of(dbSeasons);
+            }
+        };
+        seasonUpdater = new season_updater_1.SeasonUpdater(seasonRepoStub);
+    });
     describe('updateCurrentMatchRound', () => {
         it('should get seasons by externalId', () => __awaiter(this, void 0, void 0, function* () {
             let spy = sinon.spy(seasonRepoStub, 'getByExternalIds$');
             yield seasonUpdater.updateCurrentMatchRound(apiSeasons);
             let externalIds = [].map.call(apiSeasons, n => n.id);
             expect(spy).to.have.been.calledOnce
-                .and.to.have.been.calledWith(sinon.match.array)
                 .and.to.have.been.calledWith(sinon.match(externalIds));
         }));
-        it('should update currentRound of season if different from stored', () => {
-        });
-        it('should not update currentRound if similar', () => {
-        });
+        it('should update currentRound of season if different from stored', () => __awaiter(this, void 0, void 0, function* () {
+            let spy = sinon.spy(seasonRepoStub, 'findByIdAndUpdate$');
+            let res = yield seasonUpdater.updateCurrentMatchRound(apiSeasons);
+            expect(spy).to.have.been.calledOnce;
+            expect(spy).to.have.been.calledWith(sinon.match(dbSeason._id));
+        }));
+        it('should not update currentRound if similar', () => __awaiter(this, void 0, void 0, function* () {
+            let apiSeason = newApiSeason();
+            apiSeason.currentMatchRound = 1;
+            let spy = sinon.spy(seasonRepoStub, 'findByIdAndUpdate$');
+            yield seasonUpdater.updateCurrentMatchRound([apiSeason]);
+            expect(spy).not.to.have.been.called;
+        }));
     });
 });
 //# sourceMappingURL=season.updater.spec.js.map

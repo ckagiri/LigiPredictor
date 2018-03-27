@@ -6,6 +6,7 @@ import { IEntity } from '../models/base.model';
 import { IConverter } from '../converters/converter';
 
 export interface IBaseProviderRepository<T extends IEntity> {
+  Converter: IConverter;
   save$(obj: IEntity): Observable<T>;
   findByExternalIdAndUpdate$(obj: IEntity): Observable<T>;
   findEachByExternalIdAndUpdate$(obj: IEntity[]): Observable<T[]>;
@@ -23,6 +24,10 @@ export class BaseProviderRepository<T extends IEntity> implements IBaseProviderR
   constructor(schemaModel: Model<Document>, converter: IConverter, baseRepo?: IBaseRepository<Document>) {
     this._baseRepo = baseRepo || new BaseRepository<Document>(schemaModel);
     this._converter = converter;
+  }
+
+  get Converter() {
+    return this._converter
   }
 
   save$(obj: IEntity): Observable<T> {
