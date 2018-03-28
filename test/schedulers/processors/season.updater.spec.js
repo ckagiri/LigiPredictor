@@ -40,14 +40,14 @@ let apiSeasons = [apiSeason];
 let seasonConverterStub;
 let seasonRepoStub;
 let seasonUpdater;
-describe.only('SeasonUpdater', () => {
+describe('SeasonUpdater', () => {
     beforeEach(() => {
         seasonConverterStub = {
             provider,
             from: () => { }
         };
         seasonRepoStub = {
-            Converter: seasonConverterStub,
+            Provider: provider,
             findByIdAndUpdate$: () => { return rxjs_1.Observable.of(dbSeason); },
             getByExternalIds$: () => {
                 return rxjs_1.Observable.of(dbSeasons);

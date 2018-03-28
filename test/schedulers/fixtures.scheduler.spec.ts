@@ -48,17 +48,16 @@ describe('ApiFootballData: Fixtures scheduler', () => {
 
   it('should run again after polling interval', (done) => {
     let clock = sinon.useFakeTimers();
-    let spy = sinon.spy(fixturesScheduler, 'onTaskExecuted');      
-    let count = 0;
+    let taskExecutionCount = 0;
     fixturesScheduler.start();  
     fixturesScheduler.on('task:executed', () => {
-      count += 1;
-      if(count == 2) {
+      taskExecutionCount += 1;
+      if(taskExecutionCount == 2) {
         fixturesScheduler.stop();
       }
     });
     fixturesScheduler.on('stopped', () => {
-      expect(spy).to.have.callCount(2);
+      expect(taskExecutionCount).to.equal(2);
       done();
     });
     clock.restore();  

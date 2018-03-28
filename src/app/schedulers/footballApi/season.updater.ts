@@ -26,7 +26,7 @@ export class SeasonUpdater implements ISeasonUpdater {
         return Observable.from(dbSeasons);
       })
       .flatMap((dbSeason) => {
-        let provider = this.seasonRepo.Converter.provider;
+        let provider = this.seasonRepo.Provider;
         let extId = dbSeason['externalReference'][provider]['id'];
         let extCurrentMatchRound = externalIdToSeasonMap[extId].currentMatchRound;
         

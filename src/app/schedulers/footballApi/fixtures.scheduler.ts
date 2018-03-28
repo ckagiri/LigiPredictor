@@ -72,7 +72,7 @@ export class FixturesScheduler extends EventEmitter implements IScheduler {
           this._nextUpdate = this.calculateNextUpdate(fixtures)
           let finishedFixtures = [].filter.call(changedDbFixtures, n => n.status == FixtureStatus.FINISHED);
           this.eventMedidatior.publish('process:predictions', finishedFixtures);
-          this.onTaskExecuted();
+          this.emit('task:executed')
         } 
       })
     }
@@ -83,10 +83,6 @@ export class FixturesScheduler extends EventEmitter implements IScheduler {
       this._polling = false
       this.emit('stopped')
     })
-  }
-
-  onTaskExecuted = () => {
-    this.emit('task:executed')
   }
 
   calculateNextUpdate = (fixtures: any[]) => {

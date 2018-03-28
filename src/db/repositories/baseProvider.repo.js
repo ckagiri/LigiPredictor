@@ -7,8 +7,8 @@ class BaseProviderRepository {
         this._baseRepo = baseRepo || new base_repo_1.BaseRepository(schemaModel);
         this._converter = converter;
     }
-    get Converter() {
-        return this._converter;
+    get Provider() {
+        return this._converter.provider;
     }
     save$(obj) {
         return this._converter.from(obj)

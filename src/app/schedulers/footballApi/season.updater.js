@@ -21,7 +21,7 @@ class SeasonUpdater {
             return rxjs_1.Observable.from(dbSeasons);
         })
             .flatMap((dbSeason) => {
-            let provider = this.seasonRepo.Converter.provider;
+            let provider = this.seasonRepo.Provider;
             let extId = dbSeason['externalReference'][provider]['id'];
             let extCurrentMatchRound = externalIdToSeasonMap[extId].currentMatchRound;
             if (dbSeason.currentMatchRound !== extCurrentMatchRound) {

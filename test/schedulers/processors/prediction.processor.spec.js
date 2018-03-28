@@ -1,8 +1,8 @@
 describe('Prediction Processor', () => {
     describe('getPredictions', () => {
-        it('should get selectable fixtures in gameRound', () => {
+        it('should get the selectable fixtures of gameRound', () => {
         });
-        it('should cache selectable fixtures in game round', () => {
+        it('should cache the selectable fixtures', () => {
         });
         it('should getOrCreate joker prediction', () => {
         });

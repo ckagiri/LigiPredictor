@@ -45,7 +45,8 @@ class FinishedFixturesScheduler extends events_1.EventEmitter {
         this.processPredictions = (finishedFixtures) => __awaiter(this, void 0, void 0, function* () {
             if (Array.isArray(finishedFixtures) && finishedFixtures.length) {
                 yield this.finishedFixturesProcessor.processPredictions(finishedFixtures);
-                //await leaderboardProcessor.processRankigs()
+                // await leaderboardUpdater.updateScores(finishedFixtures)
+                //await leaderboardUpdater.updateRankigs()
                 //await finishedFixturesProcessor.setToTrueAllPredictionsProcessed(fixtures)
             }
             this.eventMediator.publish('predictions:processed');

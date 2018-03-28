@@ -50,7 +50,7 @@ class FixturesScheduler extends events_1.EventEmitter {
                         this._nextUpdate = this.calculateNextUpdate(fixtures);
                         let finishedFixtures = [].filter.call(changedDbFixtures, n => n.status == fixture_model_1.FixtureStatus.FINISHED);
                         this.eventMedidatior.publish('process:predictions', finishedFixtures);
-                        this.onTaskExecuted();
+                        this.emit('task:executed');
                     })
                 });
             }
@@ -61,9 +61,6 @@ class FixturesScheduler extends events_1.EventEmitter {
                 this.emit('stopped');
             });
         });
-        this.onTaskExecuted = () => {
-            this.emit('task:executed');
-        };
         this.calculateNextUpdate = (fixtures) => {
             return 10 * 60 * 60 * 1000;
         };

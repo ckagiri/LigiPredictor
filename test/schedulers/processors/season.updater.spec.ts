@@ -34,14 +34,14 @@ let seasonConverterStub: any;
 let seasonRepoStub: any;
 let seasonUpdater: any;
 
-describe.only('SeasonUpdater', () => {  
+describe('SeasonUpdater', () => {  
   beforeEach(() => {
     seasonConverterStub = {
       provider,
       from: () => {}
     }
     seasonRepoStub = {
-      Converter: seasonConverterStub,
+      Provider: provider,
       findByIdAndUpdate$: () => { return Observable.of(dbSeason) },
       getByExternalIds$: () => {
         return Observable.of(dbSeasons);
