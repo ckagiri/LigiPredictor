@@ -23,10 +23,10 @@ class SeasonUpdater {
             .flatMap((dbSeason) => {
             let provider = this.seasonRepo.Converter.provider;
             let extId = dbSeason['externalReference'][provider]['id'];
-            let extCurrentRound = externalIdToSeasonMap[extId].currentMatchRound;
-            if (dbSeason.currentMatchRound !== extCurrentRound) {
+            let extCurrentMatchRound = externalIdToSeasonMap[extId].currentMatchRound;
+            if (dbSeason.currentMatchRound !== extCurrentMatchRound) {
                 let id = dbSeason['_id'];
-                let update = { $set: { currentMatchRound: extCurrentRound } };
+                let update = { $set: { currentMatchRound: extCurrentMatchRound } };
                 return this.seasonRepo.findByIdAndUpdate$(id, update);
             }
             else {

@@ -8,5 +8,7 @@ export class FinishedFixturesProcessor implements IFinishedFixturesProcessor {
   }
 
   processPredictions(fixtures: any[]) {
+ 
   }
 }
+

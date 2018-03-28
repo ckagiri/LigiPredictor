@@ -5,8 +5,8 @@ import { IFinishedFixturesProcessor, FinishedFixturesProcessor} from './finished
 import { IScheduler } from '../schedulers';
 
 export class FinishedFixturesScheduler extends EventEmitter implements IScheduler {
-  private _isProcessing = false;
-  private _isRunning = false;
+  private _processing = false;
+  private _running = false;
   private RUN_INTERVAL = 10 * 60 * 60 * 1000;
   constructor(
     private taskRunner: ITaskRunner,
@@ -18,17 +18,21 @@ export class FinishedFixturesScheduler extends EventEmitter implements ISchedule
   }
 
   get IsRunning() {
-    return this._isRunning;
+    return this._running;
+  }
+
+  get IsProcessing() {
+    return this._processing;
   }
 
   start = async () => {
-    this._isRunning = true;
-    while(this._isRunning) {
+    this._running = true;
+    while(this._running) {
       await this.taskRunner.run({
         whenToExecute: this.RUN_INTERVAL,
         context: this,
         task: async () => {
-          await Promise.resolve();
+          await Promise.resolve(); //processFinishedFixtures;
           this.emit('task:executed')               
         }
       })
@@ -37,14 +41,22 @@ export class FinishedFixturesScheduler extends EventEmitter implements ISchedule
 
   stop = async () => {
     await Promise.resolve().then(() => {
-      this._isRunning = false      
+      this._running = false      
       this.emit('stopped')
     })
   }
 
+  processFinishedFixtures = () => {
+    // if _processing return
+    // let fs = await fixtureRepo.findFinishedWithPendingPredictions$();
+    // await processPredictions(fs);
+  }
+
   processPredictions = async (finishedFixtures: any[]) => {
     if(Array.isArray(finishedFixtures) && finishedFixtures.length) {
-      await this.finishedFixturesProcessor.processPredictions(finishedFixtures)
+      await this.finishedFixturesProcessor.processPredictions(finishedFixtures);
+      //await leaderboardProcessor.processRankigs()
+      //await finishedFixturesProcessor.setToTrueAllPredictionsProcessed(fixtures)
     }
     this.eventMediator.publish('predictions:processed')
   }

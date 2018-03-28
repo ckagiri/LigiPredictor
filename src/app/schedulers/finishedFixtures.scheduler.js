@@ -15,17 +15,17 @@ class FinishedFixturesScheduler extends events_1.EventEmitter {
         this.taskRunner = taskRunner;
         this.finishedFixturesProcessor = finishedFixturesProcessor;
         this.eventMediator = eventMediator;
-        this._isProcessing = false;
-        this._isRunning = false;
+        this._processing = false;
+        this._running = false;
         this.RUN_INTERVAL = 10 * 60 * 60 * 1000;
         this.start = () => __awaiter(this, void 0, void 0, function* () {
-            this._isRunning = true;
-            while (this._isRunning) {
+            this._running = true;
+            while (this._running) {
                 yield this.taskRunner.run({
                     whenToExecute: this.RUN_INTERVAL,
                     context: this,
                     task: () => __awaiter(this, void 0, void 0, function* () {
-                        yield Promise.resolve();
+                        yield Promise.resolve(); //processFinishedFixtures;
                         this.emit('task:executed');
                     })
                 });
@@ -33,20 +33,30 @@ class FinishedFixturesScheduler extends events_1.EventEmitter {
         });
         this.stop = () => __awaiter(this, void 0, void 0, function* () {
             yield Promise.resolve().then(() => {
-                this._isRunning = false;
+                this._running = false;
                 this.emit('stopped');
             });
         });
+        this.processFinishedFixtures = () => {
+            // if _processing return
+            // let fs = await fixtureRepo.findFinishedWithPendingPredictions$();
+            // await processPredictions(fs);
+        };
         this.processPredictions = (finishedFixtures) => __awaiter(this, void 0, void 0, function* () {
             if (Array.isArray(finishedFixtures) && finishedFixtures.length) {
                 yield this.finishedFixturesProcessor.processPredictions(finishedFixtures);
+                //await leaderboardProcessor.processRankigs()
+                //await finishedFixturesProcessor.setToTrueAllPredictionsProcessed(fixtures)
             }
             this.eventMediator.publish('predictions:processed');
         });
         this.eventMediator.addListener('process:predictions', this.processPredictions);
     }
     get IsRunning() {
-        return this._isRunning;
+        return this._running;
+    }
+    get IsProcessing() {
+        return this._processing;
     }
 }
 exports.FinishedFixturesScheduler = FinishedFixturesScheduler;
