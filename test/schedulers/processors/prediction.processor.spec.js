@@ -61,7 +61,7 @@ let predictionCalculatorStub = {
     calculateScore: () => { return { points: 9 }; }
 };
 let predictionProcessor;
-describe.only('Prediction Processor', () => {
+describe('Prediction Processor', () => {
     describe('getPredictions', () => __awaiter(this, void 0, void 0, function* () {
         beforeEach(() => {
             predictionProcessor = new prediction_processor_1.PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub, predictionCalculatorStub);

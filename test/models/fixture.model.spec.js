@@ -27,6 +27,12 @@ describe('Fixture', () => {
                     done();
                 });
             });
+            it('should require gameRound', (done) => {
+                s.validate((err) => {
+                    chai_1.expect(err.errors.gameRound).to.exist;
+                    done();
+                });
+            });
             it('should require a home team', (done) => {
                 s.validate((err) => {
                     chai_1.expect(err.errors['homeTeam.id']).to.exist;
@@ -52,6 +58,7 @@ describe('Fixture', () => {
                 date: '2018-05-13T14:00:00Z',
                 status: fixture_model_1.FixtureStatus.SCHEDULED,
                 matchRound: 38,
+                gameRound: 38,
                 homeTeam: {
                     id: '4edd40c86762e0fb12000001',
                     name: 'Arsenal',
