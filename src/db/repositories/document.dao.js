@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class DocumentRepository {
+class DocumentDao {
     constructor(schemaModel) {
         this._model = schemaModel;
     }
@@ -9,5 +9,5 @@ class DocumentRepository {
         return model.save();
     }
 }
-exports.DocumentRepository = DocumentRepository;
-//# sourceMappingURL=document.repo.js.map
+exports.DocumentDao = DocumentDao;
+//# sourceMappingURL=document.dao.js.map

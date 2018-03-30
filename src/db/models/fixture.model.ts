@@ -11,6 +11,11 @@ export enum FixtureStatus {
   FINISHED = 'FINISHED'
 }
 
+interface Result {
+	goalsHomeTeam: number;
+  goalsAwayTeam: number;
+}
+
 export interface IFixture extends IEntity {
   season?: string;
   slug?: string;
@@ -35,6 +40,7 @@ export interface IFixture extends IEntity {
     awayWin: number,
     draw: number
   };
+  result?: Result,
   venue?: string;
   externalReference?: any;
 }

@@ -4,26 +4,31 @@ import { } from '../../db/repositories/user.repo';
 import { IFixtureRepository, FixtureRepository }  from '../../db/repositories/fixture.repo';
 import { IUserRepository, UserRepository }  from '../../db/repositories/user.repo';
 import { IPredictionRepository, PredictionRepository }  from '../../db/repositories/prediction.repo';
+import { IPredictionCalculator, PredictionCalculator } from './prediction.calculator';
 
 import { IFixture }  from '../../db/models/fixture.model';
+import { IPrediction }  from '../../db/models/prediction.model';
 import { FootballApiProvider as ApiProvider } from '../../common/footballApiProvider';
 
 export interface IPredictionProcessor {
   getPredictions(fixture: IFixture);
+  processPrediction(prediction: IPrediction, fixture: IFixture);
 }
 
-export class PredictionProcessor {
+export class PredictionProcessor implements IPredictionProcessor {
   static getInstance() {
     return new PredictionProcessor(
       FixtureRepository.getInstance(ApiProvider.LIGI),
       UserRepository.getInstance(),
-      PredictionRepository.getInstance());
+      PredictionRepository.getInstance(),
+      new PredictionCalculator());
   }
   constructor(
     private fixtureRepo: IFixtureRepository, 
     private userRepo: IUserRepository,
-    private predictionRepo: IPredictionRepository) {
-  }
+    private predictionRepo: IPredictionRepository,
+    private predictionCalculator: IPredictionCalculator
+    ) { }
 
   getPredictions(fixture: IFixture) {
     let { season: seasonId, gameRound } = fixture;
@@ -71,6 +76,13 @@ export class PredictionProcessor {
       })
       .toArray()
       .toPromise();
+  }
+
+  processPrediction(prediction: IPrediction, fixture: IFixture) {
+    let { choice } = prediction;
+    let { result } = fixture;
+    let score = this.predictionCalculator.calculateScore(choice, result);
+    return this.predictionRepo.findByIdAndUpdate$(prediction['_id'], { score });
   }
 }
 

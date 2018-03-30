@@ -4,15 +4,17 @@ const rxjs_1 = require("rxjs");
 const fixture_repo_1 = require("../../db/repositories/fixture.repo");
 const user_repo_1 = require("../../db/repositories/user.repo");
 const prediction_repo_1 = require("../../db/repositories/prediction.repo");
+const prediction_calculator_1 = require("./prediction.calculator");
 const footballApiProvider_1 = require("../../common/footballApiProvider");
 class PredictionProcessor {
-    constructor(fixtureRepo, userRepo, predictionRepo) {
+    constructor(fixtureRepo, userRepo, predictionRepo, predictionCalculator) {
         this.fixtureRepo = fixtureRepo;
         this.userRepo = userRepo;
         this.predictionRepo = predictionRepo;
+        this.predictionCalculator = predictionCalculator;
     }
     static getInstance() {
-        return new PredictionProcessor(fixture_repo_1.FixtureRepository.getInstance(footballApiProvider_1.FootballApiProvider.LIGI), user_repo_1.UserRepository.getInstance(), prediction_repo_1.PredictionRepository.getInstance());
+        return new PredictionProcessor(fixture_repo_1.FixtureRepository.getInstance(footballApiProvider_1.FootballApiProvider.LIGI), user_repo_1.UserRepository.getInstance(), prediction_repo_1.PredictionRepository.getInstance(), new prediction_calculator_1.PredictionCalculator());
     }
     getPredictions(fixture) {
         let { season: seasonId, gameRound } = fixture;
@@ -60,6 +62,12 @@ class PredictionProcessor {
         })
             .toArray()
             .toPromise();
+    }
+    processPrediction(prediction, fixture) {
+        let { choice } = prediction;
+        let { result } = fixture;
+        let score = this.predictionCalculator.calculateScore(choice, result);
+        return this.predictionRepo.findByIdAndUpdate$(prediction['_id'], { score });
     }
 }
 exports.PredictionProcessor = PredictionProcessor;

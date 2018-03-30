@@ -13,11 +13,7 @@ class BaseProviderRepository {
     save$(obj) {
         return this._converter.from(obj)
             .flatMap(entity => {
-            return this._baseRepo.save$(entity)
-                .map(d => {
-                const obj = Object.assign({}, d.toObject());
-                return obj;
-            });
+            return this._baseRepo.save$(entity);
         });
     }
     findByExternalIdAndUpdate$(obj) {

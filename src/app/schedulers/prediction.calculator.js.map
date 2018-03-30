@@ -1,0 +1,1 @@
+{"version":3,"file":"prediction.calculator.js","sourceRoot":"","sources":["prediction.calculator.ts"],"names":[],"mappings":";;AAQA;IACE,cAAc,CAAC,MAAkB,EAAE,MAAkB;QACnD,MAAM,CAAC;YACL,MAAM,EAAE,CAAC,EAAE,SAAS,EAAE,CAAC,EAAE,aAAa,EAAE,CAAC,EAAE,kBAAkB,EAAE,CAAC,EAAE,oBAAoB,EAAE,CAAC,EAAE,eAAe,EAAE,CAAC;SAC9G,CAAA;IACH,CAAC;CACF;AAND,oDAMC"}

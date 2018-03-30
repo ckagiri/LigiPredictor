@@ -2,7 +2,7 @@ import { Model, Document, Types, Query } from "mongoose";
 
 import { IEntity } from '../models/base.model';
 
-export class DocumentRepository<T extends Document> {
+export class DocumentDao<T extends Document> {
   protected _model: Model<Document>;
   
   constructor(schemaModel: Model<Document>){

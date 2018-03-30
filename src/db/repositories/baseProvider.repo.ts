@@ -19,12 +19,11 @@ export interface IBaseProviderRepository<T extends IEntity> {
 }
 
 export class BaseProviderRepository<T extends IEntity> implements IBaseProviderRepository<T> {
-  protected _baseRepo: IBaseRepository<Document>;  
+  protected _baseRepo: IBaseRepository<T>;  
   protected _converter: IConverter;
 
-  constructor(schemaModel: Model<Document>, converter: IConverter)
   constructor(schemaModel: Model<Document>, converter: IConverter) {
-    this._baseRepo = new BaseRepository<Document>(schemaModel);
+    this._baseRepo = new BaseRepository<T>(schemaModel);
     this._converter = converter;
   }
 
@@ -36,10 +35,6 @@ export class BaseProviderRepository<T extends IEntity> implements IBaseProviderR
     return this._converter.from(obj)
       .flatMap(entity => {
         return this._baseRepo.save$(entity)
-        .map(d => {
-          const obj = Object.assign({}, d.toObject());
-          return <T> obj;
-        })
       });
   }
 

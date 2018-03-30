@@ -1,15 +1,17 @@
 import { Observable } from 'rxjs';
 import { Document } from 'mongoose';
 
+import { ScorePoints } from '../models/userScore.model';
+
 import { IPrediction, IPredictionModel, PredictionModel } from '../models/prediction.model';
 import { IBaseRepository, BaseRepository } from './base.repo';
 
-export interface IPredictionRepository {
+export interface IPredictionRepository extends IBaseRepository<IPrediction> {
   getOrCreateJoker$(userId: string, seasonId: string, gameRound: number, pick: string[]): Observable<IPrediction>;  
   findOneOrCreate$(userId: string, fixtureId: string): Observable<IPrediction>;
 }
 
-export class PredictionRepository implements IPredictionRepository {
+export class PredictionRepository extends BaseRepository<IPrediction> implements IPredictionRepository {
   private _baseRepo: IBaseRepository<IPredictionModel>;
 
   static getInstance() {
@@ -17,7 +19,7 @@ export class PredictionRepository implements IPredictionRepository {
   }
 
   constructor() {
-    this._baseRepo = new BaseRepository<IPredictionModel>(PredictionModel)
+    super(PredictionModel)
   }
 
   getOrCreateJoker$(userId: string, seasonId: string, gameRound: number, pick: string[]): Observable<IPrediction> {

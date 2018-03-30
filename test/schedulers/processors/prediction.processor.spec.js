@@ -25,6 +25,7 @@ let newFixture = (id, homeTeam, awayTeam, status = fixture_model_1.FixtureStatus
         season: '4edd40c86762e0fb12000001',
         gameRound: 2,
         homeTeam, awayTeam, status,
+        result: { goalsHomeTeam: 2, goalsAwayTeam: 1 },
         externalReference: {
             [footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA]: { id }
         }
@@ -48,16 +49,22 @@ let userRepoStub = {
 };
 let chaloJoker = { user: chalo._id, fixture: liv_sou._id };
 let kagiriJoker = { user: kagiri._id, fixture: ars_che._id };
-let chaloPred = { user: chalo._id, fixture: ars_che._id };
+let chaloPred = { user: chalo._id, fixture: ars_che._id,
+    choice: { goalsHomeTeam: 1, goalsAwayTeam: 1 }
+};
 let predictionRepoStub = {
     getOrCreateJoker$: sinon.stub(),
-    findOneOrCreate$: sinon.stub()
+    findOneOrCreate$: sinon.stub(),
+    findByIdAndUpdate$: sinon.stub()
+};
+let predictionCalculatorStub = {
+    calculateScore: () => { return { points: 9 }; }
 };
 let predictionProcessor;
 describe.only('Prediction Processor', () => {
     describe('getPredictions', () => __awaiter(this, void 0, void 0, function* () {
         beforeEach(() => {
-            predictionProcessor = new prediction_processor_1.PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub);
+            predictionProcessor = new prediction_processor_1.PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub, predictionCalculatorStub);
             predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(chalo._id)).returns(rxjs_1.Observable.of(chaloJoker));
             predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(kagiri._id)).returns(rxjs_1.Observable.of(kagiriJoker));
             predictionRepoStub.findOneOrCreate$.returns(rxjs_1.Observable.of(chaloPred));
@@ -80,8 +87,8 @@ describe.only('Prediction Processor', () => {
             let spy = predictionRepoStub.getOrCreateJoker$;
             yield predictionProcessor.getPredictions(ars_che);
             expect(spy).to.have.been.calledTwice;
-            expect(spy.firstCall).have.been.calledWithExactly(chalo._id, ars_che.season, ars_che.gameRound, [liv_sou._id, ars_che._id]);
-            expect(spy.secondCall).calledWithExactly(kagiri._id, ars_che.season, ars_che.gameRound, [liv_sou._id, ars_che._id]);
+            expect(spy.firstCall).to.have.been.calledWithExactly(chalo._id, ars_che.season, ars_che.gameRound, [liv_sou._id, ars_che._id]);
+            expect(spy.secondCall).to.have.been.calledWithExactly(kagiri._id, ars_che.season, ars_che.gameRound, [liv_sou._id, ars_che._id]);
         }));
         it('should getOrCreate prediction if joker fixure != fixture passed', () => __awaiter(this, void 0, void 0, function* () {
             let spy = predictionRepoStub.findOneOrCreate$;
@@ -101,11 +108,19 @@ describe.only('Prediction Processor', () => {
         }));
     }));
     describe('processPrediction', () => {
-        it('should calculate score for prediction', () => {
-            //let spy = sinon.spy(predictionCalculator, )
-        });
-        it('should save calculatedScore for prediction', () => {
-        });
+        predictionProcessor = new prediction_processor_1.PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub, predictionCalculatorStub);
+        it('should calculate score for prediction', () => __awaiter(this, void 0, void 0, function* () {
+            let spy = sinon.spy(predictionCalculatorStub, 'calculateScore');
+            yield predictionProcessor.processPrediction(chaloPred, ars_che);
+            expect(spy).to.have.been.calledOnce;
+            expect(spy).to.have.been.calledWith({ goalsHomeTeam: 1, goalsAwayTeam: 1 }, { goalsHomeTeam: 2, goalsAwayTeam: 1 });
+        }));
+        it('should save calculatedScore for prediction', () => __awaiter(this, void 0, void 0, function* () {
+            let spy = predictionRepoStub.findByIdAndUpdate$;
+            yield predictionProcessor.processPrediction(chaloPred, ars_che);
+            expect(spy).to.have.been.called;
+            expect(spy).to.have.been.calledWithMatch(chaloPred['_id']);
+        }));
     });
 });
 //# sourceMappingURL=prediction.processor.spec.js.map
