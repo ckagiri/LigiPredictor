@@ -48,21 +48,24 @@ let userRepoStub = {
 };
 let chaloJoker = { user: chalo._id, fixture: liv_sou._id };
 let kagiriJoker = { user: kagiri._id, fixture: ars_che._id };
+let chaloPred = { user: chalo._id, fixture: ars_che._id };
 let predictionRepoStub = {
     getOrCreateJoker$: sinon.stub(),
-    findOneOrCreate$: () => { return rxjs_1.Observable.of(); }
+    findOneOrCreate$: sinon.stub()
 };
 let predictionProcessor;
 describe.only('Prediction Processor', () => {
-    beforeEach(() => {
-        predictionProcessor = new prediction_processor_1.PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub);
-        predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(chalo._id)).returns(rxjs_1.Observable.of(chaloJoker));
-        predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(kagiri._id)).returns(rxjs_1.Observable.of(kagiriJoker));
-    });
-    afterEach(() => {
-        predictionRepoStub.getOrCreateJoker$ = sinon.stub();
-    });
     describe('getPredictions', () => __awaiter(this, void 0, void 0, function* () {
+        beforeEach(() => {
+            predictionProcessor = new prediction_processor_1.PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub);
+            predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(chalo._id)).returns(rxjs_1.Observable.of(chaloJoker));
+            predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(kagiri._id)).returns(rxjs_1.Observable.of(kagiriJoker));
+            predictionRepoStub.findOneOrCreate$.returns(rxjs_1.Observable.of(chaloPred));
+        });
+        afterEach(() => {
+            predictionRepoStub.getOrCreateJoker$ = sinon.stub();
+            predictionRepoStub.findOneOrCreate$ = sinon.stub();
+        });
         it('should get the selectable fixtures of gameRound', () => __awaiter(this, void 0, void 0, function* () {
             let spy = sinon.spy(fixtureRepoStub, 'findSelectableFixtures$');
             yield predictionProcessor.getPredictions(ars_che);
@@ -80,25 +83,26 @@ describe.only('Prediction Processor', () => {
             expect(spy.firstCall).have.been.calledWithExactly(chalo._id, ars_che.season, ars_che.gameRound, [liv_sou._id, ars_che._id]);
             expect(spy.secondCall).calledWithExactly(kagiri._id, ars_che.season, ars_che.gameRound, [liv_sou._id, ars_che._id]);
         }));
-        describe('getOrCreate Prediction', () => {
-            afterEach(() => {
-                predictionRepoStub.findOneOrCreate$.restore();
-            });
-            it('should getOrCreate prediction if joker fixure != fixture passed', () => __awaiter(this, void 0, void 0, function* () {
-                let spy = sinon.spy(predictionRepoStub, 'findOneOrCreate$');
-                yield predictionProcessor.getPredictions(ars_che);
-                expect(spy).to.have.been.calledOnce;
-                expect(spy).to.have.been.calledWithExactly(chalo._id, ars_che._id);
-            }));
-            it('should not getOrCreate prediction if joker fixture == passedIn fixture', () => __awaiter(this, void 0, void 0, function* () {
-                let spy = sinon.spy(predictionRepoStub, 'findOneOrCreate$');
-                yield predictionProcessor.getPredictions(liv_sou);
-                expect(spy).to.have.been.calledOnce;
-            }));
-        });
+        it('should getOrCreate prediction if joker fixure != fixture passed', () => __awaiter(this, void 0, void 0, function* () {
+            let spy = predictionRepoStub.findOneOrCreate$;
+            yield predictionProcessor.getPredictions(ars_che);
+            expect(spy).to.have.been.calledOnce;
+            expect(spy).to.have.been.calledWithExactly(chalo._id, ars_che._id);
+        }));
+        it('should not getOrCreate prediction if joker fixture == passedIn fixture', () => __awaiter(this, void 0, void 0, function* () {
+            let spy = predictionRepoStub.findOneOrCreate$;
+            yield predictionProcessor.getPredictions(liv_sou);
+            expect(spy).to.have.been.calledOnce;
+        }));
+        it('should return equal number of predictions to users', () => __awaiter(this, void 0, void 0, function* () {
+            let predictions = yield predictionProcessor.getPredictions(ars_che);
+            expect(predictions).to.be.an('array');
+            expect(predictions.length).to.equal(2);
+        }));
     }));
-    xdescribe('processPrediction', () => {
+    describe('processPrediction', () => {
         it('should calculate score for prediction', () => {
+            //let spy = sinon.spy(predictionCalculator, )
         });
         it('should save calculatedScore for prediction', () => {
         });

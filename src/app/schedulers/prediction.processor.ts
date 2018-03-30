@@ -57,7 +57,6 @@ export class PredictionProcessor {
       .flatMap(data => {
         let fixtureId = fixture['_id'];
         let { userId, jokerPrediction } = data;
-
         if(jokerPrediction.fixture === fixtureId) {
           return Observable.of({
             userId, prediction: jokerPrediction
