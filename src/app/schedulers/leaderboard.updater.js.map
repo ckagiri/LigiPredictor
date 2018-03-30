@@ -1,1 +1,1 @@
-{"version":3,"file":"leaderboard.updater.js","sourceRoot":"","sources":["leaderboard.updater.ts"],"names":[],"mappings":""}
+{"version":3,"file":"leaderboard.updater.js","sourceRoot":"","sources":["leaderboard.updater.ts"],"names":[],"mappings":";;AAKA;IACE,YAAY,CAAC,gBAAuB;QAClC,cAAc;QACd,UAAU;QACV,SAAS;QACT,UAAU;QACV,WAAW;IACb,CAAC;IAED,aAAa;QACX,MAAM,IAAI,KAAK,CAAC,yBAAyB,CAAC,CAAC;IAC7C,CAAC;CACF;AAZD,gDAYC"}

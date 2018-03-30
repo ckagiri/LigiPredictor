@@ -1,6 +1,5 @@
 import { Observable } from 'rxjs';
 
-import { } from '../../db/repositories/user.repo';
 import { IFixtureRepository, FixtureRepository }  from '../../db/repositories/fixture.repo';
 import { IUserRepository, UserRepository }  from '../../db/repositories/user.repo';
 import { IPredictionRepository, PredictionRepository }  from '../../db/repositories/prediction.repo';
@@ -11,8 +10,8 @@ import { IPrediction }  from '../../db/models/prediction.model';
 import { FootballApiProvider as ApiProvider } from '../../common/footballApiProvider';
 
 export interface IPredictionProcessor {
-  getPredictions(fixture: IFixture);
-  processPrediction(prediction: IPrediction, fixture: IFixture);
+  getPredictions$(fixture: IFixture): Observable<IPrediction[]>
+  processPrediction$(prediction: IPrediction, fixture: IFixture): Observable<IPrediction>
 }
 
 export class PredictionProcessor implements IPredictionProcessor {
@@ -30,7 +29,7 @@ export class PredictionProcessor implements IPredictionProcessor {
     private predictionCalculator: IPredictionCalculator
     ) { }
 
-  getPredictions(fixture: IFixture) {
+  getPredictions$(fixture: IFixture) {
     let { season: seasonId, gameRound } = fixture;
     return this.fixtureRepo.findSelectableFixtures$(seasonId, gameRound)
       .map(selectableFixtures => {
@@ -63,36 +62,17 @@ export class PredictionProcessor implements IPredictionProcessor {
         let fixtureId = fixture['_id'];
         let { userId, jokerPrediction } = data;
         if(jokerPrediction.fixture === fixtureId) {
-          return Observable.of({
-            userId, prediction: jokerPrediction
-          })
+          return Observable.of(jokerPrediction)
         }
         return this.predictionRepo.findOneOrCreate$(userId, fixtureId)
-          .map(prediction => {
-            return {
-              userId, prediction
-            }
-          })
       })
       .toArray()
-      .toPromise();
   }
 
-  processPrediction(prediction: IPrediction, fixture: IFixture) {
+  processPrediction$(prediction: IPrediction, fixture: IFixture) {
     let { choice } = prediction;
     let { result } = fixture;
     let score = this.predictionCalculator.calculateScore(choice, result);
-    return this.predictionRepo.findByIdAndUpdate$(prediction['_id'], { score });
+    return this.predictionRepo.findByIdAndUpdate$(prediction['_id'], { score })
   }
 }
-
-
-
-// getPredictions(fixture)
-
-// getSelectableFixtures(seasoId, gameRound)  
-// getOrCreateJokerPrediction(user, seasonId, gameRound, selectable:[])
-// getOrCreatePrediction(user, fixture)
-// processPrediction(prediction.choice, fixture.result)
-// predictionCalculator.calculateScore
-// updatePrediction(id, score)

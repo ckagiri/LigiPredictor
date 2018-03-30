@@ -16,7 +16,7 @@ class PredictionProcessor {
     static getInstance() {
         return new PredictionProcessor(fixture_repo_1.FixtureRepository.getInstance(footballApiProvider_1.FootballApiProvider.LIGI), user_repo_1.UserRepository.getInstance(), prediction_repo_1.PredictionRepository.getInstance(), new prediction_calculator_1.PredictionCalculator());
     }
-    getPredictions(fixture) {
+    getPredictions$(fixture) {
         let { season: seasonId, gameRound } = fixture;
         return this.fixtureRepo.findSelectableFixtures$(seasonId, gameRound)
             .map(selectableFixtures => {
@@ -49,21 +49,13 @@ class PredictionProcessor {
             let fixtureId = fixture['_id'];
             let { userId, jokerPrediction } = data;
             if (jokerPrediction.fixture === fixtureId) {
-                return rxjs_1.Observable.of({
-                    userId, prediction: jokerPrediction
-                });
+                return rxjs_1.Observable.of(jokerPrediction);
             }
-            return this.predictionRepo.findOneOrCreate$(userId, fixtureId)
-                .map(prediction => {
-                return {
-                    userId, prediction
-                };
-            });
+            return this.predictionRepo.findOneOrCreate$(userId, fixtureId);
         })
-            .toArray()
-            .toPromise();
+            .toArray();
     }
-    processPrediction(prediction, fixture) {
+    processPrediction$(prediction, fixture) {
         let { choice } = prediction;
         let { result } = fixture;
         let score = this.predictionCalculator.calculateScore(choice, result);
@@ -71,11 +63,4 @@ class PredictionProcessor {
     }
 }
 exports.PredictionProcessor = PredictionProcessor;
-// getPredictions(fixture)
-// getSelectableFixtures(seasoId, gameRound)  
-// getOrCreateJokerPrediction(user, seasonId, gameRound, selectable:[])
-// getOrCreatePrediction(user, fixture)
-// processPrediction(prediction.choice, fixture.result)
-// predictionCalculator.calculateScore
-// updatePrediction(id, score)
 //# sourceMappingURL=prediction.processor.js.map

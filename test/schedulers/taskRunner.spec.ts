@@ -26,7 +26,7 @@ describe('TaskRunner', () => {
       taskRunner.on('end', spy);
       
       taskRunner.run({
-        whenToExecute: 15        
+        whenToExecute: 20      
       });    
       setTimeout(() => {
         expect(spy.called).to.be.false;          

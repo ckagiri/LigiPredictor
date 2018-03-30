@@ -54,12 +54,12 @@ let predictionCalculatorStub: any = {
 }
 let predictionProcessor: IPredictionProcessor;
 describe('Prediction Processor', () => {
-  describe('getPredictions', async () => {
+  describe('getPredictions$', async () => {
     beforeEach(() => {
-      predictionProcessor = new PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub, predictionCalculatorStub);
       predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(chalo._id)).returns(Observable.of(chaloJoker));
       predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(kagiri._id)).returns(Observable.of(kagiriJoker));   
       predictionRepoStub.findOneOrCreate$.returns(Observable.of(chaloPred)); 
+      predictionProcessor = new PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub, predictionCalculatorStub);     
     })
 
     afterEach(() => {
@@ -70,7 +70,7 @@ describe('Prediction Processor', () => {
     it('should get the selectable fixtures of gameRound', async () => {
       let spy = sinon.spy(fixtureRepoStub, 'findSelectableFixtures$');
 
-      await predictionProcessor.getPredictions(ars_che)
+      await predictionProcessor.getPredictions$(ars_che).toPromise();
 
       expect(spy).to.have.been.calledOnce;
     })
@@ -78,7 +78,7 @@ describe('Prediction Processor', () => {
     it('should get all users', async () => {
       let spy = sinon.spy(userRepoStub, 'findAll$')
 
-      await predictionProcessor.getPredictions(ars_che);
+      await predictionProcessor.getPredictions$(ars_che).toPromise();
 
       expect(spy).to.have.been.calledOnce;
     })
@@ -86,7 +86,7 @@ describe('Prediction Processor', () => {
     it('should getOrCreate jokerPrediction for user', async () => {
       let spy = predictionRepoStub.getOrCreateJoker$
 
-      await predictionProcessor.getPredictions(ars_che);
+      await predictionProcessor.getPredictions$(ars_che).toPromise();
 
       expect(spy).to.have.been.calledTwice;
       expect(spy.firstCall).to.have.been.calledWithExactly(
@@ -100,7 +100,7 @@ describe('Prediction Processor', () => {
     it('should getOrCreate prediction if joker fixure != fixture passed', async () => {
       let spy = predictionRepoStub.findOneOrCreate$;
       
-      await predictionProcessor.getPredictions(ars_che);
+      await predictionProcessor.getPredictions$(ars_che).toPromise();
 
       expect(spy).to.have.been.calledOnce;
       expect(spy).to.have.been.calledWithExactly(chalo._id, ars_che._id)
@@ -109,13 +109,13 @@ describe('Prediction Processor', () => {
     it('should not getOrCreate prediction if joker fixture == passedIn fixture', async () => {
       let spy = predictionRepoStub.findOneOrCreate$;
 
-      await predictionProcessor.getPredictions(liv_sou);
+      await predictionProcessor.getPredictions$(liv_sou).toPromise();
 
       expect(spy).to.have.been.calledOnce; 
     })
 
     it('should return equal number of predictions to users', async () => {
-      let predictions = await predictionProcessor.getPredictions(ars_che);
+      let predictions = await predictionProcessor.getPredictions$(ars_che).toPromise();
 
       expect(predictions).to.be.an('array');
       expect(predictions.length).to.equal(2);
@@ -123,25 +123,36 @@ describe('Prediction Processor', () => {
   })
   
   describe('processPrediction', () => {
-    predictionProcessor = new PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub, predictionCalculatorStub);
+    beforeEach(() => {
+      predictionRepoStub.findByIdAndUpdate$.returns(Observable.of(chaloPred)); 
+      predictionProcessor = new PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub, predictionCalculatorStub);
+      
+    })
+    afterEach(() => {
+      predictionRepoStub.findByIdAndUpdate$ = sinon.stub()      
+    })
     
-    it('should calculate score for prediction', async () => {
+    it('should calculate score for prediction', (done) => {
       let spy = sinon.spy(predictionCalculatorStub, 'calculateScore');
 
-      await predictionProcessor.processPrediction(chaloPred, ars_che);
-
-      expect(spy).to.have.been.calledOnce;
-      expect(spy).to.have.been.calledWith(
-        { goalsHomeTeam: 1, goalsAwayTeam: 1 }, { goalsHomeTeam: 2, goalsAwayTeam: 1 })
+      predictionProcessor.processPrediction$(chaloPred, ars_che)
+        .subscribe(_ => {
+          expect(spy).to.have.been.calledOnce;
+          expect(spy).to.have.been.calledWith(
+            { goalsHomeTeam: 1, goalsAwayTeam: 1 }, { goalsHomeTeam: 2, goalsAwayTeam: 1 })  
+          done();
+        });
     })
 
-    it('should save calculatedScore for prediction', async () => {
+    it('should save calculatedScore for prediction', (done) => {
       let spy = predictionRepoStub.findByIdAndUpdate$;
 
-      await predictionProcessor.processPrediction(chaloPred, ars_che);
-      
-      expect(spy).to.have.been.called;
-      expect(spy).to.have.been.calledWithMatch(chaloPred['_id'])
+      predictionProcessor.processPrediction$(chaloPred, ars_che)
+        .subscribe(_ => {
+          expect(spy).to.have.been.called;
+          expect(spy).to.have.been.calledWithMatch(chaloPred['_id'])
+          done();
+        })      
     })
   })
 })

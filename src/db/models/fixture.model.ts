@@ -22,7 +22,7 @@ export interface IFixture extends IEntity {
 	date?: any;
   matchRound?: number;
   gameRound?: number;  
-  status?: string;
+  status?: FixtureStatus;
   homeTeam?: {
     name: string, 
     slug: string,
@@ -42,6 +42,7 @@ export interface IFixture extends IEntity {
   };
   result?: Result,
   venue?: string;
+  allPredictionsProcessed?: boolean;
   externalReference?: any;
 }
 

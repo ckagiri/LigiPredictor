@@ -4,7 +4,7 @@ import { Model, Document, Query, SaveOptions } from 'mongoose';
 import { DocumentDao } from '../repositories/document.dao';
 import { IEntity } from '../models/base.model';
 
-export interface IBaseDao<T extends IEntity> {
+export interface IBaseDao<T extends Document> {
   save$(obj: IEntity): Observable<T>;
   findByIdAndUpdate$(id: string|number, update: any): Observable<T>;
   findOneAndUpdate$(conditions: any, update: any): Observable<T>;

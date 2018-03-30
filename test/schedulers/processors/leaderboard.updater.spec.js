@@ -1,25 +1,69 @@
-describe('LeagueUpdater', () => {
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const sinon = require("sinon");
+const chai = require("chai");
+const sinonChai = require("sinon-chai");
+chai.use(sinonChai);
+const expect = chai.expect;
+const mongoose_1 = require("mongoose");
+const ObjectId = mongoose_1.Types.ObjectId;
+const footballApiProvider_1 = require("../../../src/common/footballApiProvider");
+const leaderboard_updater_1 = require("../../../src/app/schedulers/leaderboard.updater");
+const fixture_model_1 = require("../../../src/db/models/fixture.model");
+let newFixture = (id, homeTeam, awayTeam, status = fixture_model_1.FixtureStatus.FINISHED) => {
+    return {
+        _id: ObjectId().toHexString(),
+        season: '4edd40c86762e0fb12000001',
+        gameRound: 2,
+        homeTeam, awayTeam, status,
+        result: { goalsHomeTeam: 2, goalsAwayTeam: 1 },
+        externalReference: {
+            [footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA]: { id }
+        }
+    };
+};
+let ars_che = newFixture(1, 'Arsenal', 'Chelsea');
+let liv_sou = newFixture(2, 'Liverpool', 'Southampton');
+let finishedFixtures = [ars_che, liv_sou];
+let leaderboardRepoStub = {
+    findSeasonAndUpdate$: sinon.stub()
+};
+let leaderboardUpdater = new leaderboard_updater_1.LeaderboardUpdater();
+describe('Leaderboard Updater', () => {
     describe('updateScores', () => {
-        describe('getLeaderBoards', () => {
-            it('should getSeasonboard', () => {
+        it('should getUsers', () => {
+        });
+        xdescribe('getLeaderBoards', () => {
+            it('should getSeasonboard', () => __awaiter(this, void 0, void 0, function* () {
+                let spy = leaderboardRepoStub.findSeasonAndUpdate$;
+                yield leaderboardUpdater.updateScores(finishedFixtures);
+                expect(spy).to.have.been.called;
+            }));
+            xit('should have seasonBoard with UpdatingScores status', () => {
             });
-            it('should have seasonBoard with UpdatingScores status', () => {
+            xit('should getMonthboard', () => {
             });
-            it('should getMonthboard', () => {
+            xit('should have monthBoard with UpdatingScores status', () => {
             });
-            it('should have seasonBoard with UpdatingScores status', () => {
+            xit('should getRoundboard', () => {
             });
-            it('should getRoundboard', () => {
-            });
-            it('should have seasonBoard with UpdatingScores status', () => {
+            xit('should have roundBoard with UpdatingScores status', () => {
             });
             it('should cache boards', () => {
             });
         });
-        it('should save userScores', () => {
+        xit('should save userScores', () => {
         });
     });
-    describe('UpdateRankings', () => {
+    xdescribe('UpdateRankings', () => {
     });
 });
 //# sourceMappingURL=leaderboard.updater.spec.js.map

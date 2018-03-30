@@ -62,12 +62,12 @@ let predictionCalculatorStub = {
 };
 let predictionProcessor;
 describe('Prediction Processor', () => {
-    describe('getPredictions', () => __awaiter(this, void 0, void 0, function* () {
+    describe('getPredictions$', () => __awaiter(this, void 0, void 0, function* () {
         beforeEach(() => {
-            predictionProcessor = new prediction_processor_1.PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub, predictionCalculatorStub);
             predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(chalo._id)).returns(rxjs_1.Observable.of(chaloJoker));
             predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(kagiri._id)).returns(rxjs_1.Observable.of(kagiriJoker));
             predictionRepoStub.findOneOrCreate$.returns(rxjs_1.Observable.of(chaloPred));
+            predictionProcessor = new prediction_processor_1.PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub, predictionCalculatorStub);
         });
         afterEach(() => {
             predictionRepoStub.getOrCreateJoker$ = sinon.stub();
@@ -75,52 +75,64 @@ describe('Prediction Processor', () => {
         });
         it('should get the selectable fixtures of gameRound', () => __awaiter(this, void 0, void 0, function* () {
             let spy = sinon.spy(fixtureRepoStub, 'findSelectableFixtures$');
-            yield predictionProcessor.getPredictions(ars_che);
+            yield predictionProcessor.getPredictions$(ars_che).toPromise();
             expect(spy).to.have.been.calledOnce;
         }));
         it('should get all users', () => __awaiter(this, void 0, void 0, function* () {
             let spy = sinon.spy(userRepoStub, 'findAll$');
-            yield predictionProcessor.getPredictions(ars_che);
+            yield predictionProcessor.getPredictions$(ars_che).toPromise();
             expect(spy).to.have.been.calledOnce;
         }));
         it('should getOrCreate jokerPrediction for user', () => __awaiter(this, void 0, void 0, function* () {
             let spy = predictionRepoStub.getOrCreateJoker$;
-            yield predictionProcessor.getPredictions(ars_che);
+            yield predictionProcessor.getPredictions$(ars_che).toPromise();
             expect(spy).to.have.been.calledTwice;
             expect(spy.firstCall).to.have.been.calledWithExactly(chalo._id, ars_che.season, ars_che.gameRound, [liv_sou._id, ars_che._id]);
             expect(spy.secondCall).to.have.been.calledWithExactly(kagiri._id, ars_che.season, ars_che.gameRound, [liv_sou._id, ars_che._id]);
         }));
         it('should getOrCreate prediction if joker fixure != fixture passed', () => __awaiter(this, void 0, void 0, function* () {
             let spy = predictionRepoStub.findOneOrCreate$;
-            yield predictionProcessor.getPredictions(ars_che);
+            yield predictionProcessor.getPredictions$(ars_che).toPromise();
             expect(spy).to.have.been.calledOnce;
             expect(spy).to.have.been.calledWithExactly(chalo._id, ars_che._id);
         }));
         it('should not getOrCreate prediction if joker fixture == passedIn fixture', () => __awaiter(this, void 0, void 0, function* () {
             let spy = predictionRepoStub.findOneOrCreate$;
-            yield predictionProcessor.getPredictions(liv_sou);
+            yield predictionProcessor.getPredictions$(liv_sou).toPromise();
             expect(spy).to.have.been.calledOnce;
         }));
         it('should return equal number of predictions to users', () => __awaiter(this, void 0, void 0, function* () {
-            let predictions = yield predictionProcessor.getPredictions(ars_che);
+            let predictions = yield predictionProcessor.getPredictions$(ars_che).toPromise();
             expect(predictions).to.be.an('array');
             expect(predictions.length).to.equal(2);
         }));
     }));
     describe('processPrediction', () => {
-        predictionProcessor = new prediction_processor_1.PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub, predictionCalculatorStub);
-        it('should calculate score for prediction', () => __awaiter(this, void 0, void 0, function* () {
+        beforeEach(() => {
+            predictionRepoStub.findByIdAndUpdate$.returns(rxjs_1.Observable.of(chaloPred));
+            predictionProcessor = new prediction_processor_1.PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub, predictionCalculatorStub);
+        });
+        afterEach(() => {
+            predictionRepoStub.findByIdAndUpdate$ = sinon.stub();
+        });
+        it('should calculate score for prediction', (done) => {
             let spy = sinon.spy(predictionCalculatorStub, 'calculateScore');
-            yield predictionProcessor.processPrediction(chaloPred, ars_che);
-            expect(spy).to.have.been.calledOnce;
-            expect(spy).to.have.been.calledWith({ goalsHomeTeam: 1, goalsAwayTeam: 1 }, { goalsHomeTeam: 2, goalsAwayTeam: 1 });
-        }));
-        it('should save calculatedScore for prediction', () => __awaiter(this, void 0, void 0, function* () {
+            predictionProcessor.processPrediction$(chaloPred, ars_che)
+                .subscribe(_ => {
+                expect(spy).to.have.been.calledOnce;
+                expect(spy).to.have.been.calledWith({ goalsHomeTeam: 1, goalsAwayTeam: 1 }, { goalsHomeTeam: 2, goalsAwayTeam: 1 });
+                done();
+            });
+        });
+        it('should save calculatedScore for prediction', (done) => {
             let spy = predictionRepoStub.findByIdAndUpdate$;
-            yield predictionProcessor.processPrediction(chaloPred, ars_che);
-            expect(spy).to.have.been.called;
-            expect(spy).to.have.been.calledWithMatch(chaloPred['_id']);
-        }));
+            predictionProcessor.processPrediction$(chaloPred, ars_che)
+                .subscribe(_ => {
+                expect(spy).to.have.been.called;
+                expect(spy).to.have.been.calledWithMatch(chaloPred['_id']);
+                done();
+            });
+        });
     });
 });
 //# sourceMappingURL=prediction.processor.spec.js.map

@@ -3,15 +3,22 @@ import { Schema, Model, model, Document } from 'mongoose';
 import { IEntity } from './base.model';
 import { ScorePoints } from './userScore.model';
 
+export enum PredictionStatus {
+  PENDING = 'PENDING',
+  PROCESSED = 'PROCESSED'
+}
+
 interface Choice {
 	goalsHomeTeam: number;
   goalsAwayTeam: number;
 }
 
 export interface IPrediction extends IEntity {
-  fixture: string
-  choice: Choice,
-  points?: ScorePoints
+  user: string;
+  fixture: string;
+  choice: Choice;
+  points?: ScorePoints;
+  status?: PredictionStatus;
 }
 
 export interface IPredictionModel extends IPrediction, Document {}
