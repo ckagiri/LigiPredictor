@@ -1,5 +1,5 @@
 import { Observable, Observer, Subscriber } from 'rxjs';
-import { Model, Document, Query, SaveOptions } from 'mongoose';
+import { Model, Document } from 'mongoose';
 
 import { BaseRepository, IBaseRepository } from '../repositories/base.repo';
 import { IEntity } from '../models/base.model';
@@ -15,6 +15,7 @@ export interface IBaseProviderRepository<T extends IEntity> {
   getByExternalIds$(ids: Array<string|number>): Observable<T[]>;
   findByIdAndUpdate$(id: string|number, update: any): Observable<T>;
   findOneAndUpdate$(conditions: any, update: any): Observable<T>;
+  findAll$(conditions: any): Observable<T[]>;
 }
 
 export class BaseProviderRepository<T extends IEntity> implements IBaseProviderRepository<T> {
@@ -22,8 +23,8 @@ export class BaseProviderRepository<T extends IEntity> implements IBaseProviderR
   protected _converter: IConverter;
 
   constructor(schemaModel: Model<Document>, converter: IConverter)
-  constructor(schemaModel: Model<Document>, converter: IConverter, baseRepo?: IBaseRepository<Document>) {
-    this._baseRepo = baseRepo || new BaseRepository<Document>(schemaModel);
+  constructor(schemaModel: Model<Document>, converter: IConverter) {
+    this._baseRepo = new BaseRepository<Document>(schemaModel);
     this._converter = converter;
   }
 
@@ -64,5 +65,9 @@ export class BaseProviderRepository<T extends IEntity> implements IBaseProviderR
     
   findOneAndUpdate$(conditions: any, update: any): Observable<T> {
     return Observable.of(<T>{})    
+  }
+
+  findAll$(): Observable<T[]> {
+    return Observable.of([<T>{}])
   }
 }

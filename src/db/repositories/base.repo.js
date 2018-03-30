@@ -13,6 +13,15 @@ class BaseRepository extends document_repo_1.DocumentRepository {
             });
         });
     }
+    findByIdAndUpdate$(id, update) {
+        return rxjs_1.Observable.of({});
+    }
+    findOneAndUpdate$(conditions, update) {
+        return rxjs_1.Observable.of({});
+    }
+    findAll$() {
+        return rxjs_1.Observable.of([{}]);
+    }
 }
 exports.BaseRepository = BaseRepository;
 //# sourceMappingURL=base.repo.js.map

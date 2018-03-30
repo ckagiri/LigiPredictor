@@ -16,6 +16,7 @@ export interface IFixture extends IEntity {
   slug?: string;
 	date?: any;
   matchRound?: number;
+  gameRound?: number;  
   status?: string;
   homeTeam?: {
     name: string, 
@@ -46,6 +47,7 @@ export const fixtureSchema = new Schema({
   season: { type: ObjectId,  ref: 'Season', index: true, required: true },
   slug: { type: String, required: true, trim: true },
   matchRound: { type: Number, required: true },
+  gameRound: { type: Number, required: true },  
  	date: { type: Date, required: true	},  
 	homeTeam: {
     name: { type: String, required: true },

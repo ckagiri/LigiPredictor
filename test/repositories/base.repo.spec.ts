@@ -9,7 +9,7 @@ import { IBaseRepository } from '../../src/db/repositories/base.repo';
 const entity: IEntity = {
   name: 'abc'
 };
-let mockBaseRepo: IBaseRepository<Document> = {
+let mockBaseRepo: any = {
   save$(obj: IEntity): Observable<Document> {
     return Observable.create((observer) => {
       observer.next(entity);

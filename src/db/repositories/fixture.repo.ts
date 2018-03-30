@@ -6,6 +6,7 @@ import { IFixtureConverter, FixtureConverter } from '../converters/fixture.conve
 import { FootballApiProvider as ApiProvider } from '../../common/footballApiProvider';
 
 export interface IFixtureRepository extends IBaseProviderRepository<IFixture> {
+  findSelectableFixtures$(season, gameRound): Observable<IFixture[]>
 }
 
 export class FixtureRepository extends BaseProviderRepository<IFixture> implements IFixtureRepository {
@@ -16,4 +17,8 @@ export class FixtureRepository extends BaseProviderRepository<IFixture> implemen
   constructor(converter: IFixtureConverter) {
     super(FixtureModel, converter);
   }
+
+  findSelectableFixtures$(season, gameRound) {
+    return Observable.of([<IFixture>{}])    
+  }  
 }
