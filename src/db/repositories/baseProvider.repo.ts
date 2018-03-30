@@ -6,16 +6,12 @@ import { IEntity } from '../models/base.model';
 import { IConverter } from '../converters/converter';
 import { FootballApiProvider as ApiProvider } from '../../common/footballApiProvider';
 
-export interface IBaseProviderRepository<T extends IEntity> {
+export interface IBaseProviderRepository<T extends IEntity> extends IBaseRepository<T> {
   Provider: ApiProvider;
-  save$(obj: IEntity): Observable<T>;
   findByExternalIdAndUpdate$(obj: IEntity): Observable<T>;
   findEachByExternalIdAndUpdate$(obj: IEntity[]): Observable<T[]>;
   getByExternalId$(id: string|number): Observable<T>;  
   getByExternalIds$(ids: Array<string|number>): Observable<T[]>;
-  findByIdAndUpdate$(id: string|number, update: any): Observable<T>;
-  findOneAndUpdate$(conditions: any, update: any): Observable<T>;
-  findAll$(conditions: any): Observable<T[]>;
 }
 
 export class BaseProviderRepository<T extends IEntity> implements IBaseProviderRepository<T> {
@@ -55,14 +51,14 @@ export class BaseProviderRepository<T extends IEntity> implements IBaseProviderR
   }
 
   findByIdAndUpdate$(id: string | number, update: any): Observable<T> {
-    return Observable.of(<T>{})    
+    return this._baseRepo.findByIdAndUpdate$(id, update);   
   }
     
   findOneAndUpdate$(conditions: any, update: any): Observable<T> {
-    return Observable.of(<T>{})    
+    return this._baseRepo.findOneAndUpdate$(conditions, update);   
   }
 
   findAll$(): Observable<T[]> {
-    return Observable.of([<T>{}])
+    return this._baseRepo.findAll$();
   }
 }

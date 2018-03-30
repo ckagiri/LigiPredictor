@@ -29,13 +29,13 @@ class BaseProviderRepository {
         return rxjs_1.Observable.of([{}]);
     }
     findByIdAndUpdate$(id, update) {
-        return rxjs_1.Observable.of({});
+        return this._baseRepo.findByIdAndUpdate$(id, update);
     }
     findOneAndUpdate$(conditions, update) {
-        return rxjs_1.Observable.of({});
+        return this._baseRepo.findOneAndUpdate$(conditions, update);
     }
     findAll$() {
-        return rxjs_1.Observable.of([{}]);
+        return this._baseRepo.findAll$();
     }
 }
 exports.BaseProviderRepository = BaseProviderRepository;
