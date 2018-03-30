@@ -5,7 +5,8 @@ import { IPrediction, IPredictionModel, PredictionModel } from '../models/predic
 import { IBaseRepository, BaseRepository } from './base.repo';
 
 export interface IPredictionRepository {
-  getOrCreateJoker$(user: string, season: string, gameRound: number, pick: string[]): Observable<IPrediction>;  
+  getOrCreateJoker$(userId: string, seasonId: string, gameRound: number, pick: string[]): Observable<IPrediction>;  
+  findOneOrCreate$(userId: string, fixtureId: string): Observable<IPrediction>;
 }
 
 export class PredictionRepository implements IPredictionRepository {
@@ -19,7 +20,11 @@ export class PredictionRepository implements IPredictionRepository {
     this._baseRepo = new BaseRepository<IPredictionModel>(PredictionModel)
   }
 
-  getOrCreateJoker$(): Observable<IPrediction> {
+  getOrCreateJoker$(userId: string, seasonId: string, gameRound: number, pick: string[]): Observable<IPrediction> {
     return Observable.of(<IPrediction>{})
   }
+
+  findOneOrCreate$(userId: string, fixtureId: string): Observable<IPrediction> {
+    return Observable.of(<IPrediction>{})
+  }  
 }

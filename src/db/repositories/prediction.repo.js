@@ -10,7 +10,10 @@ class PredictionRepository {
     constructor() {
         this._baseRepo = new base_repo_1.BaseRepository(prediction_model_1.PredictionModel);
     }
-    getOrCreateJoker$() {
+    getOrCreateJoker$(userId, seasonId, gameRound, pick) {
+        return rxjs_1.Observable.of({});
+    }
+    findOneOrCreate$(userId, fixtureId) {
         return rxjs_1.Observable.of({});
     }
 }

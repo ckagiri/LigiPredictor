@@ -2,7 +2,9 @@ import { Schema, Model, model, Document } from 'mongoose';
 
 import { IEntity } from './base.model';
 
-export interface IPrediction extends IEntity {}
+export interface IPrediction extends IEntity {
+  fixture: string
+}
 
 export interface IPredictionModel extends IPrediction, Document {}
 

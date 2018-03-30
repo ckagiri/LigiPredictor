@@ -11,7 +11,7 @@ class FixtureRepository extends baseProvider_repo_1.BaseProviderRepository {
     constructor(converter) {
         super(fixture_model_1.FixtureModel, converter);
     }
-    findSelectableFixtures$(season, gameRound) {
+    findSelectableFixtures$(seasonId, gameRound) {
         return rxjs_1.Observable.of([{}]);
     }
 }

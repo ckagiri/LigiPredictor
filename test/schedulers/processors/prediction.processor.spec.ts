@@ -31,20 +31,31 @@ let kagiri = {
 }
 let ars_che = newFixture(1, 'Arsenal', 'Chelsea'); 
 let liv_sou = newFixture(2, 'Liverpool', 'Southampton');
+
 let fixtureRepoStub:any = {
   findSelectableFixtures$: () => { return Observable.of([liv_sou])}
 }
 let userRepoStub: any = {
   findAll$: () => { return Observable.of([chalo, kagiri]) }
 }
+let chaloJoker = { user: chalo._id, fixture: liv_sou._id };
+let kagiriJoker = { user: kagiri._id, fixture: ars_che._id }
+
 let predictionRepoStub: any = {
-  getOrCreateJoker$: () => { return Observable.of() }
+  getOrCreateJoker$: sinon.stub(),
+  findOneOrCreate$: () => { return Observable.of() }
 }
+
 
 let predictionProcessor: IPredictionProcessor;
 describe.only('Prediction Processor', () => {
   beforeEach(() => {
     predictionProcessor = new PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub);
+    predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(chalo._id)).returns(Observable.of(chaloJoker));
+    predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(kagiri._id)).returns(Observable.of(kagiriJoker));    
+  })
+  afterEach(() => {
+    predictionRepoStub.getOrCreateJoker$ = sinon.stub()
   })
   describe('getPredictions', async () => {
     it('should get the selectable fixtures of gameRound', async () => {
@@ -52,17 +63,17 @@ describe.only('Prediction Processor', () => {
 
       await predictionProcessor.getPredictions(ars_che)
 
-      expect(spy).to.have.been.called;
+      expect(spy).to.have.been.calledOnce;
     })
     it('should get all users', async () => {
       let spy = sinon.spy(userRepoStub, 'findAll$')
 
       await predictionProcessor.getPredictions(ars_che);
 
-      expect(spy).to.have.been.called;
+      expect(spy).to.have.been.calledOnce;
     })
-    it('should getOrCreate joker prediction for user', async () => {
-      let spy = sinon.spy(predictionRepoStub, 'getOrCreateJoker$')
+    it('should getOrCreate jokerPrediction for user', async () => {
+      let spy = predictionRepoStub.getOrCreateJoker$
 
       await predictionProcessor.getPredictions(ars_che);
 
@@ -74,12 +85,27 @@ describe.only('Prediction Processor', () => {
         kagiri._id, ars_che.season, ars_che.gameRound,
         [ liv_sou._id, ars_che._id ])
     })
-    xit('should getOrCreate prediction if joker fixure != fixture passed', () => {
 
-    })
-    xit('should not getOrCreate prediction if joker fixture == passedIn fixture', () => {
-
-    })
+    describe('getOrCreate Prediction', () => {
+      afterEach(() => {
+        predictionRepoStub.findOneOrCreate$.restore();
+      })
+      it('should getOrCreate prediction if joker fixure != fixture passed', async () => {
+        let spy = sinon.spy(predictionRepoStub, 'findOneOrCreate$')
+        
+        await predictionProcessor.getPredictions(ars_che);
+  
+        expect(spy).to.have.been.calledOnce;
+        expect(spy).to.have.been.calledWithExactly(chalo._id, ars_che._id)
+      })
+      it('should not getOrCreate prediction if joker fixture == passedIn fixture', async () => {
+        let spy = sinon.spy(predictionRepoStub, 'findOneOrCreate$')
+  
+        await predictionProcessor.getPredictions(liv_sou);
+  
+        expect(spy).to.have.been.calledOnce; 
+      })
+    })    
   })
   
   xdescribe('processPrediction', () =>{

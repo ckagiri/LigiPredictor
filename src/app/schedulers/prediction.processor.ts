@@ -26,8 +26,8 @@ export class PredictionProcessor {
   }
 
   getPredictions(fixture: IFixture) {
-    let { season, gameRound } = fixture;
-    return this.fixtureRepo.findSelectableFixtures$(season, gameRound)
+    let { season: seasonId, gameRound } = fixture;
+    return this.fixtureRepo.findSelectableFixtures$(seasonId, gameRound)
       .map(selectableFixtures => {
         return [...selectableFixtures, fixture].map(n => n['_id'])
       })
@@ -38,16 +38,37 @@ export class PredictionProcessor {
           })      
           .map(user => {
             return {
-              selectableFixtures: fixtureIds,
+              selectableFixtureIds: fixtureIds,
               user
             }
           })
       })
       .flatMap(data => {
-        let { season, gameRound } = fixture;
-        let selectableFixtures = data.selectableFixtures;
-        let user = data.user['_id'];
-        return this.predictionRepo.getOrCreateJoker$(user, season, gameRound, selectableFixtures)
+        let { season: seasonId, gameRound } = fixture;
+        let selectableFixtureIds = data.selectableFixtureIds;
+        let userId = data.user['_id'];
+        return this.predictionRepo.getOrCreateJoker$(userId, seasonId, gameRound, selectableFixtureIds)
+          .map(jokerPrediction => {
+            return {
+              userId, jokerPrediction
+            }
+          })
+      })
+      .flatMap(data => {
+        let fixtureId = fixture['_id'];
+        let { userId, jokerPrediction } = data;
+
+        if(jokerPrediction.fixture === fixtureId) {
+          return Observable.of({
+            userId, prediction: jokerPrediction
+          })
+        }
+        return this.predictionRepo.findOneOrCreate$(userId, fixtureId)
+          .map(prediction => {
+            return {
+              userId, prediction
+            }
+          })
       })
       .toArray()
       .toPromise();
