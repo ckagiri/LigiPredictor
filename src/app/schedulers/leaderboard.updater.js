@@ -95,6 +95,17 @@ class LeaderboardUpdater {
             .count()
             .toPromise();
     }
+    markLeaderboardsAsRefreshed(seasonId) {
+        return this.leaderboardRepo.findAll$({ season: seasonId, status: leaderboard_model_1.LeaderboardStatus.UPDATING_RANKINGS })
+            .flatMap(leaderboards => {
+            return rxjs_1.Observable.from(leaderboards);
+        })
+            .flatMap(leaderboard => {
+            return this.leaderboardRepo.findByIdAndUpdate$(leaderboard['_id'], { status: leaderboard_model_1.LeaderboardStatus.REFRESHED });
+        })
+            .count()
+            .toPromise();
+    }
 }
 exports.LeaderboardUpdater = LeaderboardUpdater;
 //# sourceMappingURL=leaderboard.updater.js.map

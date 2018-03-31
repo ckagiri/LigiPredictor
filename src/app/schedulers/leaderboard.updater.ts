@@ -10,6 +10,7 @@ import { IUserScoreRepository, UserScoreRepository} from '../../db/repositories/
 export interface ILeaderboardUpdater {
   updateScores(fixtures: IFixture[])
   updateRankings(seasonId: string)
+  markLeaderboardsAsRefreshed(seasonId: string)
 }
 
 export class LeaderboardUpdater implements ILeaderboardUpdater {
@@ -104,5 +105,17 @@ export class LeaderboardUpdater implements ILeaderboardUpdater {
       })
       .count()
       .toPromise();
+  }
+
+  markLeaderboardsAsRefreshed(seasonId: string) {
+    return this.leaderboardRepo.findAll$({season: seasonId, status: LeaderboardStatus.UPDATING_RANKINGS})
+    .flatMap(leaderboards => {
+      return Observable.from(leaderboards)
+    })
+    .flatMap(leaderboard => {
+      return this.leaderboardRepo.findByIdAndUpdate$(leaderboard['_id'], { status: LeaderboardStatus.REFRESHED })
+    })
+    .count()
+    .toPromise();
   }
 }

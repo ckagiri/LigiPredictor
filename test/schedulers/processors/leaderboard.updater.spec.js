@@ -93,7 +93,7 @@ let userScoreRepoStub = {
     findByIdAndUpdate$: () => { return rxjs_1.Observable.of(standing1); }
 };
 let leaderboardUpdater = new leaderboard_updater_1.LeaderboardUpdater(userRepoStub, leaderboardRepoStub, predictionRepoStub, userScoreRepoStub);
-describe.only('Leaderboard Updater', () => {
+describe('Leaderboard Updater', () => {
     describe('updateScores', () => {
         beforeEach(() => {
             leaderboardRepoStub.findSeasonBoardAndUpdate$.returns(rxjs_1.Observable.of({ _id: 1 }));
@@ -174,7 +174,19 @@ describe.only('Leaderboard Updater', () => {
             expect(spy).to.have.been.called;
             expect(spy.firstCall).to.have.been.calledWith(sinon.match.string, { positionNew: 1, positionOld: 2 });
             expect(spy.secondCall).to.have.been.calledWith(sinon.match.string, { positionNew: 2, positionOld: 1 });
-            console.log(count);
+        }));
+    });
+    describe('SetLeaderboardsToRefreshed', () => {
+        it('should get leaderboards that have UPDATING_RANKINGS status', () => __awaiter(this, void 0, void 0, function* () {
+            let spy = leaderboardRepoStub.findAll$;
+            yield leaderboardUpdater.markLeaderboardsAsRefreshed(seasonId);
+            expect(spy).to.have.been.called;
+        }));
+        it('should change leaderboard status to REFRESHED', () => __awaiter(this, void 0, void 0, function* () {
+            let spy = leaderboardRepoStub.findByIdAndUpdate$;
+            let count = yield leaderboardUpdater.markLeaderboardsAsRefreshed(seasonId);
+            expect(spy).to.have.been.called;
+            expect(spy).to.have.been.calledWith(sinon.match.string, sinon.match({ status: leaderboard_model_1.LeaderboardStatus.UPDATING_RANKINGS }));
         }));
     });
 });
