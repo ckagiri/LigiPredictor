@@ -16,6 +16,9 @@ class PredictionRepository extends base_repo_1.BaseRepository {
     findOneOrCreate$(userId, fixtureId) {
         return rxjs_1.Observable.of({});
     }
+    findOne$(userId, fixtureId) {
+        return rxjs_1.Observable.of({});
+    }
 }
 exports.PredictionRepository = PredictionRepository;
 //# sourceMappingURL=prediction.repo.js.map

@@ -19,6 +19,7 @@ export interface IPrediction extends IEntity {
   choice: Choice;
   points?: ScorePoints;
   status?: PredictionStatus;
+  hasJoker?: boolean;
 }
 
 export interface IPredictionModel extends IPrediction, Document {}

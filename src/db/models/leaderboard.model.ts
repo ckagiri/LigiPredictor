@@ -6,6 +6,12 @@ export interface ILeaderboard extends IEntity {}
 
 export interface ILeaderboardModel extends ILeaderboard, Document {}
 
+export enum LeaderboardStatus {
+  UPDATING_SCORES = 'UPDATING_SCORES',
+  UPDATING_RANKINGS = 'UPDATING_RANKINGS',
+  REFRESHED = 'REFRESHED'
+}
+
 const leaderboardSchema = new Schema({
 
 });

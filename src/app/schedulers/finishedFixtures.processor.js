@@ -32,6 +32,7 @@ class FinishedFixturesProcessor {
             let { fixture, prediction } = data;
             return this.predictionProcessor.processPrediction$(prediction, fixture);
         })
+            .count()
             .toPromise();
     }
 }
