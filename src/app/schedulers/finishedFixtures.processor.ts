@@ -5,7 +5,7 @@ import { IFixture, FixtureStatus }  from '../../db/models/fixture.model';
 import { IPredictionProcessor, PredictionProcessor } from './prediction.processor';
 
 export interface IFinishedFixturesProcessor {
-  processPredictions(fixtures: any[]): Promise<IPrediction[]>
+  processPredictions(fixtures: any[])
 }
 
 export class FinishedFixturesProcessor implements IFinishedFixturesProcessor {
@@ -37,7 +37,6 @@ export class FinishedFixturesProcessor implements IFinishedFixturesProcessor {
         let { fixture, prediction } = data;
         return this.predictionProcessor.processPrediction$(prediction, fixture)
       })
-      .toArray()
       .toPromise();
   }
 }

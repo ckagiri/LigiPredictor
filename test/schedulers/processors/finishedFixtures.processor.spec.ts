@@ -62,7 +62,7 @@ describe.only('Finished Fixtures', () => {
       predictionProcessorStub.getPredictions$ = sinon.stub();
       predictionProcessorStub.processPrediction$ = sinon.stub();        
     })
-    it('should getPredictions for FINISHED fixture but not AllPredictionsProcessed', async () => {
+    it('should getPredictions for FINISHED fixture with not AllPredictionsProcessed status', async () => {
       let spy = predictionProcessorStub.getPredictions$;
 
       await finishedFixturesProcessor.processPredictions(finishedFixtures)
@@ -73,7 +73,7 @@ describe.only('Finished Fixtures', () => {
     it('should process PENDING predictions', async () => {
       let spy = predictionProcessorStub.processPrediction$;
 
-      let predictions = await finishedFixturesProcessor.processPredictions(finishedFixtures);
+      await finishedFixturesProcessor.processPredictions(finishedFixtures);
 
       expect(spy).to.have.callCount(3);
     })

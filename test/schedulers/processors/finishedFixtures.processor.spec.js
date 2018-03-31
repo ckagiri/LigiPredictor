@@ -67,14 +67,14 @@ describe.only('Finished Fixtures', () => {
             predictionProcessorStub.getPredictions$ = sinon.stub();
             predictionProcessorStub.processPrediction$ = sinon.stub();
         });
-        it('should getPredictions for FINISHED fixture but not AllPredictionsProcessed', () => __awaiter(this, void 0, void 0, function* () {
+        it('should getPredictions for FINISHED fixture with not AllPredictionsProcessed status', () => __awaiter(this, void 0, void 0, function* () {
             let spy = predictionProcessorStub.getPredictions$;
             yield finishedFixturesProcessor.processPredictions(finishedFixtures);
             expect(spy).to.have.been.calledTwice;
         }));
         it('should process PENDING predictions', () => __awaiter(this, void 0, void 0, function* () {
             let spy = predictionProcessorStub.processPrediction$;
-            let predictions = yield finishedFixturesProcessor.processPredictions(finishedFixtures);
+            yield finishedFixturesProcessor.processPredictions(finishedFixtures);
             expect(spy).to.have.callCount(3);
         }));
     });
