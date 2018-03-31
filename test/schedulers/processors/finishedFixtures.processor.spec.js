@@ -55,7 +55,7 @@ let predictionProcessorStub = {
     processPrediction$: sinon.stub()
 };
 let finishedFixturesProcessor;
-describe.only('Finished Fixtures', () => {
+describe('Finished Fixtures', () => {
     describe('processPredictions', () => {
         beforeEach(() => {
             predictionProcessorStub.getPredictions$.withArgs(sinon.match(ars_che)).returns(rxjs_1.Observable.of([pred1, pred2]));
@@ -67,7 +67,7 @@ describe.only('Finished Fixtures', () => {
             predictionProcessorStub.getPredictions$ = sinon.stub();
             predictionProcessorStub.processPrediction$ = sinon.stub();
         });
-        it('should getPredictions for FINISHED fixture with not AllPredictionsProcessed status', () => __awaiter(this, void 0, void 0, function* () {
+        it('should getPredictions for FINISHED but not AllPredictionsProcessed fixture', () => __awaiter(this, void 0, void 0, function* () {
             let spy = predictionProcessorStub.getPredictions$;
             yield finishedFixturesProcessor.processPredictions(finishedFixtures);
             expect(spy).to.have.been.calledTwice;

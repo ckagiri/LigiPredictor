@@ -18,6 +18,7 @@ let newFixture = (id, homeTeam, awayTeam, status = FixtureStatus.FINISHED) => {
     gameRound: 2,
     homeTeam, awayTeam, status, 
     result: { goalsHomeTeam: 2, goalsAwayTeam: 1 },
+    allPredictionsProcessed: false,
     externalReference: {
       [ApiProvider.API_FOOTBALL_DATA]: { id }
     }
@@ -25,17 +26,34 @@ let newFixture = (id, homeTeam, awayTeam, status = FixtureStatus.FINISHED) => {
 }
 let ars_che = newFixture(1, 'Arsenal', 'Chelsea'); 
 let liv_sou = newFixture(2, 'Liverpool', 'Southampton');
-let finishedFixtures = [ ars_che, liv_sou ];
+let eve_wat = newFixture(3, 'Everton', 'Watford', FixtureStatus.IN_PLAY);
+let finishedFixtures = [ ars_che, liv_sou, eve_wat ];
 let leaderboardRepoStub = {
   findSeasonAndUpdate$: sinon.stub()
 }
-let leaderboardUpdater = new LeaderboardUpdater();
+let chalo = {
+  _id: ObjectId().toHexString(),
+  userName: 'chalo'
+};
+let kagiri = {
+  _id: ObjectId().toHexString(),
+  userName: 'kagiri'
+}
+let userRepoStub: any = {
+  findAll$: () => { return Observable.of([chalo, kagiri]) }
+}
+let leaderboardUpdater = new LeaderboardUpdater(userRepoStub);
 
-describe('Leaderboard Updater', () => {
+describe.only('Leaderboard Updater', () => {
   describe('updateScores', () => {
-    it('should getUsers', () => {
-
+    it('should getUsers', async () => {
+      let spy = sinon.spy(userRepoStub, 'findAll$')
+      
+      await leaderboardUpdater.updateScores(finishedFixtures)
+      
+      expect(spy).to.have.been.calledTwice;    
     })
+    
     xdescribe('getLeaderBoards', () => {
       it('should getSeasonboard', async () => {
         let spy = leaderboardRepoStub.findSeasonAndUpdate$;

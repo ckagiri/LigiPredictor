@@ -10,7 +10,7 @@ import { IPrediction }  from '../../db/models/prediction.model';
 import { FootballApiProvider as ApiProvider } from '../../common/footballApiProvider';
 
 export interface IPredictionProcessor {
-   getPredictions$(fixture: IFixture): Observable<IPrediction[]>
+  getPredictions$(fixture: IFixture): Observable<IPrediction[]>
   processPrediction$(prediction: IPrediction, fixture: IFixture): Observable<IPrediction>
 }
 
