@@ -54,7 +54,7 @@ class LeaderboardUpdater {
         })
             .flatMap(data => {
             let { user, fixture, leaderboard } = data;
-            return this.predictionRepo.findOne$(user['_id'], fixture['_id'])
+            return this.predictionRepo.findOneByUserAndFixture$(user['_id'], fixture['_id'])
                 .map(prediction => {
                 return { user, fixture, leaderboard, prediction };
             });

@@ -14,13 +14,74 @@ class BaseDao extends document_dao_1.DocumentDao {
         });
     }
     findByIdAndUpdate$(id, update) {
-        return rxjs_1.Observable.of({});
+        return rxjs_1.Observable.create((observer) => {
+            super.findByIdAndUpdate(id, update).exec().then((result) => {
+                observer.next(result);
+                observer.complete();
+            }, (error) => {
+                observer.error(error);
+            });
+        });
     }
     findOneAndUpdate$(conditions, update) {
-        return rxjs_1.Observable.of({});
+        return rxjs_1.Observable.create((observer) => {
+            super.findOneAndUpdate(conditions, update).exec().then((result) => {
+                observer.next(result);
+                observer.complete();
+            }, (error) => {
+                observer.error(error);
+            });
+        });
     }
-    findAll$() {
-        return rxjs_1.Observable.of([{}]);
+    findAll$(conditions, projection, options) {
+        return rxjs_1.Observable.create((observer) => {
+            super.findAll(conditions, projection, options).exec().then((result) => {
+                observer.next(result);
+                observer.complete();
+            }, (error) => {
+                observer.error(error);
+            });
+        });
+    }
+    findOne$(conditions, projection) {
+        return rxjs_1.Observable.create((observer) => {
+            super.findOne(conditions).exec().then((result) => {
+                observer.next(result);
+                observer.complete();
+            }, (error) => {
+                observer.error(error);
+            });
+        });
+    }
+    findById$(id) {
+        return rxjs_1.Observable.create((observer) => {
+            super.findById(id).exec().then((result) => {
+                observer.next(result);
+                observer.complete();
+            }, (error) => {
+                observer.error(error);
+            });
+        });
+    }
+    remove$(id) {
+        return rxjs_1.Observable.create((observer) => {
+            super.remove(id).exec().then(() => {
+                observer.next();
+                observer.complete();
+            }, (error) => {
+                observer.error(error);
+            });
+        });
+    }
+    count$(conditions) {
+        return rxjs_1.Observable.create((observer) => {
+            super.count(conditions).exec().then((result) => {
+                observer.next(result);
+                observer.complete();
+            }, (error) => {
+                observer.error(error);
+            });
+        });
     }
 }
 exports.BaseDao = BaseDao;

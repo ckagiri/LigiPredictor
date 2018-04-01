@@ -51,17 +51,20 @@
     "all": true
   },
   "dependencies": {
+    "@types/chai-http": "^3.0.4",
     "async": "^2.6.0",
     "chalk": "^2.3.2",
     "express": "^4.16.2",
     "lodash": "^4.17.5",
     "moment": "^2.21.0",
     "mongoose": "^5.0.7",
+    "morgan": "^1.9.0",
     "object-assign": "^4.1.1",
     "q": "^1.5.1",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "rxjs": "^5.5.6",
+    "serve-favicon": "^2.5.0",
     "util-promisify": "^2.1.0"
   }
 }

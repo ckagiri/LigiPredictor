@@ -10,9 +10,9 @@ export interface IBaseProviderRepository<T extends IEntity> extends IBaseReposit
   Provider: ApiProvider;
   findByExternalIdAndUpdate$(obj: IEntity): Observable<T>;
   findEachByExternalIdAndUpdate$(obj: IEntity[]): Observable<T[]>;
-  getByExternalId$(id: string|number): Observable<T>;  
-  getByExternalIds$(ids: Array<string|number>): Observable<T[]>;
-  findById$(id: string|number): Observable<T>;  
+  getByExternalId$(id: string): Observable<T>;  
+  getByExternalIds$(ids: Array<string>): Observable<T[]>;
+  findById$(id: string): Observable<T>;  
 }
 
 export class BaseProviderRepository<T extends IEntity> implements IBaseProviderRepository<T> {
@@ -51,7 +51,7 @@ export class BaseProviderRepository<T extends IEntity> implements IBaseProviderR
     return Observable.of([<T>{}])
   }
 
-  findByIdAndUpdate$(id: string | number, update: any): Observable<T> {
+  findByIdAndUpdate$(id: string, update: any): Observable<T> {
     return this._baseRepo.findByIdAndUpdate$(id, update);   
   }
     
@@ -63,7 +63,11 @@ export class BaseProviderRepository<T extends IEntity> implements IBaseProviderR
     return this._baseRepo.findAll$();
   }
 
-  findById$(id: string|number) {
+  findById$(id: string) {
     return this._baseRepo.findById$(id);
   }  
+
+  findOne$(conditions: any) {
+    return this._baseRepo.findOne$(conditions);
+  }
 }

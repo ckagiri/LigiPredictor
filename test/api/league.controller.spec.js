@@ -1,29 +1,72 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const sinon = require("sinon");
+const request = require("supertest");
+const mongoose = require("mongoose");
 const chai = require("chai");
 const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
+const chaiHttp = require("chai-http");
+chai.use(chaiHttp);
 const expect = chai.expect;
-const rxjs_1 = require("rxjs");
-const league_data_1 = require("../fixtures/testData/league_data");
-const league_controller_1 = require("../../src/app/api/league/league.controller");
-let mockLeagueService = {
-    getAllLeagues$() { return rxjs_1.Observable.of(league_data_1.newLeagues); }
+const server_1 = require("../../src/app/server");
+const league_model_1 = require("../../src/db/models/league.model");
+const season_model_1 = require("../../src/db/models/season.model");
+const team_model_1 = require("../../src/db/models/team.model");
+function clearData(done) {
+    let promises = [];
+    // for (let i in mongoose.connection.collections) {
+    //    promises.push(mongoose.connection.collections[i].remove(function (err) { }));
+    // }
+    promises.push(league_model_1.LeagueModel.remove({}).exec(), season_model_1.SeasonModel.remove({}).exec(), team_model_1.TeamModel.remove({}).exec());
+    Promise.all(promises).then(() => done());
+}
+const epl = {
+    name: 'English Premier League',
+    slug: 'english_premier_league',
+    code: 'epl'
 };
-describe.only('League Controller', () => {
-    it('should get all leagues', () => {
-        let res = { status(stat) { return this; },
-            json(result) {
-                expect(result).to.be.an.instanceof(Array);
-                expect(result[0].name).to.equal("test123");
+function addLeague(aLeague) {
+    return new Promise((resolve, reject) => {
+        new league_model_1.LeagueModel(aLeague).save((err, league) => {
+            if (err) {
+                return reject(err);
             }
-        };
-        let spy = sinon.spy(mockLeagueService, 'getAllLeagues$');
-        const leagueController = new league_controller_1.LeagueController(mockLeagueService);
-        leagueController.list({}, res);
-        expect(spy).to.have.been.called;
-        spy.restore();
+            resolve();
+        });
+    });
+}
+describe.only('League API', function () {
+    this.timeout(5000);
+    before(done => clearData(done));
+    afterEach(done => clearData(done));
+    after(done => { mongoose.disconnect(); server_1.server.close(); done(); });
+    it('should respond with JSON array', function (done) {
+        request(server_1.server)
+            .get('/api/v1/leagues')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .end((err, res) => {
+            if (err) {
+                return done(err);
+            }
+            expect(res.body).to.be.an.instanceof(Array);
+            done();
+        });
+    });
+    it('should respond with a single league', done => {
+        addLeague(epl).then(() => {
+            request(server_1.server)
+                .get(`/api/v1/leagues/${epl.slug}`)
+                .expect(200)
+                .expect('Content-Type', /json/)
+                .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                expect(res).to.be.json;
+                done();
+            });
+        });
     });
 });
 //# sourceMappingURL=league.controller.spec.js.map

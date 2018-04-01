@@ -15,8 +15,8 @@ export class SeasonUpdater implements ISeasonUpdater {
   }
 
   updateCurrentMatchRound(seasons: any[]) {
-    let externalIdToSeasonMap = new Map<string|number, any>();
-    let externalIds: Array<string|number> = [];
+    let externalIdToSeasonMap = new Map<string, any>();
+    let externalIds: Array<string> = [];
     for (let season of seasons) {
       externalIdToSeasonMap[season.id] = season;
       externalIds.push(season.id);      

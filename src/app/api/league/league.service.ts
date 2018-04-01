@@ -6,6 +6,7 @@ import { ILeagueRepository, LeagueRepository } from '../../../db/repositories/le
 import { ISeasonRepository, SeasonRepository } from '../../../db/repositories/season.repo';
 
 import { FootballApiProvider as ApiProvider } from '../../../common/footballApiProvider';
+import isMongoId from '../../utils/isMongoId'
 
 export interface ILeagueService {
   getAllLeagues$(): Observable<ILeague[]>;
@@ -29,7 +30,11 @@ export class LeagueService implements ILeagueService {
   }
 
   getLeagueById$(id: string) {
-    return this.leagueRepo.findById$(id);
+    if (isMongoId(id)) {
+      return this.leagueRepo.findById$(id);
+    } else {
+      return this.leagueRepo.findOne$({ slug: id });
+    }
   }
 
   getAllSeasonsByLeague$(leagueId: string) {

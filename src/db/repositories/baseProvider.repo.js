@@ -40,6 +40,9 @@ class BaseProviderRepository {
     findById$(id) {
         return this._baseRepo.findById$(id);
     }
+    findOne$(conditions) {
+        return this._baseRepo.findOne$(conditions);
+    }
 }
 exports.BaseProviderRepository = BaseProviderRepository;
 //# sourceMappingURL=baseProvider.repo.js.map

@@ -8,6 +8,27 @@ class DocumentDao {
         const model = new this._model(obj);
         return model.save();
     }
+    findAll(conditions = {}, projection, options) {
+        return this._model.find(conditions, projection, options);
+    }
+    findOne(conditions, projection) {
+        return this._model.findOne(conditions, projection);
+    }
+    findById(id) {
+        return this._model.findById(id);
+    }
+    findByIdAndUpdate(id, update, options = { overwrite: false, new: true }) {
+        return this._model.findByIdAndUpdate(id, update, options);
+    }
+    findOneAndUpdate(conditions, update, options = { overwrite: false, new: true }) {
+        return this._model.findOneAndUpdate(conditions, update, options);
+    }
+    remove(id) {
+        return this._model.remove({ _id: id });
+    }
+    count(conditions) {
+        return this._model.count(conditions);
+    }
 }
 exports.DocumentDao = DocumentDao;
 //# sourceMappingURL=document.dao.js.map

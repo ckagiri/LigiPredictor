@@ -8,29 +8,57 @@ class BaseRepository {
     }
     save$(data) {
         return this._baseDao.save$(data)
-            .map(d => {
-            const obj = Object.assign({}, d.toObject());
-            return obj;
+            .catch((error) => {
+            return rxjs_1.Observable.throw(error);
+        })
+            .map((data) => {
+            return data;
         });
     }
     findByIdAndUpdate$(id, update) {
-        return rxjs_1.Observable.of({});
+        return this._baseDao.findByIdAndUpdate$(id, update)
+            .catch((error) => {
+            return rxjs_1.Observable.throw(error);
+        })
+            .map((data) => {
+            return data;
+        });
     }
     findOneAndUpdate$(conditions, update) {
-        return rxjs_1.Observable.of({});
+        return this._baseDao.findOneAndUpdate$(conditions, update)
+            .catch((error) => {
+            return rxjs_1.Observable.throw(error);
+        })
+            .map((data) => {
+            return data;
+        });
     }
     findAll$(conditions = {}) {
         return this._baseDao.findAll$(conditions)
-            .flatMap(users => {
-            return rxjs_1.Observable.from(users);
+            .catch((error) => {
+            return rxjs_1.Observable.throw(error);
         })
-            .map(user => {
-            return Object.assign({}, user.toObject());
-        })
-            .toArray();
+            .map((data) => {
+            return data;
+        });
     }
     findById$(id) {
-        return rxjs_1.Observable.of({});
+        return this._baseDao.findById$(id)
+            .catch((error) => {
+            return rxjs_1.Observable.throw(error);
+        })
+            .map((data) => {
+            return data;
+        });
+    }
+    findOne$(conditions) {
+        return this._baseDao.findOne$(conditions)
+            .catch((error) => {
+            return rxjs_1.Observable.throw(error);
+        })
+            .map((data) => {
+            return data;
+        });
     }
 }
 exports.BaseRepository = BaseRepository;
