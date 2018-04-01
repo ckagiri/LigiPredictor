@@ -39,7 +39,7 @@ class FinishedFixturesScheduler extends events_1.EventEmitter {
         });
         this.processFinishedFixtures = () => {
             // if _processing return
-            // let fs = await fixtureRepo.findFinishedWithPendingPredictions$();
+            // let fs = await fixtureRepo.findAllFinishedWithPendingPredictions$();
             // await processPredictions(fs);
         };
         this.processPredictions = (finishedFixtures) => __awaiter(this, void 0, void 0, function* () {
@@ -47,6 +47,7 @@ class FinishedFixturesScheduler extends events_1.EventEmitter {
                 yield this.finishedFixturesProcessor.processPredictions(finishedFixtures);
                 // await leaderboardUpdater.updateScores(finishedFixtures)
                 //await leaderboardUpdater.updateRankigs()
+                //await leaderboardUpdater.markLeaderboardsAsRefreshed()
                 //await finishedFixturesProcessor.setToTrueAllPredictionsProcessed(fixtures)
             }
             this.eventMediator.publish('predictions:processed');

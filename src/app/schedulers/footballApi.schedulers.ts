@@ -2,9 +2,9 @@ import { IScheduler } from '../schedulers';
 import { FootballApiProvider as ApiProvider } from '../../common/footballApiProvider';
 import { SeasonScheduler } from './footballApi/season.scheduler';
 
-export class FootballDataSchedulers implements IScheduler {
+export class FootballApiSchedulers implements IScheduler {
   static getInstance() {
-    return new FootballDataSchedulers();
+    return new FootballApiSchedulers();
   }
 
   start() {

@@ -48,7 +48,7 @@ export class FinishedFixturesScheduler extends EventEmitter implements ISchedule
 
   processFinishedFixtures = () => {
     // if _processing return
-    // let fs = await fixtureRepo.findFinishedWithPendingPredictions$();
+    // let fs = await fixtureRepo.findAllFinishedWithPendingPredictions$();
     // await processPredictions(fs);
   }
 
@@ -57,6 +57,7 @@ export class FinishedFixturesScheduler extends EventEmitter implements ISchedule
       await this.finishedFixturesProcessor.processPredictions(finishedFixtures);
       // await leaderboardUpdater.updateScores(finishedFixtures)
       //await leaderboardUpdater.updateRankigs()
+      //await leaderboardUpdater.markLeaderboardsAsRefreshed()
       //await finishedFixturesProcessor.setToTrueAllPredictionsProcessed(fixtures)
     }
     this.eventMediator.publish('predictions:processed')
