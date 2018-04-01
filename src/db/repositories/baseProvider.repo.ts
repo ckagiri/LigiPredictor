@@ -12,6 +12,7 @@ export interface IBaseProviderRepository<T extends IEntity> extends IBaseReposit
   findEachByExternalIdAndUpdate$(obj: IEntity[]): Observable<T[]>;
   getByExternalId$(id: string|number): Observable<T>;  
   getByExternalIds$(ids: Array<string|number>): Observable<T[]>;
+  findById$(id: string|number): Observable<T>;  
 }
 
 export class BaseProviderRepository<T extends IEntity> implements IBaseProviderRepository<T> {
@@ -61,4 +62,8 @@ export class BaseProviderRepository<T extends IEntity> implements IBaseProviderR
   findAll$(): Observable<T[]> {
     return this._baseRepo.findAll$();
   }
+
+  findById$(id: string|number) {
+    return this._baseRepo.findById$(id);
+  }  
 }

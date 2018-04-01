@@ -131,3 +131,4 @@ $RECYCLE.BIN/
 
 /src/config
 /src/config/environment
+/src/**/*.js.map

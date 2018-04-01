@@ -37,6 +37,9 @@ class BaseProviderRepository {
     findAll$() {
         return this._baseRepo.findAll$();
     }
+    findById$(id) {
+        return this._baseRepo.findById$(id);
+    }
 }
 exports.BaseProviderRepository = BaseProviderRepository;
 //# sourceMappingURL=baseProvider.repo.js.map

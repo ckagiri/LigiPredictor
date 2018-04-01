@@ -9,6 +9,7 @@ export interface IBaseRepository<T extends IEntity> {
   findByIdAndUpdate$(id: string|number, update: any): Observable<T>;
   findOneAndUpdate$(conditions: any, update: any): Observable<T>;
   findAll$(conditions?: any): Observable<T[]>;
+  findById$(id: string|number): Observable<T>;
 }
 
 export class BaseRepository<T extends IEntity> implements IBaseRepository<T> {
@@ -18,7 +19,7 @@ export class BaseRepository<T extends IEntity> implements IBaseRepository<T> {
     this._baseDao = new BaseDao<Document>(schemaModel);
   }
   
-  save$(data: T): Observable<T> {
+  save$(data: T) {
     return this._baseDao.save$(data)
       .map(d => {
         const obj = Object.assign({}, d.toObject()) as T;
@@ -26,15 +27,15 @@ export class BaseRepository<T extends IEntity> implements IBaseRepository<T> {
       })
   }
   
-  findByIdAndUpdate$(id: string | number, update: any): Observable<T> {
+  findByIdAndUpdate$(id: string | number, update: any) {
     return Observable.of(<T>{})    
   }
     
-  findOneAndUpdate$(conditions: any, update: any): Observable<T> {
+  findOneAndUpdate$(conditions: any, update: any) {
     return Observable.of(<T>{})    
   } 
 
-  findAll$(conditions: any = {}): Observable<T[]> {
+  findAll$(conditions: any = {}) {
     return this._baseDao.findAll$(conditions)
       .flatMap(users => {
         return Observable.from(users);
@@ -43,5 +44,9 @@ export class BaseRepository<T extends IEntity> implements IBaseRepository<T> {
         return Object.assign({}, user.toObject()) as T;
       })
       .toArray();
+  }
+
+  findById$(id: string | number) {
+    return Observable.of(<T>{})    
   }
 }

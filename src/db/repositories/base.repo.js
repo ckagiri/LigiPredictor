@@ -29,6 +29,9 @@ class BaseRepository {
         })
             .toArray();
     }
+    findById$(id) {
+        return rxjs_1.Observable.of({});
+    }
 }
 exports.BaseRepository = BaseRepository;
 //# sourceMappingURL=base.repo.js.map
