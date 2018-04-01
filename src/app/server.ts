@@ -10,28 +10,11 @@ const chalk = require('chalk');
 import { routes as apiRoutes } from './apiRoutes';
 const config = require('../config/environment/index');
 
-const globalMiddleware = require('./middleware/global.middleware');
 (<any>mongoose).Promise = global.Promise;    
 const app = express();
 app.use(favicon(__dirname + '/favicon.ico'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(logger('dev'));
-app.use((req, res, next) => {
-  if (req.query.id) {
-    req.query._id = req.query.id
-    delete req.query.id
-  }
-  next()
-})
-app.use((req, res, next) => {
-	if (req.path.substr(-1) == '/' && req.path.length > 1) {
-		var query = req.url.slice(req.path.length);
-		res.redirect(301, req.path.slice(0, -1) + query);
-	} else {
-		next();
-	}
-});
 
 app.use('/api', apiRoutes);
 

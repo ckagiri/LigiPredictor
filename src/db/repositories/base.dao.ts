@@ -27,7 +27,7 @@ export class BaseDao<T extends Document> extends DocumentDao<T> implements IBase
     });
   }
   
-  public findByIdAndUpdate$(id: string, update: any): Observable<T> {
+  findByIdAndUpdate$(id: string, update: any): Observable<T> {
 		return Observable.create((observer: Subscriber<T>) => {
 			super.findByIdAndUpdate(id, update).exec().then((result: T) => {
 				observer.next(result);
