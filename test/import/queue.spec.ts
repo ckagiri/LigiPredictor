@@ -2,7 +2,7 @@ import { Queue } from '../../src/import/queue';
 import { assert, expect } from 'chai';
 import * as sinon from 'sinon';
 
-describe.skip('Queue', () => {  
+describe('Queue', () => {  
   let q;
   let newJob = () => ({ start: () => Promise.resolve({}) })
   
@@ -62,48 +62,35 @@ describe.skip('Queue', () => {
     })
 
     it('should reduce tokens left when processing pending job after interval', () => {
-      let clock = sinon.useFakeTimers();          
-      q = new Queue(1, 100);  
+      q = new Queue(1, 30);  
       q.jobs.push(newJob());
       let j = newJob();   
-      let spy = sinon.spy(j, 'start');
       q.addJob(j);
-      clock.tick(101);
-      assert.equal(q.tokensLeftInInterval, 0);
-      clock.restore();
+      setTimeout(() => {
+        assert.equal(q.tokensLeftInInterval, 0);        
+      }, 45)
     })
 
     it('should schedule timer when tokens are finished during processing', () => {
-      let clock = sinon.useFakeTimers();          
-      q = new Queue(1, 100);  
       q.jobs.push(newJob());
       q.jobs.push(newJob());
       q.addJob(newJob());
-      clock.tick(101);
-      assert.equal(q.pendingJobs.length, 1);
-      expect(q.timer).to.exist;
-      clock.restore();
+      setImmediate(() => {
+        assert.equal(q.pendingJobs.length, 1);
+        expect(q.timer).to.exist;  
+      })
     });
 
     it('should clear timer when no jobs remaining', () => {
-      let clock = sinon.useFakeTimers();          
-      q = new Queue(1, 100);  
       q.jobs.push(newJob());
       q.jobs.push(newJob());
       q.addJob(newJob());
 
-      assert.equal(q.jobs.length, 1);
-      assert.equal(q.pendingJobs.length, 1);
-
-      clock.tick(101);
-      assert.equal(q.jobs.length, 0);
-      assert.equal(q.pendingJobs.length, 1);
-      
-      clock.tick(101);
-      assert.equal(q.jobs.length, 0)
-      assert.equal(q.pendingJobs.length, 0);
-      expect(q.timer).to.not.exist;
-      clock.restore();
+      setImmediate(() => {
+        assert.equal(q.jobs.length, 0)
+        assert.equal(q.pendingJobs.length, 0);
+        expect(q.timer).to.not.exist;
+      })
     });
   })
 
@@ -155,8 +142,10 @@ describe.skip('Queue', () => {
       q.tokensLeftInInterval = 1;   
       q.jobs.push(newJob());
       q.addJob(newJob());
-      assert.equal(q.jobs.length, 0)
-      assert.equal(q.pendingJobs.length, 1);
+      setImmediate(() => {
+        assert.equal(q.jobs.length, 0)
+        assert.equal(q.pendingJobs.length, 1);
+      })
     })
 
     it('should process the last job after starting current job', () => {
@@ -164,10 +153,10 @@ describe.skip('Queue', () => {
       let j = newJob();
       let spy = sinon.spy(q, 'processLastJob');
       q.addJob(j);
-      sinon.assert.calledTwice(spy);      
+      setImmediate(() => {
+        sinon.assert.calledTwice(spy);      
+      })
     })
-
-
   })
   describe('start a job', () => {
     it('should be passed this queue instance', ()  => {
