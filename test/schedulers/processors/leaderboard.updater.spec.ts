@@ -12,6 +12,7 @@ import { ILeaderboardUpdater, LeaderboardUpdater } from '../../../src/app/schedu
 import { FixtureStatus } from '../../../src/db/models/fixture.model';
 import { PredictionStatus } from '../../../src/db/models/prediction.model';
 import { LeaderboardStatus } from '../../../src/db/models/leaderboard.model';
+import { CacheService } from '../../../src/common/cacheService';
 
 let seasonId = '4edd40c86762e0fb12000001';
 let gameRound = 2;
@@ -77,7 +78,7 @@ let userRepoStub: any = {
   findAll$: () => { return Observable.of([chalo, kagiri]) }
 }
 let predictionRepoStub: any = {
-  findOne$: () => { return Observable.of(pred1) }
+  findOneByUserAndFixture$: () => { return Observable.of(pred1) }
 }
 let userScoreRepoStub: any = {
   findOneAndUpdateOrCreate$: () => { return Observable.of({ _id: ObjectId().toHexString() }) },
@@ -148,7 +149,7 @@ describe('Leaderboard Updater', () => {
     })
     it('should cache boards', async () => {
       let spy = leaderboardRepoStub.findSeasonBoardAndUpdate$;
-      
+      leaderboardUpdater.setCacheService(new CacheService);
       await leaderboardUpdater.updateScores(finishedFixtures)
       
       expect(spy).to.have.callCount(4);      

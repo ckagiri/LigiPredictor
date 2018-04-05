@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = require("events");
-let Moment = require('moment');
+let moment = require('moment');
 const taskRunner_1 = require("../taskRunner");
 const apiClient_1 = require("../../../thirdParty/footballApi/apiClient");
 const eventMediator_1 = require("../../../common/eventMediator");
@@ -61,8 +61,29 @@ class FixturesScheduler extends events_1.EventEmitter {
                 this.emit('stopped');
             });
         });
-        this.calculateNextUpdate = (fixtures) => {
-            return 10 * 60 * 60 * 1000;
+        this.calculateNextUpdate = (fixtureList) => {
+            let nextUpdate = moment().add(12, 'hours');
+            let fixtures = fixtureList.filter(f => f.status !== fixture_model_1.FixtureStatus.FINISHED);
+            let hasLiveFixture = false;
+            for (let fixture of fixtures) {
+                if (fixture.status == fixture_model_1.FixtureStatus.IN_PLAY) {
+                    hasLiveFixture = true;
+                }
+                if (fixture.status == fixture_model_1.FixtureStatus.SCHEDULED || fixture.status == fixture_model_1.FixtureStatus.TIMED) {
+                    let fixtureStart = moment(fixture.date);
+                    const diff = fixtureStart.diff(moment(), 'minutes');
+                    if (diff <= 5) {
+                        hasLiveFixture = true;
+                    }
+                    if (fixtureStart.isAfter(moment()) && fixtureStart.isBefore(nextUpdate)) {
+                        nextUpdate = fixtureStart;
+                    }
+                }
+            }
+            if (hasLiveFixture) {
+                nextUpdate = moment().add(90, 'seconds');
+            }
+            return nextUpdate - moment();
         };
     }
     static getInstance(provider) {

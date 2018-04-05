@@ -6,6 +6,7 @@ import { LeaderboardStatus, ILeaderboard } from '../../db/models/leaderboard.mod
 import { ILeaderboardRepository, LeaderboardRepository }  from '../../db/repositories/leaderboard.repo';
 import { IPredictionRepository, PredictionRepository }  from '../../db/repositories/prediction.repo';
 import { IUserScoreRepository, UserScoreRepository} from '../../db/repositories/userScore.repo';
+import { ICacheService, CacheService } from '../../common/cacheService';
 
 export interface ILeaderboardUpdater {
   updateScores(fixtures: IFixture[])
@@ -21,12 +22,18 @@ export class LeaderboardUpdater implements ILeaderboardUpdater {
     UserScoreRepository.getInstance()
   }
   
+  private cacheService: ICacheService;
+
   constructor(
     private userRepo: IUserRepository,
     private leaderboardRepo: ILeaderboardRepository,
     private predictionRepo: IPredictionRepository,
     private userScoreRepo: IUserScoreRepository
   ) { }
+
+  setCacheService(cacheService: ICacheService) {
+    this.cacheService = cacheService;
+  }
 
   updateScores(fixtures: IFixture[]) {
     return Observable.from(fixtures)
@@ -49,9 +56,22 @@ export class LeaderboardUpdater implements ILeaderboardUpdater {
         let year = date.getFullYear();
   
         let boards: Observable<ILeaderboard>[] = [];
-        let sBoard = this.leaderboardRepo.findSeasonBoardAndUpdate$(season, {status: LeaderboardStatus.UPDATING_SCORES});
-        let mBoard = this.leaderboardRepo.findMonthBoardAndUpdate$(season, year, month, {status: LeaderboardStatus.UPDATING_SCORES});
-        let rBoard = this.leaderboardRepo.findRoundBoardAndUpdate$(season, gameRound, {status: LeaderboardStatus.UPDATING_SCORES});
+        let sBoard: Observable<ILeaderboard>;
+        let mBoard: Observable<ILeaderboard>;
+        let rBoard: Observable<ILeaderboard>;
+        
+        if(this.cacheService != null) {
+          sBoard = this.cacheService.get(`${season}`, 
+            this.leaderboardRepo.findSeasonBoardAndUpdate$(season, {status: LeaderboardStatus.UPDATING_SCORES}));
+          mBoard = this.cacheService.get(`${season}-${year}-${month}`, 
+            this.leaderboardRepo.findMonthBoardAndUpdate$(season, year, month, {status: LeaderboardStatus.UPDATING_SCORES}));
+          rBoard = this.cacheService.get(`${season}-${gameRound}`,
+            this.leaderboardRepo.findRoundBoardAndUpdate$(season, gameRound, {status: LeaderboardStatus.UPDATING_SCORES}));
+        } else {
+          sBoard = this.leaderboardRepo.findSeasonBoardAndUpdate$(season, {status: LeaderboardStatus.UPDATING_SCORES});
+          mBoard = this.leaderboardRepo.findMonthBoardAndUpdate$(season, year, month, {status: LeaderboardStatus.UPDATING_SCORES});
+          rBoard = this.leaderboardRepo.findRoundBoardAndUpdate$(season, gameRound, {status: LeaderboardStatus.UPDATING_SCORES});
+        }
         boards.push(sBoard, mBoard, rBoard);
         return Observable.forkJoin(boards)
           .flatMap(leaderboards => {
@@ -71,7 +91,7 @@ export class LeaderboardUpdater implements ILeaderboardUpdater {
       .concatMap(data => {
         let { user, fixture, leaderboard, prediction } = data;
         let userId = user['_id'];
-        let fixtureId = fixture['_id']
+        let fixtureId = fixture['_id'];
         let leaderboardId = leaderboard['_id'];
         let predictionId = prediction['_id'];
         let { points, hasJoker } = prediction;

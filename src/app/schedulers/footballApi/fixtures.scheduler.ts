@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-let Moment = require('moment');
+let moment = require('moment');
 
 import { IScheduler } from '../../schedulers';
 import { ITaskRunner, TaskRunner } from '../taskRunner';
@@ -7,7 +7,7 @@ import { IFootballApiClient, FootballApiClient as ApiClient } from '../../../thi
 import { FootballApiProvider as ApiProvider } from '../../../common/footballApiProvider';
 import { IEventMediator, EventMediator } from '../../../common/eventMediator';
 import { IFixtureConverter, FixtureConverter } from '../../../db/converters/fixture.converter';
-import { FixtureStatus } from '../../../db/models/fixture.model';
+import { IFixture, FixtureStatus } from '../../../db/models/fixture.model';
 
 import { IFixturesUpdater, FixturesUpdater } from './fixtures.updater';
 
@@ -85,7 +85,29 @@ export class FixturesScheduler extends EventEmitter implements IScheduler {
     })
   }
 
-  calculateNextUpdate = (fixtures: any[]) => {
-    return 10*60*60*1000;
+  calculateNextUpdate = (fixtureList: IFixture[]) => {
+    let nextUpdate = moment().add(12, 'hours');
+    let fixtures = fixtureList.filter(f => f.status !== FixtureStatus.FINISHED);
+    let hasLiveFixture = false;
+    for(let fixture of fixtures) {
+      if (fixture.status == FixtureStatus.IN_PLAY) {
+        hasLiveFixture = true;
+      }
+      if (fixture.status == FixtureStatus.SCHEDULED || fixture.status == FixtureStatus.TIMED) {
+        let fixtureStart = moment(fixture.date);        
+        const diff = fixtureStart.diff(moment(), 'minutes');
+        if(diff <= 5) {
+          hasLiveFixture = true;
+        }
+        if (fixtureStart.isAfter(moment()) && fixtureStart.isBefore(nextUpdate)) {
+          nextUpdate = fixtureStart;
+        }
+      }
+    }
+
+    if(hasLiveFixture) {
+      nextUpdate = moment().add(90, 'seconds');
+    }
+    return nextUpdate - moment();
   }
 }

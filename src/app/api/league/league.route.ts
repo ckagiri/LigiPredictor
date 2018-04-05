@@ -4,7 +4,7 @@ import { LeagueController } from './league.controller';
 let router = Router();
 
 class LeagueRouter {
-  private controller: LeagueController = LeagueController.getInstance();
+  private controller = LeagueController.getInstance();
 
   get routes () {
       router.get('/', this.controller.list);

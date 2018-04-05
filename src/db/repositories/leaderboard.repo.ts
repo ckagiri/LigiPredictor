@@ -5,9 +5,9 @@ import { ILeaderboard, ILeaderboardModel, LeaderboardModel } from '../models/lea
 import { IBaseRepository, BaseRepository } from './base.repo';
 
 export interface ILeaderboardRepository extends IBaseRepository<ILeaderboard> {  
-  findSeasonBoardAndUpdate$(seasonId: string, update: any);
-  findMonthBoardAndUpdate$(seasonId: string, year: number, month: number, update: any);
-  findRoundBoardAndUpdate$(seasonId: string, gameRound: number, update: any);
+  findSeasonBoardAndUpdate$(seasonId: string, update: any): Observable<ILeaderboard>
+  findMonthBoardAndUpdate$(seasonId: string, year: number, month: number, update: any): Observable<ILeaderboard>
+  findRoundBoardAndUpdate$(seasonId: string, gameRound: number, update: any): Observable<ILeaderboard>
 }
 
 export class LeaderboardRepository extends BaseRepository<ILeaderboard> implements ILeaderboardRepository {

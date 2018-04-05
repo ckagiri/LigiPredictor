@@ -21,6 +21,7 @@ const leaderboard_updater_1 = require("../../../src/app/schedulers/leaderboard.u
 const fixture_model_1 = require("../../../src/db/models/fixture.model");
 const prediction_model_1 = require("../../../src/db/models/prediction.model");
 const leaderboard_model_1 = require("../../../src/db/models/leaderboard.model");
+const cacheService_1 = require("../../../src/common/cacheService");
 let seasonId = '4edd40c86762e0fb12000001';
 let gameRound = 2;
 let newFixture = (id, homeTeam, awayTeam, status = fixture_model_1.FixtureStatus.FINISHED) => {
@@ -85,7 +86,7 @@ let userRepoStub = {
     findAll$: () => { return rxjs_1.Observable.of([chalo, kagiri]); }
 };
 let predictionRepoStub = {
-    findOne$: () => { return rxjs_1.Observable.of(pred1); }
+    findOneByUserAndFixture$: () => { return rxjs_1.Observable.of(pred1); }
 };
 let userScoreRepoStub = {
     findOneAndUpdateOrCreate$: () => { return rxjs_1.Observable.of({ _id: ObjectId().toHexString() }); },
@@ -140,6 +141,7 @@ describe('Leaderboard Updater', () => {
         }));
         it('should cache boards', () => __awaiter(this, void 0, void 0, function* () {
             let spy = leaderboardRepoStub.findSeasonBoardAndUpdate$;
+            leaderboardUpdater.setCacheService(new cacheService_1.CacheService);
             yield leaderboardUpdater.updateScores(finishedFixtures);
             expect(spy).to.have.callCount(4);
         }));

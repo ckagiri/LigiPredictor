@@ -6,6 +6,12 @@ interface CacheContent {
   value: any;
 }
 
+export interface ICacheService {
+  get(key: string, fallback?: Observable<any>, maxAge?: number): Observable<any> | Subject<any>;
+  set(key: string, value: any, maxAge?: number): void;
+  has(key: string): boolean
+}
+
 /**
  * Cache Service is an observables based in-memory cache implementation
  * Keeps track of in-flight observables and sets a default expiry for cached values
@@ -15,7 +21,7 @@ interface CacheContent {
 export class CacheService {
   private cache: Map<string, CacheContent> = new Map<string, CacheContent>();
   private inFlightObservables: Map<string, Subject<any>> = new Map<string, Subject<any>>();
-  readonly DEFAULT_MAX_AGE: number = 300000;
+  readonly DEFAULT_MAX_AGE: number = 15 * 60 * 1000;
 
   /**
    * Gets the value from cache if the key is provided.
@@ -26,7 +32,7 @@ export class CacheService {
   get(key: string, fallback?: Observable<any>, maxAge?: number): Observable<any> | Subject<any> {
 
     if (this.hasValidCachedValue(key)) {
-      console.log(`%cGetting from cache ${key}`, 'color: green');
+      // console.log(`%cGetting from cache ${key}`, 'color: green');
       return Observable.of(this.cache.get(key).value);
     }
 
@@ -38,7 +44,7 @@ export class CacheService {
       return this.inFlightObservables.get(key);
     } else if (fallback && fallback instanceof Observable) {
       this.inFlightObservables.set(key, new Subject());
-      console.log(`%c Calling api for ${key}`, 'color: purple');
+      // console.log(`%c Calling api for ${key}`, 'color: purple');
       return fallback.do((value) => { this.set(key, value, maxAge); });
     } else {
       return Observable.throw('Requested key is not available in Cache');

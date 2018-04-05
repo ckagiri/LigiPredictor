@@ -20,6 +20,9 @@ class LeaderboardUpdater {
             prediction_repo_1.PredictionRepository.getInstance(),
             userScore_repo_1.UserScoreRepository.getInstance();
     }
+    setCacheService(cacheService) {
+        this.cacheService = cacheService;
+    }
     updateScores(fixtures) {
         return rxjs_1.Observable.from(fixtures)
             .filter(fixture => {
@@ -40,9 +43,19 @@ class LeaderboardUpdater {
             let month = date.getUTCMonth() + 1;
             let year = date.getFullYear();
             let boards = [];
-            let sBoard = this.leaderboardRepo.findSeasonBoardAndUpdate$(season, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
-            let mBoard = this.leaderboardRepo.findMonthBoardAndUpdate$(season, year, month, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
-            let rBoard = this.leaderboardRepo.findRoundBoardAndUpdate$(season, gameRound, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
+            let sBoard;
+            let mBoard;
+            let rBoard;
+            if (this.cacheService != null) {
+                sBoard = this.cacheService.get(`${season}`, this.leaderboardRepo.findSeasonBoardAndUpdate$(season, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES }));
+                mBoard = this.cacheService.get(`${season}-${year}-${month}`, this.leaderboardRepo.findMonthBoardAndUpdate$(season, year, month, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES }));
+                rBoard = this.cacheService.get(`${season}-${gameRound}`, this.leaderboardRepo.findRoundBoardAndUpdate$(season, gameRound, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES }));
+            }
+            else {
+                sBoard = this.leaderboardRepo.findSeasonBoardAndUpdate$(season, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
+                mBoard = this.leaderboardRepo.findMonthBoardAndUpdate$(season, year, month, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
+                rBoard = this.leaderboardRepo.findRoundBoardAndUpdate$(season, gameRound, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
+            }
             boards.push(sBoard, mBoard, rBoard);
             return rxjs_1.Observable.forkJoin(boards)
                 .flatMap(leaderboards => {

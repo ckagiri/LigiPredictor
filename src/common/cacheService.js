@@ -12,7 +12,7 @@ class CacheService {
     constructor() {
         this.cache = new Map();
         this.inFlightObservables = new Map();
-        this.DEFAULT_MAX_AGE = 300000;
+        this.DEFAULT_MAX_AGE = 15 * 60 * 1000;
     }
     /**
      * Gets the value from cache if the key is provided.
@@ -22,7 +22,7 @@ class CacheService {
      */
     get(key, fallback, maxAge) {
         if (this.hasValidCachedValue(key)) {
-            console.log(`%cGetting from cache ${key}`, 'color: green');
+            // console.log(`%cGetting from cache ${key}`, 'color: green');
             return Observable_1.Observable.of(this.cache.get(key).value);
         }
         if (!maxAge) {
@@ -33,7 +33,7 @@ class CacheService {
         }
         else if (fallback && fallback instanceof Observable_1.Observable) {
             this.inFlightObservables.set(key, new Rx_1.Subject());
-            console.log(`%c Calling api for ${key}`, 'color: purple');
+            // console.log(`%c Calling api for ${key}`, 'color: purple');
             return fallback.do((value) => { this.set(key, value, maxAge); });
         }
         else {
