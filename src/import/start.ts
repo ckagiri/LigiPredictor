@@ -1,5 +1,5 @@
 
-import { apiFootballDataImporter }  from './apiFootballData/run'
+import { apiFootballDataImporter }  from './apiFootballData/start'
 import { config } from '../config/environment/index';
 import * as db from '../db/index'
 function start() {

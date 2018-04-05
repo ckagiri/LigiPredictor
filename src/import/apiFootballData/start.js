@@ -9,4 +9,4 @@ exports.apiFootballDataImporter = {
         q.addJob(main_job_1.MainJob.getInstance());
     }
 };
-//# sourceMappingURL=run.js.map
+//# sourceMappingURL=start.js.map
