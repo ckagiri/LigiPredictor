@@ -139,7 +139,7 @@ describe('Leaderboard Updater', () => {
       expect(spy).to.have.been.calledWith(seasonId, gameRound, {status: LeaderboardStatus.UPDATING_SCORES})
     })
     it('should get fixture prediction for the user', async () => {
-      let spy = sinon.spy(predictionRepoStub, 'findOne$');
+      let spy = sinon.spy(predictionRepoStub, 'findOneByUserAndFixture$');
 
       await leaderboardUpdater.updateScores(finishedFixtures)
 

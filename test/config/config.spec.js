@@ -2,10 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const configPath = '../../src/config/environment/index';
-let config = require(configPath);
+let Config = require(configPath);
+let config = Config.getInstance();
 function reloadConfig() {
     delete require.cache[require.resolve(configPath)];
-    return require(configPath);
+    let Config = require(configPath);
+    return Config.getInstance();
 }
 describe('config', () => {
     it('should select development when NODE_ENV=null', () => {

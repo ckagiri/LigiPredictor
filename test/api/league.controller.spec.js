@@ -8,16 +8,12 @@ chai.use(sinonChai);
 const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
 const expect = chai.expect;
-//import { server as app } from '../../src/app/server';
-let app;
+const server_1 = require("../../src/app/server");
 const league_model_1 = require("../../src/db/models/league.model");
 const season_model_1 = require("../../src/db/models/season.model");
 const team_model_1 = require("../../src/db/models/team.model");
 function clearData(done) {
     let promises = [];
-    // for (let i in mongoose.connection.collections) {
-    //    promises.push(mongoose.connection.collections[i].remove(function (err) { }));
-    // }
     promises.push(league_model_1.LeagueModel.remove({}).exec(), season_model_1.SeasonModel.remove({}).exec(), team_model_1.TeamModel.remove({}).exec());
     Promise.all(promises).then(() => done());
 }
@@ -40,9 +36,9 @@ describe('League API', function () {
     this.timeout(5000);
     before(done => clearData(done));
     afterEach(done => clearData(done));
-    after(done => { mongoose.disconnect(); app.close(); done(); });
+    after(done => { mongoose.disconnect(); server_1.server.close(); done(); });
     it('should respond with JSON array', function (done) {
-        request(app)
+        request(server_1.server)
             .get('/api/v1/leagues')
             .expect(200)
             .expect('Content-Type', /json/)
@@ -56,7 +52,7 @@ describe('League API', function () {
     });
     it('should respond with a single league', done => {
         addLeague(epl).then(() => {
-            request(app)
+            request(server_1.server)
                 .get(`/api/v1/leagues/${epl.slug}`)
                 .expect(200)
                 .expect('Content-Type', /json/)

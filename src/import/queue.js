@@ -75,9 +75,11 @@ class Queue {
             });
         };
         this.cleanUp = () => {
-            clearInterval(this.timer);
-            this.timer = null;
-            this.isActive = false;
+            if (this.isActive) {
+                clearInterval(this.timer);
+                this.timer = null;
+                this.isActive = false;
+            }
         };
         this.tokensInInterval = limit;
         this.tokensLeftInInterval = limit;

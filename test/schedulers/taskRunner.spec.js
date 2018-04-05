@@ -6,7 +6,7 @@ const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 const expect = chai.expect;
 const taskRunner_1 = require("../../src/app/schedulers/taskRunner");
-describe('TaskRunner', () => {
+describe.skip('TaskRunner', () => {
     let taskRunner = new taskRunner_1.TaskRunner();
     describe('run', () => {
         it('should call begin', () => {

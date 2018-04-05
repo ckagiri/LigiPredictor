@@ -134,7 +134,7 @@ describe('Leaderboard Updater', () => {
             expect(spy).to.have.been.calledWith(seasonId, gameRound, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
         }));
         it('should get fixture prediction for the user', () => __awaiter(this, void 0, void 0, function* () {
-            let spy = sinon.spy(predictionRepoStub, 'findOne$');
+            let spy = sinon.spy(predictionRepoStub, 'findOneByUserAndFixture$');
             yield leaderboardUpdater.updateScores(finishedFixtures);
             expect(spy).to.have.been.called;
             expect(spy.firstCall).to.have.been.calledWith(chalo._id, ars_che._id);

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const queue_1 = require("../../src/import/queue");
 const chai_1 = require("chai");
 const sinon = require("sinon");
-describe('Queue', () => {
+describe.skip('Queue', () => {
     let q;
     let newJob = () => ({ start: () => { } });
     let job = beforeEach(() => {

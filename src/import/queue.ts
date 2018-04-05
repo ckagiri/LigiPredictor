@@ -85,8 +85,10 @@ export class Queue {
   }
 
   cleanUp = () => {
-    clearInterval(this.timer);
-    this.timer = null;
-    this.isActive = false;
+    if(this.isActive) {
+      clearInterval(this.timer);
+      this.timer = null;
+      this.isActive = false;
+    }
   }
 }

@@ -1,11 +1,13 @@
 import { expect } from 'chai';
 const configPath = '../../src/config/environment/index';
 import {Configurations}  from '../../src/config/environment/index';
-let config: Configurations = require(configPath);
+let Config = require(configPath);
+let config: Configurations = Config.getInstance();
 
 function reloadConfig(){
   delete require.cache[require.resolve(configPath)];
-  return require(configPath);
+  let Config = require(configPath);
+  return Config.getInstance()
 }
 
 describe('config', () => {

@@ -23,7 +23,7 @@ let fixturesProcessorStub: any = {
   }
 }
 let eventMediator: IEventMediator = EventMediator.getInstance();
-let finishedFixturesScheduler: any;
+let finishedFixturesScheduler: FinishedFixturesScheduler;
 
 describe('ApiFootballData: FinishedFixtures scheduler', () => {
   beforeEach(() => {

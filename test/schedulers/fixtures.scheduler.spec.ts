@@ -78,7 +78,7 @@ describe('ApiFootballData: Fixtures scheduler', () => {
     clock.restore();  
   })  
 
-  describe.only('nextUpdate', () => {
+  describe('nextUpdate', () => {
     it('should update after 90secs if any fixture is IN_PLAY', (done) => {
       ars_che_td.status = FixtureStatus.IN_PLAY;
       fixturesScheduler.start();  

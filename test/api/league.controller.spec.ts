@@ -11,17 +11,13 @@ import chaiHttp = require('chai-http');
 chai.use(chaiHttp);
   const expect = chai.expect;
 
-//import { server as app } from '../../src/app/server';
-let app:any;
+import { server as app } from '../../src/app/server';
 import { LeagueModel as League } from '../../src/db/models/league.model';
 import { SeasonModel as Season } from '../../src/db/models/season.model';
 import { TeamModel as Team } from '../../src/db/models/team.model';
 
 function clearData(done) {
   let promises = <any>[];
-  // for (let i in mongoose.connection.collections) {
-  //    promises.push(mongoose.connection.collections[i].remove(function (err) { }));
-  // }
   promises.push(League.remove({}).exec(), Season.remove({}).exec(), Team.remove({}).exec())
   Promise.all(promises).then(() => done());
 }
