@@ -85,6 +85,7 @@ export class CompetitionJob implements IJob {
   }
 
   start(queue: Queue) {
+    console.log('** starting ApiFootballData Competition job')
     let competitionObs =  Observable.fromPromise(this.apiClient.getCompetition(this.competitionId))
       .flatMap((competitionRes: any) => {
         let competition = competitionRes.data;
@@ -92,13 +93,15 @@ export class CompetitionJob implements IJob {
       })
     let teamsObs = Observable.fromPromise(this.apiClient.getTeams(this.competitionId))
       .flatMap((teamsRes: any) => {
-        let teams = teamsRes.data.teams;
+        let teams = teamsRes.data.teams;        
         return this.teamRepo.findByNameAndUpdate$(teams);
       })
     return Observable.zip(competitionObs, teamsObs, (competition, teams) => {
       return { competition, teams }
     })
-    .map(_ => {
+    .catch( ( error: any ) => {
+      return Observable.throw( error );
+    })    .map(_ => {
       let jobBuilder = FixturesJob.Builder;
       let job = jobBuilder
         .setApiClient(this.apiClient)

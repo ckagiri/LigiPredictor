@@ -1,9 +1,10 @@
 let request = require('request-promise');
 const configPath = '../../../../src/config/environment/index'
-import {Configurations}  from '../../../../src/config/environment/index';
+import { Configurations }  from '../../../../src/config/environment/index';
 import { IFootballApiClient } from '../apiClient';
 
-let config: Configurations = require(configPath);
+let Config = require(configPath);
+let config: Configurations = Config.getInstance();
 
 let API_KEY = config.API_FOOTBALL_DATA.apiKey;
 let BASE_URL = "http://api.football-data.org/v1";

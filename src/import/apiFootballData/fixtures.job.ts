@@ -58,6 +58,7 @@ export class FixturesJob implements IJob {
   }
 
   start(queue: Queue) {
+    console.log('** starting ApiFootballData Fixtures job')    
     return Observable.fromPromise(this.apiClient.getFixtures(this.competitionId))
       .flatMap((fixturesRes: any) => {
         let fixtures = fixturesRes.data.fixtures;

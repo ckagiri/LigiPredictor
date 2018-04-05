@@ -37,6 +37,7 @@ class FixturesJob {
         return new Builder();
     }
     start(queue) {
+        console.log('** starting ApiFootballData Fixtures job');
         return rxjs_1.Observable.fromPromise(this.apiClient.getFixtures(this.competitionId))
             .flatMap((fixturesRes) => {
             let fixtures = fixturesRes.data.fixtures;

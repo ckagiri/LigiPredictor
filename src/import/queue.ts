@@ -1,8 +1,10 @@
+import { IJob } from './jobs/job';
+
 export class Queue {
   tokensInInterval: number;
   tokensLeftInInterval: number;
   timeInterval: number;
-  jobs: any[];
+  jobs: IJob[];
   pendingJobs: any[];
   isActive: boolean;
   timer: any;
@@ -16,7 +18,7 @@ export class Queue {
     this.pendingJobs = [];
   }
 
-  start() {
+  start = () => {
     if (this.isActive) {
       return;
     }
@@ -25,7 +27,7 @@ export class Queue {
     this.processJobQueue();
   }
 
-  startTimer() {    
+  startTimer = () => {    
     this.timer = setInterval(() => {
       this.tokensLeftInInterval = this.tokensInInterval;
       while(this.pendingJobs.length > 0) {
@@ -42,39 +44,47 @@ export class Queue {
     }, this.timeInterval);
   }
 
-  addJob(job: any) {
+  addJob = (job: IJob) => {
     this.jobs.push(job);
     if (!this.isActive) {
       this.start();
     }
   }
 
-  processJobQueue() {
+  processJobQueue = () => {
     if(this.jobs.length > 0) {
       let job = this.jobs.pop();
       this.processLastJob(job);
+    } else {
+      this.cleanUp();
     }
   }
 
-  processLastJob(job) {
+  processLastJob = (job: IJob) => {
     let wrappedJob = this.wrapJob(job);
     wrappedJob();
   }
 
-  wrapJob(job) {
-    return () => {
-      if (this.tokensLeftInInterval > 0) {
-        this.tokensLeftInInterval -= 1;
-        job.start(this);
-        this.processJobQueue();
+  wrapJob = (job: IJob) => {
+    let self = this;
+    return async () => {
+      if (self.tokensLeftInInterval > 0) {
+        self.tokensLeftInInterval -= 1;
+        try {
+          await job.start(this);
+          self.processJobQueue();
+        } catch (error) {
+          console.error(error)
+          self.cleanUp();                    
+        }
       } else {
-        let wrappedJob = this.wrapJob(job);
-        this.pendingJobs.push(wrappedJob);
+        let wrappedJob = self.wrapJob(job);
+        self.pendingJobs.push(wrappedJob);
       }
     }
   }
 
-  cleanUp() {
+  cleanUp = () => {
     clearInterval(this.timer);
     this.timer = null;
     this.isActive = false;

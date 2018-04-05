@@ -8,7 +8,7 @@ import * as path from 'path';
 const chalk = require('chalk');
 
 import { routes as apiRoutes } from './apiRoutes';
-const config = require('../config/environment/index');
+import { config } from '../config/environment/index';
 
 (<any>mongoose).Promise = global.Promise;    
 const app = express();

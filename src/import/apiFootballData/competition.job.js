@@ -54,6 +54,7 @@ class CompetitionJob {
         return new Builder();
     }
     start(queue) {
+        console.log('** starting ApiFootballData Competition job');
         let competitionObs = rxjs_1.Observable.fromPromise(this.apiClient.getCompetition(this.competitionId))
             .flatMap((competitionRes) => {
             let competition = competitionRes.data;
@@ -67,7 +68,9 @@ class CompetitionJob {
         return rxjs_1.Observable.zip(competitionObs, teamsObs, (competition, teams) => {
             return { competition, teams };
         })
-            .map(_ => {
+            .catch((error) => {
+            return rxjs_1.Observable.throw(error);
+        }).map(_ => {
             let jobBuilder = fixtures_job_1.FixturesJob.Builder;
             let job = jobBuilder
                 .setApiClient(this.apiClient)

@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 let request = require('request-promise');
 const configPath = '../../../../src/config/environment/index';
-let config = require(configPath);
+let Config = require(configPath);
+let config = Config.getInstance();
 let API_KEY = config.API_FOOTBALL_DATA.apiKey;
 let BASE_URL = "http://api.football-data.org/v1";
 module.exports = {

@@ -17,6 +17,7 @@ class MainJob {
         return new MainJob(apiClient_1.FootballApiClient.getInstance(footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA), season_repo_1.SeasonRepository.getInstance(footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA), team_repo_1.TeamRepository.getInstance(footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA), fixture_repo_1.FixtureRepository.getInstance(footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA));
     }
     start(queue) {
+        console.log('** starting ApiFootballData Main job');
         return this.apiClient.getCompetitions(2017).then(({ data: competitions }) => {
             for (let comp of competitions) {
                 if (comp.id !== 445) {

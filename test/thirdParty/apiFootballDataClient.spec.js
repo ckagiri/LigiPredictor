@@ -13,7 +13,7 @@ const mockery = require("mockery");
 const sinon = require("sinon");
 const apiClient_1 = require("../../src/thirdParty/footballApi/apiClient");
 const footballApiProvider_1 = require("../../src/common/footballApiProvider");
-describe('apifootballDataClient', () => {
+describe.only('apifootballDataClient', () => {
     describe('getCompetitions', () => {
         before(() => {
             mockery.enable({

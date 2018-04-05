@@ -25,6 +25,7 @@ export class MainJob implements IJob {
   }
   
   start(queue: Queue) {
+    console.log('** starting ApiFootballData Main job')    
     return this.apiClient.getCompetitions(2017).then(({data: competitions}) => {
       for (let comp of competitions) {
          if (comp.id !== 445) {
