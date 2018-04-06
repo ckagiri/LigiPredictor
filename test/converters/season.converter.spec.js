@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const season_converter_1 = require("../../src/db/converters/ligi/season.converter");
 const season_converter_2 = require("../../src/db/converters/apiFootballData/season.converter");
-describe('Season Converter', () => {
-    describe('Ligi SeasonConverter', () => {
+describe('Season Converter', function () {
+    this.timeout(5000);
+    describe.skip('Ligi SeasonConverter', () => {
         const converter = season_converter_1.SeasonConverter.getInstance();
         const season = {
             name: '2017-2018',

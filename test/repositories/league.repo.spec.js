@@ -47,7 +47,8 @@ describe('LeagueRepo', () => {
             done();
         }));
     });
-    describe('with real repo', () => {
+    describe('with real repo', function () {
+        this.timeout(5000);
         let repo = league_repo_1.LeagueRepository.getInstance(footballApiProvider_1.FootballApiProvider.LIGI);
         it('should save a new league', (done) => {
             repo.save$(league).subscribe(l => {

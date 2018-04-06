@@ -43,7 +43,7 @@ describe('SeasonUpdater', () => {
     seasonRepoStub = {
       Provider: provider,
       findByIdAndUpdate$: () => { return Observable.of(dbSeason) },
-      getByExternalIds$: () => {
+      findByExternalIds$: () => {
         return Observable.of(dbSeasons);
       }
     }
@@ -52,7 +52,7 @@ describe('SeasonUpdater', () => {
 
   describe('updateCurrentMatchRound', () => {    
     it('should get seasons by externalId', async () => {
-      let spy = sinon.spy(seasonRepoStub, 'getByExternalIds$')
+      let spy = sinon.spy(seasonRepoStub, 'findByExternalIds$')
 
       await seasonUpdater.updateCurrentMatchRound(apiSeasons);
       let externalIds = [].map.call(apiSeasons, n => n.id);     

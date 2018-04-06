@@ -19,7 +19,7 @@ let epl17 = {
     seasonEnd: '2018-05-13T16:00:00+0200',
     leagueId: null
 };
-describe.only('seasonRepo', function () {
+describe('seasonRepo', function () {
     this.timeout(5000);
     before(function (done) {
         db.init(index_1.config.mongo.uri, done, { drop: true });

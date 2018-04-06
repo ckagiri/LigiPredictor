@@ -21,7 +21,7 @@ let epl17 = {
   leagueId: null
 }
 
-describe.only('seasonRepo', function() {
+describe('seasonRepo', function() {
   this.timeout(5000);
   before(function(done) {
     db.init(config.mongo.uri, done, { drop: true });

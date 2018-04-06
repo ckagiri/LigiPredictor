@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 
 import { CompetitionJob } from '../../../src/import/apiFootballData/competition.job';
 import { FixturesJob } from '../../../src/import/apiFootballData/fixtures.job';
+import { TeamsJob } from '../../../src/import/apiFootballData/teams.job';
 
 let competition = require('../../fixtures/requests/apiFootballData.epl2017');
 let teams = require('../../fixtures/requests/apiFootballData.epl2017Teams');
@@ -57,24 +58,6 @@ describe('ApiFootballData:Competition Job', () => {
         .and.to.have.been.calledWith(competitionId);
     })
 
-    it('should call client.getTeams', async () => {
-      let spy = sinon.spy(clientStub, 'getTeams');
-
-      await job.start(queueStub)   
-            
-      expect(spy).to.have.been.calledOnce
-        .and.to.have.been.calledWith(competitionId);
-    })
-
-    it('should call teamRepo.findByNameAndUpdate$', async () => {
-      let spy = sinon.spy(teamRepoStub, 'findByNameAndUpdate$');
-
-      await job.start(queueStub)   
-            
-      expect(spy).to.have.been.calledOnce
-        .and.to.have.been.calledWith(sinon.match.array);
-    })
-
     it('should call seasonRepo.findByExternalIdAndUpdate$', async () => {
       let spy = sinon.spy(seasonRepoStub, 'findByExternalIdAndUpdate$');   
 
@@ -91,6 +74,19 @@ describe('ApiFootballData:Competition Job', () => {
       
       expect(spy).to.have.been.called
         .and.to.have.been.calledWith(sinon.match.instanceOf(FixturesJob))
+
+      queueStub.addJob.restore()
+    })
+
+    it('should add teamsJob to queue', async () => {
+      let spy = sinon.spy(queueStub, 'addJob');
+      
+      await job.start(queueStub) 
+      
+      expect(spy).to.have.been.called
+        .and.to.have.been.calledWith(sinon.match.instanceOf(TeamsJob))
+
+      queueStub.addJob.restore()        
     })
   })
 })

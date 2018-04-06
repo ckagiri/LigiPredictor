@@ -16,6 +16,7 @@ const expect = chai.expect;
 const rxjs_1 = require("rxjs");
 const competition_job_1 = require("../../../src/import/apiFootballData/competition.job");
 const fixtures_job_1 = require("../../../src/import/apiFootballData/fixtures.job");
+const teams_job_1 = require("../../../src/import/apiFootballData/teams.job");
 let competition = require('../../fixtures/requests/apiFootballData.epl2017');
 let teams = require('../../fixtures/requests/apiFootballData.epl2017Teams');
 let queueStub = {
@@ -61,18 +62,6 @@ describe('ApiFootballData:Competition Job', () => {
             expect(spy).to.have.been.calledOnce
                 .and.to.have.been.calledWith(competitionId);
         }));
-        it('should call client.getTeams', () => __awaiter(this, void 0, void 0, function* () {
-            let spy = sinon.spy(clientStub, 'getTeams');
-            yield job.start(queueStub);
-            expect(spy).to.have.been.calledOnce
-                .and.to.have.been.calledWith(competitionId);
-        }));
-        it('should call teamRepo.findByNameAndUpdate$', () => __awaiter(this, void 0, void 0, function* () {
-            let spy = sinon.spy(teamRepoStub, 'findByNameAndUpdate$');
-            yield job.start(queueStub);
-            expect(spy).to.have.been.calledOnce
-                .and.to.have.been.calledWith(sinon.match.array);
-        }));
         it('should call seasonRepo.findByExternalIdAndUpdate$', () => __awaiter(this, void 0, void 0, function* () {
             let spy = sinon.spy(seasonRepoStub, 'findByExternalIdAndUpdate$');
             yield job.start(queueStub);
@@ -84,6 +73,14 @@ describe('ApiFootballData:Competition Job', () => {
             yield job.start(queueStub);
             expect(spy).to.have.been.called
                 .and.to.have.been.calledWith(sinon.match.instanceOf(fixtures_job_1.FixturesJob));
+            queueStub.addJob.restore();
+        }));
+        it('should add teamsJob to queue', () => __awaiter(this, void 0, void 0, function* () {
+            let spy = sinon.spy(queueStub, 'addJob');
+            yield job.start(queueStub);
+            expect(spy).to.have.been.called
+                .and.to.have.been.calledWith(sinon.match.instanceOf(teams_job_1.TeamsJob));
+            queueStub.addJob.restore();
         }));
     });
 });

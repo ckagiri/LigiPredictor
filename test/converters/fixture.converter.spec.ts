@@ -42,7 +42,7 @@ describe('Fixture Converter', () => {
       _id: '4edd40c86762e0fb12000001'
     }
     let seasonRepoStub:any = {
-      getByExternalId$: () => {
+      findByExternalId$: () => {
         return Observable.of(season);
       }
     }
@@ -59,10 +59,10 @@ describe('Fixture Converter', () => {
       crestUrl: 'http://upload.wikimedia.org/wikipedia/de/d/da/Chelsea.svg'
     }
     let teamRepoStub:any = {
-      getByName$: sinon.stub()
+      findByName$: sinon.stub()
     }
-    teamRepoStub.getByName$.withArgs(sinon.match('Arsenal')).returns(Observable.of(homeTeam));
-    teamRepoStub.getByName$.withArgs(sinon.match('Chelsea')).returns(Observable.of(awayTeam));
+    teamRepoStub.findByName$.withArgs(sinon.match('Arsenal')).returns(Observable.of(homeTeam));
+    teamRepoStub.findByName$.withArgs(sinon.match('Chelsea')).returns(Observable.of(awayTeam));
     const converter = new AfdFixtureConverter(seasonRepoStub, teamRepoStub);
     const fixture = {
         id: 158952,

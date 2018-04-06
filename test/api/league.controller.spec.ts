@@ -38,7 +38,7 @@ function addLeague(aLeague) {
   })
 }
 
-describe('League API', function() {  
+describe.skip('League API', function() {  
   this.timeout(5000);
   before(done => clearData(done))
   afterEach(done => clearData(done))

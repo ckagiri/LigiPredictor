@@ -54,7 +54,8 @@ describe('LeagueRepo', () => {
     }));   
   })
 
-  describe('with real repo', () => {
+  describe('with real repo', function() {
+    this.timeout(5000);
     let repo = LeagueRepository.getInstance(ApiProvider.LIGI);
     
     it('should save a new league', (done) => {
