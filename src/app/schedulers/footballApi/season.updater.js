@@ -16,7 +16,7 @@ class SeasonUpdater {
             externalIdToSeasonMap[season.id] = season;
             externalIds.push(season.id);
         }
-        return this.seasonRepo.getByExternalIds$(externalIds)
+        return this.seasonRepo.findByExternalIds$(externalIds)
             .flatMap((dbSeasons) => {
             return rxjs_1.Observable.from(dbSeasons);
         })

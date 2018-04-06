@@ -9,7 +9,7 @@ import { ITeamRepository, TeamRepository } from '../../repositories/team.repo';
 export class FixtureConverter implements IFixtureConverter {
   provider: ApiProvider;
 
-  static getInstance() {
+  static getInstance(): IFixtureConverter {
     return new FixtureConverter();
   }
 

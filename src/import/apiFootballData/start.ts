@@ -1,7 +1,6 @@
 import { Queue } from '../queue'
 import { MainJob } from './main.job';
 
-
 export const apiFootballDataImporter = {
   start: () => {
     console.log('** starting ApiFootballData Importer')

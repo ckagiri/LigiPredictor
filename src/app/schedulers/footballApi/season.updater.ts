@@ -21,7 +21,7 @@ export class SeasonUpdater implements ISeasonUpdater {
       externalIdToSeasonMap[season.id] = season;
       externalIds.push(season.id);      
     }
-    return this.seasonRepo.getByExternalIds$(externalIds)
+    return this.seasonRepo.findByExternalIds$(externalIds)
       .flatMap((dbSeasons) => {
         return Observable.from(dbSeasons);
       })

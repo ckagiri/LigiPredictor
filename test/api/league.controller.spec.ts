@@ -11,7 +11,8 @@ import chaiHttp = require('chai-http');
 chai.use(chaiHttp);
   const expect = chai.expect;
 
-import { server as app } from '../../src/app/server';
+//import { server as app } from '../../src/app/server'; 
+let app:any;
 import { LeagueModel as League } from '../../src/db/models/league.model';
 import { SeasonModel as Season } from '../../src/db/models/season.model';
 import { TeamModel as Team } from '../../src/db/models/team.model';

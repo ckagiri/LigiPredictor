@@ -7,7 +7,7 @@ import { SeasonConverter as AfdSeasonConverter} from '../../src/db/converters/ap
 
 describe('Season Converter', () => {
   describe('Ligi SeasonConverter', () => {
-    const converter = new LigiSeasonConverter();
+    const converter = LigiSeasonConverter.getInstance();
     const season = {
       name: '2017-2018',
       slug: '17-18',

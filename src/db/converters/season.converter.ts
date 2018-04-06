@@ -15,9 +15,9 @@ export abstract class SeasonConverter {
   static getInstance(provider: ApiProvider) : ISeasonConverter {
     switch(provider) {
       case ApiProvider.LIGI:
-        return new LigiSeasonConverter();
+        return LigiSeasonConverter.getInstance();
       case ApiProvider.API_FOOTBALL_DATA:
-        return new AfdSeasonConverter();
+        return AfdSeasonConverter.getInstance();
       default: 
         throw new Error('Converter for Provider does not exist');
     }

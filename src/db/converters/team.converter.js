@@ -7,9 +7,9 @@ class TeamConverter {
     static getInstance(provider) {
         switch (provider) {
             case footballApiProvider_1.FootballApiProvider.LIGI:
-                return new team_converter_1.TeamConverter();
+                return team_converter_1.TeamConverter.getInstance();
             case footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA:
-                return new team_converter_2.TeamConverter();
+                return team_converter_2.TeamConverter.getInstance();
             default:
                 throw new Error('Converter for Provider does not exist');
         }

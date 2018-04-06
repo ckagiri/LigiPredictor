@@ -11,10 +11,10 @@ class TeamRepository extends baseProvider_repo_1.BaseProviderRepository {
     constructor(converter) {
         super(team_model_1.TeamModel, converter);
     }
-    findByNameAndUpdate$(teams) {
+    findEachByNameAndUpdate$(teams) {
         return rxjs_1.Observable.of([{}]);
     }
-    getByName$(name) {
+    findByName$(name) {
         return rxjs_1.Observable.of({});
     }
 }

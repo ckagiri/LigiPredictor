@@ -7,6 +7,10 @@ import { FootballApiProvider as ApiProvider } from '../../../common/footballApiP
 export class LeagueConverter implements ILeagueConverter {
   provider: ApiProvider;
 
+  static getInstance(): ILeagueConverter {
+    return new LeagueConverter();
+  }
+
   constructor() { this. provider = ApiProvider.API_FOOTBALL_DATA }
 
   from(data: any): Observable<ILeague> {

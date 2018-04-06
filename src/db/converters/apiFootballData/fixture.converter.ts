@@ -9,7 +9,7 @@ import { ITeamRepository, TeamRepository } from '../../repositories/team.repo';
 export class FixtureConverter implements IFixtureConverter {
   provider: ApiProvider;
 
-  static getInstance() {
+  static getInstance(): IFixtureConverter {
     return new FixtureConverter(
       SeasonRepository.getInstance(ApiProvider.API_FOOTBALL_DATA), 
       TeamRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
@@ -23,9 +23,9 @@ export class FixtureConverter implements IFixtureConverter {
 
   from(data: any): any {
     return Observable.zip(
-			this.seasonRepo.getByExternalId$(data.seasonId),
-			this.teamRepo.getByName$(data.homeTeamName),
-			this.teamRepo.getByName$(data.awayTeamName),
+			this.seasonRepo.findByExternalId$(data.seasonId),
+			this.teamRepo.findByName$(data.homeTeamName),
+			this.teamRepo.findByName$(data.awayTeamName),
 			(season: any, homeTeam: any, awayTeam: any) => {
 				return {
           season: season._id,

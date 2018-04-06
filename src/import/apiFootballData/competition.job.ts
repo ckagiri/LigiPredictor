@@ -7,6 +7,7 @@ import { ISeasonRepository } from '../../db/repositories/season.repo';
 import { ITeamRepository } from '../../db/repositories/team.repo';
 import { IFixtureRepository } from '../../db/repositories/fixture.repo';
 import { FixturesJob } from './fixtures.job';
+import { TeamsJob } from './teams.job'
 
 class Builder {
   private competitionId: number|string;  
@@ -86,29 +87,25 @@ export class CompetitionJob implements IJob {
 
   start(queue: Queue) {
     console.log('** starting ApiFootballData Competition job')
-    let competitionObs =  Observable.fromPromise(this.apiClient.getCompetition(this.competitionId))
+    return Observable.fromPromise(this.apiClient.getCompetition(this.competitionId))
       .flatMap((competitionRes: any) => {
         let competition = competitionRes.data;
         return this.seasonRepo.findByExternalIdAndUpdate$(competition);
-      })
-    let teamsObs = Observable.fromPromise(this.apiClient.getTeams(this.competitionId))
-      .flatMap((teamsRes: any) => {
-        let teams = teamsRes.data.teams;        
-        return this.teamRepo.findByNameAndUpdate$(teams);
-      })
-    return Observable.zip(competitionObs, teamsObs, (competition, teams) => {
-      return { competition, teams }
-    })
-    .catch( ( error: any ) => {
-      return Observable.throw( error );
-    })    .map(_ => {
-      let jobBuilder = FixturesJob.Builder;
-      let job = jobBuilder
+      }).map(_ => {
+      let fixturesJob = FixturesJob.Builder
         .setApiClient(this.apiClient)
         .setFixtureRepo(this.fixtureRepo)
         .withCompetition(this.competitionId)
         .build();
-      queue.addJob(job);
+      
+      let teamsJob = TeamsJob.Builder
+        .setApiClient(this.apiClient)
+        .setTeamRepo(this.teamRepo)
+        .withCompetition(this.competitionId)
+        .build();
+
+      queue.addJob(fixturesJob);
+      queue.addJob(teamsJob)
     }).toPromise()
   }
 }

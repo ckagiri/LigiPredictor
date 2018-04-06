@@ -14,7 +14,7 @@ class FixtureConverter {
         return new FixtureConverter(season_repo_1.SeasonRepository.getInstance(footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA), team_repo_1.TeamRepository.getInstance(footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA));
     }
     from(data) {
-        return rxjs_1.Observable.zip(this.seasonRepo.getByExternalId$(data.seasonId), this.teamRepo.getByName$(data.homeTeamName), this.teamRepo.getByName$(data.awayTeamName), (season, homeTeam, awayTeam) => {
+        return rxjs_1.Observable.zip(this.seasonRepo.findByExternalId$(data.seasonId), this.teamRepo.findByName$(data.homeTeamName), this.teamRepo.findByName$(data.awayTeamName), (season, homeTeam, awayTeam) => {
             return {
                 season: season._id,
                 matchRound: data.matchday,

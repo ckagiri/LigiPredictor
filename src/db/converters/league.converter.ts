@@ -15,7 +15,7 @@ export abstract class LeagueConverter {
     switch(provider) {
       case ApiProvider.LIGI:
       case ApiProvider.API_FOOTBALL_DATA:
-        return new LigiLeagueConverter();
+        return LigiLeagueConverter.getInstance();
       default: 
         throw new Error('Converter for Provider does not exist');
     }

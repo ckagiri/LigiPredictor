@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const rxjs_1 = require("rxjs");
 const fixtures_job_1 = require("./fixtures.job");
+const teams_job_1 = require("./teams.job");
 class Builder {
     build() {
         return new CompetitionJob(this);
@@ -55,29 +56,23 @@ class CompetitionJob {
     }
     start(queue) {
         console.log('** starting ApiFootballData Competition job');
-        let competitionObs = rxjs_1.Observable.fromPromise(this.apiClient.getCompetition(this.competitionId))
+        return rxjs_1.Observable.fromPromise(this.apiClient.getCompetition(this.competitionId))
             .flatMap((competitionRes) => {
             let competition = competitionRes.data;
             return this.seasonRepo.findByExternalIdAndUpdate$(competition);
-        });
-        let teamsObs = rxjs_1.Observable.fromPromise(this.apiClient.getTeams(this.competitionId))
-            .flatMap((teamsRes) => {
-            let teams = teamsRes.data.teams;
-            return this.teamRepo.findByNameAndUpdate$(teams);
-        });
-        return rxjs_1.Observable.zip(competitionObs, teamsObs, (competition, teams) => {
-            return { competition, teams };
-        })
-            .catch((error) => {
-            return rxjs_1.Observable.throw(error);
         }).map(_ => {
-            let jobBuilder = fixtures_job_1.FixturesJob.Builder;
-            let job = jobBuilder
+            let fixturesJob = fixtures_job_1.FixturesJob.Builder
                 .setApiClient(this.apiClient)
                 .setFixtureRepo(this.fixtureRepo)
                 .withCompetition(this.competitionId)
                 .build();
-            queue.addJob(job);
+            let teamsJob = teams_job_1.TeamsJob.Builder
+                .setApiClient(this.apiClient)
+                .setTeamRepo(this.teamRepo)
+                .withCompetition(this.competitionId)
+                .build();
+            queue.addJob(fixturesJob);
+            queue.addJob(teamsJob);
         }).toPromise();
     }
 }

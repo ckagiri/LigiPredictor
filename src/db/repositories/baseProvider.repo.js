@@ -22,10 +22,10 @@ class BaseProviderRepository {
     findEachByExternalIdAndUpdate$(obj) {
         return rxjs_1.Observable.of([{}]);
     }
-    getByExternalId$(id) {
+    findByExternalId$(id) {
         return rxjs_1.Observable.of({});
     }
-    getByExternalIds$() {
+    findByExternalIds$() {
         return rxjs_1.Observable.of([{}]);
     }
     findByIdAndUpdate$(id, update) {

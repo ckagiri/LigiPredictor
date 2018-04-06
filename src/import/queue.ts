@@ -86,6 +86,7 @@ export class Queue {
 
   cleanUp = () => {
     if(this.isActive) {
+      console.log('** cleanup')
       clearInterval(this.timer);
       this.timer = null;
       this.isActive = false;

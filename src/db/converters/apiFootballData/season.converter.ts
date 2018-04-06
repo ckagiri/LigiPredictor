@@ -7,6 +7,10 @@ import { FootballApiProvider as ApiProvider } from '../../../common/footballApiP
 export class SeasonConverter implements ISeasonConverter {
   provider: ApiProvider;
 
+  static getInstance(): ISeasonConverter {
+    return new SeasonConverter();
+  }
+
   constructor() { this. provider = ApiProvider.API_FOOTBALL_DATA }
   
   from(data: any): Observable<ISeason> {

@@ -10,8 +10,8 @@ export interface IBaseProviderRepository<T extends IEntity> extends IBaseReposit
   Provider: ApiProvider;
   findByExternalIdAndUpdate$(obj: IEntity): Observable<T>;
   findEachByExternalIdAndUpdate$(obj: IEntity[]): Observable<T[]>;
-  getByExternalId$(id: string): Observable<T>;  
-  getByExternalIds$(ids: Array<string>): Observable<T[]>;
+  findByExternalId$(id: string): Observable<T>;  
+  findByExternalIds$(ids: Array<string>): Observable<T[]>;
   findById$(id: string): Observable<T>;  
 }
 
@@ -43,11 +43,11 @@ export class BaseProviderRepository<T extends IEntity> implements IBaseProviderR
     return Observable.of([<T>{}])
   }  
 
-  getByExternalId$(id: string|number): Observable<T> {
+  findByExternalId$(id: string|number): Observable<T> {
     return Observable.of(<T>{})    
   }  
 
-  getByExternalIds$(): Observable<T[]> {
+  findByExternalIds$(): Observable<T[]> {
     return Observable.of([<T>{}])
   }
 

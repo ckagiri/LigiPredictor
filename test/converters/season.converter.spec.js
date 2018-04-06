@@ -5,7 +5,7 @@ const season_converter_1 = require("../../src/db/converters/ligi/season.converte
 const season_converter_2 = require("../../src/db/converters/apiFootballData/season.converter");
 describe('Season Converter', () => {
     describe('Ligi SeasonConverter', () => {
-        const converter = new season_converter_1.SeasonConverter();
+        const converter = season_converter_1.SeasonConverter.getInstance();
         const season = {
             name: '2017-2018',
             slug: '17-18',
