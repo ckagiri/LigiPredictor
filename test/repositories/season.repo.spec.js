@@ -19,18 +19,18 @@ let epl17 = {
     seasonEnd: '2018-05-13T16:00:00+0200',
     leagueId: null
 };
-describe('seasonRepo', function () {
+describe.only('seasonRepo', function () {
     this.timeout(5000);
-    before(function (done) {
+    before((done) => {
         db.init(index_1.config.mongo.uri, done, { drop: true });
     });
-    afterEach(function (done) {
-        db.drop().then(function () {
+    afterEach((done) => {
+        db.drop().then(() => {
             done();
         });
     });
-    after(function (done) {
-        db.close().then(function () {
+    after((done) => {
+        db.close().then(() => {
             done();
         });
     });
@@ -46,7 +46,7 @@ describe('seasonRepo', function () {
             let { league, name, slug, year } = data;
             chai_1.expect(name).to.equal(epl17.name);
             chai_1.expect(slug).to.equal(epl17.slug);
-            //expect(year).to.equal(epl17.year)
+            chai_1.expect(year).to.equal(epl17.year);
             chai_1.expect(league.name).to.equal(epl.name);
             chai_1.expect(league.slug).to.equal(epl.slug);
             done();

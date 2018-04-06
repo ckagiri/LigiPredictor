@@ -21,18 +21,18 @@ let epl17 = {
   leagueId: null
 }
 
-describe('seasonRepo', function() {
+describe.only('seasonRepo', function() {
   this.timeout(5000);
-  before(function(done) {
+  before((done) => {
     db.init(config.mongo.uri, done, { drop: true });
   })
-  afterEach(function(done) {
-    db.drop().then(function() {
+  afterEach((done) => {
+    db.drop().then(() => {
       done();      
     })
   })
-  after(function(done) {
-    db.close().then(function() {
+  after((done) => {
+    db.close().then(() => {
       done();
     })
   })
@@ -50,7 +50,7 @@ describe('seasonRepo', function() {
         let { league, name, slug, year } = data
         expect(name).to.equal(epl17.name)
         expect(slug).to.equal(epl17.slug)
-        //expect(year).to.equal(epl17.year)
+        expect(year).to.equal(epl17.year)
         expect(league.name).to.equal(epl.name)
         expect(league.slug).to.equal(epl.slug)
         done();
