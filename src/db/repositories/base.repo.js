@@ -15,6 +15,24 @@ class BaseRepository {
             return data;
         });
     }
+    insert$(data) {
+        return this._baseDao.insert$(data)
+            .catch((error) => {
+            return rxjs_1.Observable.throw(error);
+        })
+            .map((data) => {
+            return data;
+        });
+    }
+    insertMany$(data) {
+        return this._baseDao.insertMany$(data)
+            .catch((error) => {
+            return rxjs_1.Observable.throw(error);
+        })
+            .map((data) => {
+            return data;
+        });
+    }
     findByIdAndUpdate$(id, update) {
         return this._baseDao.findByIdAndUpdate$(id, update)
             .catch((error) => {

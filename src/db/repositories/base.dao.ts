@@ -6,6 +6,8 @@ import { IEntity } from '../models/base.model';
 
 export interface IBaseDao<T extends Document> {
   save$(obj: IEntity): Observable<T>;
+  insert$(obj: IEntity): Observable<T>;  
+  insertMany$(objs: IEntity[]): Observable<T[]>;
   findByIdAndUpdate$(id: string, update: any): Observable<T>;
   findOneAndUpdate$(conditions: any, update: any): Observable<T>;
   findAll$(conditions?: any, projection?: any, options?: any): Observable<T[]>;
@@ -24,6 +26,28 @@ export class BaseDao<T extends Document> extends DocumentDao<T> implements IBase
 			}, (error: any) => {
 				observer.error(error);
 			});
+    });
+  }
+
+  insert$(obj: IEntity): Observable<T> {
+		return Observable.create((observer: Subscriber<T>) => {
+			this.insert(obj).then((result: T) => {
+				observer.next(result);
+				observer.complete();
+			}, (error: any) => {
+				observer.error(error);
+			}); 
+    });
+  }
+
+  insertMany$(objs: IEntity[]): Observable<T[]> {
+		return Observable.create((observer: Subscriber<T[]>) => {
+			this.insertMany(objs).then((result: T[]) => {
+				observer.next(result);
+				observer.complete();
+			}, (error: any) => {
+				observer.error(error);
+			}); 
     });
   }
   

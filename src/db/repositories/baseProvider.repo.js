@@ -23,10 +23,18 @@ class BaseProviderRepository {
         return rxjs_1.Observable.of([{}]);
     }
     findByExternalId$(id) {
-        return rxjs_1.Observable.of({});
+        let extRefIdKey = `externalReference.${this.Provider}.id`;
+        return this.findOne$({ [extRefIdKey]: id });
     }
-    findByExternalIds$() {
-        return rxjs_1.Observable.of([{}]);
+    findByExternalIds$(ids) {
+        let extRefIdKey = `externalReference.${this.Provider}.id`;
+        return this.findAll$({ [extRefIdKey]: { $in: ids } });
+    }
+    insert$(obj) {
+        return this._baseRepo.insert$(obj);
+    }
+    insertMany$(objs) {
+        return this._baseRepo.insertMany$(objs);
     }
     findByIdAndUpdate$(id, update) {
         return this._baseRepo.findByIdAndUpdate$(id, update);
@@ -34,8 +42,8 @@ class BaseProviderRepository {
     findOneAndUpdate$(conditions, update) {
         return this._baseRepo.findOneAndUpdate$(conditions, update);
     }
-    findAll$() {
-        return this._baseRepo.findAll$();
+    findAll$(conditions) {
+        return this._baseRepo.findAll$(conditions);
     }
     findById$(id) {
         return this._baseRepo.findById$(id);

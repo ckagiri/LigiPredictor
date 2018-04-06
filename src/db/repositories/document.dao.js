@@ -8,6 +8,12 @@ class DocumentDao {
         const model = new this._model(obj);
         return model.save();
     }
+    insert(obj) {
+        return this._model.create(obj);
+    }
+    insertMany(objs) {
+        return this._model.insertMany(objs);
+    }
     findAll(conditions = {}, projection, options) {
         return this._model.find(conditions, projection, options);
     }

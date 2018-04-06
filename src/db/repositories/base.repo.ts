@@ -6,6 +6,8 @@ import { IEntity } from '../models/base.model';
 
 export interface IBaseRepository<T extends IEntity> {
   save$(obj: IEntity): Observable<T>;
+  insert$(obj: IEntity): Observable<T>;
+  insertMany$(objs: IEntity[]): Observable<T[]>;  
   findByIdAndUpdate$(id: string, update: any): Observable<T>;
   findOneAndUpdate$(conditions: any, update: any): Observable<T>;
   findAll$(conditions?: any): Observable<T[]>;
@@ -26,6 +28,26 @@ export class BaseRepository<T extends IEntity> implements IBaseRepository<T> {
         return Observable.throw(error);
       })
       .map((data: T) => {
+        return data;
+      })
+  }
+
+  insert$(data: T) {
+    return this._baseDao.insert$(data)
+      .catch( (error: any) => {
+        return Observable.throw(error);
+      })
+      .map((data: T) => {
+        return data;
+      })
+  }
+
+  insertMany$(data: T[]) {
+    return this._baseDao.insertMany$(data)
+      .catch( (error: any) => {
+        return Observable.throw(error);
+      })
+      .map((data: T[]) => {
         return data;
       })
   }

@@ -26,7 +26,7 @@ class SeasonUpdater {
             let extCurrentMatchRound = externalIdToSeasonMap[extId].currentMatchRound;
             if (dbSeason.currentMatchRound !== extCurrentMatchRound) {
                 let id = dbSeason['_id'];
-                let update = { $set: { currentMatchRound: extCurrentMatchRound } };
+                let update = { currentMatchRound: extCurrentMatchRound };
                 return this.seasonRepo.findByIdAndUpdate$(id, update);
             }
             else {

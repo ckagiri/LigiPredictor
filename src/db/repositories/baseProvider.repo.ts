@@ -8,11 +8,11 @@ import { FootballApiProvider as ApiProvider } from '../../common/footballApiProv
 
 export interface IBaseProviderRepository<T extends IEntity> extends IBaseRepository<T> {
   Provider: ApiProvider;
+  save$(obj: IEntity): Observable<T>;  
   findByExternalIdAndUpdate$(obj: IEntity): Observable<T>;
   findEachByExternalIdAndUpdate$(obj: IEntity[]): Observable<T[]>;
-  findByExternalId$(id: string): Observable<T>;  
-  findByExternalIds$(ids: Array<string>): Observable<T[]>;
-  findById$(id: string): Observable<T>;  
+  findByExternalId$(id: string|number): Observable<T>;  
+  findByExternalIds$(ids: Array<string|number>): Observable<T[]>;
 }
 
 export class BaseProviderRepository<T extends IEntity> implements IBaseProviderRepository<T> {
@@ -44,11 +44,23 @@ export class BaseProviderRepository<T extends IEntity> implements IBaseProviderR
   }  
 
   findByExternalId$(id: string|number): Observable<T> {
-    return Observable.of(<T>{})    
+		let extRefIdKey = `externalReference.${this.Provider}.id`;
+    
+    return this.findOne$({ [extRefIdKey]: id }); 
   }  
 
-  findByExternalIds$(): Observable<T[]> {
-    return Observable.of([<T>{}])
+  findByExternalIds$(ids: Array<string|number>): Observable<T[]> {
+		let extRefIdKey = `externalReference.${this.Provider}.id`;
+
+    return this.findAll$({ [extRefIdKey]: { $in : ids } });
+  }
+  
+  insert$(obj: IEntity): Observable<T> {
+    return this._baseRepo.insert$(obj);
+  }
+
+  insertMany$(objs: IEntity[]): Observable<T[]> {
+    return this._baseRepo.insertMany$(objs);
   }
 
   findByIdAndUpdate$(id: string, update: any): Observable<T> {
@@ -59,8 +71,8 @@ export class BaseProviderRepository<T extends IEntity> implements IBaseProviderR
     return this._baseRepo.findOneAndUpdate$(conditions, update);   
   }
 
-  findAll$(): Observable<T[]> {
-    return this._baseRepo.findAll$();
+  findAll$(conditions?: any): Observable<T[]> {
+    return this._baseRepo.findAll$(conditions);
   }
 
   findById$(id: string) {

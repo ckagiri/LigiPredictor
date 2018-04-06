@@ -32,7 +32,7 @@ let apiSeasons = [apiSeason]
 
 let seasonConverterStub: any;
 let seasonRepoStub: any;
-let seasonUpdater: any;
+let seasonUpdater: SeasonUpdater;
 
 describe('SeasonUpdater', () => {  
   beforeEach(() => {

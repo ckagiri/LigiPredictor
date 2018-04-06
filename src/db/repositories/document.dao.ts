@@ -14,6 +14,14 @@ export class DocumentDao<T extends Document> {
     return model.save();
   }
 
+  insert(obj: IEntity): Promise<T> {
+    return this._model.create(obj) as Promise<T>
+  }
+
+  insertMany(objs: IEntity[]): Promise<T[]> {
+    return this._model.insertMany(objs) as Promise<T[]>
+  }
+
   findAll(conditions: any = {}, projection?: any, options?: any){
     return this._model.find(conditions, projection, options);
   }
