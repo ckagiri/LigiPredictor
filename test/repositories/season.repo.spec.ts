@@ -93,9 +93,7 @@ describe.only('seasonRepo', function() {
    it('should find by externalId', (done) => {
     let leagueRepo = LeagueRepository.getInstance(ApiProvider.LIGI);
     let seasonRepo = SeasonRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
-    
-    let afdSeasonRepo = SeasonRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
-    
+        
     leagueRepo.save$(epl)
       .flatMap((l: any) => {
         epl17['league'] = { id: l._id, name: l.name, slug: l.slug };
@@ -107,7 +105,7 @@ describe.only('seasonRepo', function() {
         return seasonRepo.insert$(epl17);
       })
       .flatMap(_ => {
-        return afdSeasonRepo.findByExternalId$(afdEpl17.id)
+        return seasonRepo.findByExternalId$(afdEpl17.id)
       })
       .subscribe(s => {
         expect(s.externalReference).to.deep.equal(epl17['externalReference'])
@@ -118,8 +116,6 @@ describe.only('seasonRepo', function() {
   it('should find by externalIds', (done) => {
     let leagueRepo = LeagueRepository.getInstance(ApiProvider.LIGI);
     let seasonRepo = SeasonRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
-    
-    let afdSeasonRepo = SeasonRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
     
     leagueRepo.save$(epl)
       .flatMap((l: any) => {
@@ -137,7 +133,7 @@ describe.only('seasonRepo', function() {
         return seasonRepo.insertMany$([epl16, epl17]);
       })
       .flatMap(_ => {
-        return afdSeasonRepo.findByExternalIds$([afdEpl16.id, afdEpl17.id]);
+        return seasonRepo.findByExternalIds$([afdEpl16.id, afdEpl17.id]);
       })
       .subscribe(data => {
         expect(data[0].externalReference).to.deep.equal(epl16['externalReference'])
@@ -146,7 +142,102 @@ describe.only('seasonRepo', function() {
       })
   })
 
-  it('should findByIdAndUpdate currentMatchRound', () => {
-    
+  it('should findByIdAndUpdate currentMatchRound', (done) => {
+    let leagueRepo = LeagueRepository.getInstance(ApiProvider.LIGI);
+    let seasonRepo = SeasonRepository.getInstance(ApiProvider.LIGI)
+
+    leagueRepo.save$(epl)
+      .flatMap((l: any) => {
+        epl17.leagueId = l._id;
+        return seasonRepo.save$(epl17);
+      })
+      .flatMap(s => {
+        let update = { currentMatchRound: 21 };
+
+        return seasonRepo.findByIdAndUpdate$(s['_id'], update);
+      })
+      .subscribe(s => {
+        expect(s.currentMatchRound).to.equal(21);
+        done();
+      })    
+  })
+
+  it('should findByExternalIdAndUpdate currentMatchRound', (done) => {
+    let leagueRepo = LeagueRepository.getInstance(ApiProvider.LIGI);
+    let seasonRepo = SeasonRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
+
+    leagueRepo.save$(epl)
+    .flatMap((l: any) => {
+      epl17['league'] = { id: l._id, name: l.name, slug: l.slug };
+      epl17['externalReference'] = {
+        [ApiProvider.API_FOOTBALL_DATA]: {
+          id: afdEpl17.id
+        }
+      }
+      return seasonRepo.insert$(epl17);
+    })
+    .flatMap(s => {
+      afdEpl17.currentMatchday = 21
+
+      return seasonRepo.findByExternalIdAndUpdate$(afdEpl17);
+    })
+    .subscribe(s => {
+      expect(s.currentMatchRound).to.equal(21);
+      done();
+    })    
+  })
+
+  it('should findByExternalIdAndUpdate currentMatchRound (version2)', (done) => {
+    let leagueRepo = LeagueRepository.getInstance(ApiProvider.LIGI);
+    let seasonRepo = SeasonRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
+
+    leagueRepo.save$(epl)
+      .flatMap((l: any) => {
+        epl17['league'] = { id: l._id, name: l.name, slug: l.slug };
+        epl17['externalReference'] = {
+          [ApiProvider.API_FOOTBALL_DATA]: {
+            id: afdEpl17.id
+          }
+        }
+        return seasonRepo.insert$(epl17);
+      })
+      .flatMap(s => {
+        let update = { currentMatchRound: 21 };      
+
+        return seasonRepo.findByExternalIdAndUpdate$(afdEpl17.id, update);
+      })
+      .subscribe(s => {
+        expect(s.currentMatchRound).to.equal(21);
+        done();
+      })    
+  })
+
+  it('should findByExternalIdAndUpdate while preserving ExternalReference', (done) => {
+    let leagueRepo = LeagueRepository.getInstance(ApiProvider.LIGI);
+    let seasonRepo = SeasonRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
+
+    leagueRepo.save$(epl)
+      .flatMap((l: any) => {
+        epl17['league'] = { id: l._id, name: l.name, slug: l.slug };
+        epl17['externalReference'] = {
+          ['SomeOtherApi']: {
+            id: 'someExternalId'
+          },
+          [ApiProvider.API_FOOTBALL_DATA]: {
+            id: afdEpl17.id
+          }
+        }
+        return seasonRepo.insert$(epl17);
+      })
+      .flatMap(s => {        
+        afdEpl17.currentMatchday = 21
+        
+        return seasonRepo.findByExternalIdAndUpdate$(afdEpl17);
+      })
+      .subscribe(s => {
+        expect(s.currentMatchRound).to.equal(21);
+        expect(s.externalReference).to.deep.equal(epl17['externalReference'])
+        done();
+      })     
   })
 })

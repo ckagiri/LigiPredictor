@@ -9,8 +9,8 @@ import { FootballApiProvider as ApiProvider } from '../../common/footballApiProv
 export interface IBaseProviderRepository<T extends IEntity> extends IBaseRepository<T> {
   Provider: ApiProvider;
   save$(obj: IEntity): Observable<T>;  
-  findByExternalIdAndUpdate$(obj: IEntity): Observable<T>;
-  findEachByExternalIdAndUpdate$(obj: IEntity[]): Observable<T[]>;
+  findByExternalIdAndUpdate$(id: any, obj?: any): Observable<T>;  
+  findEachByExternalIdAndUpdate$(objs: IEntity[]): Observable<T[]>;
   findByExternalId$(id: string|number): Observable<T>;  
   findByExternalIds$(ids: Array<string|number>): Observable<T[]>;
 }
@@ -35,24 +35,42 @@ export class BaseProviderRepository<T extends IEntity> implements IBaseProviderR
       });
   }
 
-  findByExternalIdAndUpdate$(obj: IEntity): Observable<T> {
-    return Observable.of(<T>{})
+  
+  findByExternalIdAndUpdate$(id: any, obj?: any): Observable<T> {
+    let externalIdKey = `externalReference.${this.Provider}.id`; 
+    if (obj == undefined){
+      obj = id;
+      id = obj.id;
+      return this._converter.from(obj)
+        .flatMap((obj: any) => { 
+          let { externalReference } = obj;
+          delete obj.externalReference;
+          return this._baseRepo.findOneAndUpdate$({ [externalIdKey]: id }, obj)
+      });
+    } else {
+      return this._baseRepo.findOneAndUpdate$({ [externalIdKey]: id }, obj)      
+    }
   }  
 
-  findEachByExternalIdAndUpdate$(obj: IEntity[]): Observable<T[]> {
-    return Observable.of([<T>{}])
+  findEachByExternalIdAndUpdate$(objs: IEntity[]): Observable<T[]> {
+    let obs: any[] = [];
+    
+    for (let obj of objs) {
+      obs.push(this.findByExternalIdAndUpdate$(obj));
+    }    
+    return Observable.forkJoin(obs);
   }  
 
   findByExternalId$(id: string|number): Observable<T> {
-		let extRefIdKey = `externalReference.${this.Provider}.id`;
+		let externalIdKey = `externalReference.${this.Provider}.id`;
     
-    return this.findOne$({ [extRefIdKey]: id }); 
+    return this.findOne$({ [externalIdKey]: id }); 
   }  
 
   findByExternalIds$(ids: Array<string|number>): Observable<T[]> {
-		let extRefIdKey = `externalReference.${this.Provider}.id`;
+		let externalIdKey = `externalReference.${this.Provider}.id`;
 
-    return this.findAll$({ [extRefIdKey]: { $in : ids } });
+    return this.findAll$({ [externalIdKey]: { $in : ids } });
   }
   
   insert$(obj: IEntity): Observable<T> {

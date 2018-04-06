@@ -16,19 +16,36 @@ class BaseProviderRepository {
             return this._baseRepo.save$(entity);
         });
     }
-    findByExternalIdAndUpdate$(obj) {
-        return rxjs_1.Observable.of({});
+    findByExternalIdAndUpdate$(id, obj) {
+        let externalIdKey = `externalReference.${this.Provider}.id`;
+        if (obj == undefined) {
+            obj = id;
+            id = obj.id;
+            return this._converter.from(obj)
+                .flatMap((obj) => {
+                let { externalReference } = obj;
+                delete obj.externalReference;
+                return this._baseRepo.findOneAndUpdate$({ [externalIdKey]: id }, obj);
+            });
+        }
+        else {
+            return this._baseRepo.findOneAndUpdate$({ [externalIdKey]: id }, obj);
+        }
     }
-    findEachByExternalIdAndUpdate$(obj) {
-        return rxjs_1.Observable.of([{}]);
+    findEachByExternalIdAndUpdate$(objs) {
+        let obs = [];
+        for (let obj of objs) {
+            obs.push(this.findByExternalIdAndUpdate$(obj));
+        }
+        return rxjs_1.Observable.forkJoin(obs);
     }
     findByExternalId$(id) {
-        let extRefIdKey = `externalReference.${this.Provider}.id`;
-        return this.findOne$({ [extRefIdKey]: id });
+        let externalIdKey = `externalReference.${this.Provider}.id`;
+        return this.findOne$({ [externalIdKey]: id });
     }
     findByExternalIds$(ids) {
-        let extRefIdKey = `externalReference.${this.Provider}.id`;
-        return this.findAll$({ [extRefIdKey]: { $in: ids } });
+        let externalIdKey = `externalReference.${this.Provider}.id`;
+        return this.findAll$({ [externalIdKey]: { $in: ids } });
     }
     insert$(obj) {
         return this._baseRepo.insert$(obj);
