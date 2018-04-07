@@ -21,27 +21,25 @@ export class TeamRepository extends BaseProviderRepository<ITeam> implements ITe
   }
 
   findByNameAndUpdate$(name: any, obj?: any): Observable<ITeam> {
-    let query: any;
+    let partialUpdate = true;
     if (obj == undefined){
       obj = name;
       name = obj.name;
-      query = {
-        $or: [{ 'name': name }, { 'shortName': name }, { 'aliases': name }]
-      };
-      return this._converter.from(obj)
-        .flatMap((obj: any) => { 
-          let { externalReference } = obj;
-          delete obj.externalReference;      
-          Object.keys(obj).forEach((key) => (obj[key] == null) && delete obj[key])              
-          return this._findOneAndUpdate$(query, obj, externalReference)
-      });
-    } else {
-      query = {
-        $or: [{ 'name': name }, { 'shortName': name }, { 'aliases': name }]
-      };
-      Object.keys(obj).forEach((key) => (obj[key] == null) && delete obj[key])          
-      return this._baseRepo.findOneAndUpdate$(query, obj)
+      partialUpdate = false;
     }
+    let query = {
+      $or: [{ 'name': name }, { 'shortName': name }, { 'aliases': name }]
+    }
+    Object.keys(obj).forEach(key => (obj[key] == null) && delete obj[key])                  
+    if(partialUpdate) {
+      return this._baseRepo.findOneAndUpdate$(query, obj)      
+    }
+    return this._converter.from(obj)
+      .flatMap((obj: any) => { 
+        let { externalReference } = obj;
+        delete obj.externalReference;      
+        return this._findOneAndUpdate$(query, obj, externalReference)
+    });
   }  
 
   findEachByNameAndUpdate$(teams: ITeam[]): Observable<ITeam[]> {

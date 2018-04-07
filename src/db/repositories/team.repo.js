@@ -12,28 +12,25 @@ class TeamRepository extends baseProvider_repo_1.BaseProviderRepository {
         super(team_model_1.TeamModel, converter);
     }
     findByNameAndUpdate$(name, obj) {
-        let query;
+        let partialUpdate = true;
         if (obj == undefined) {
             obj = name;
             name = obj.name;
-            query = {
-                $or: [{ 'name': name }, { 'shortName': name }, { 'aliases': name }]
-            };
-            return this._converter.from(obj)
-                .flatMap((obj) => {
-                let { externalReference } = obj;
-                delete obj.externalReference;
-                Object.keys(obj).forEach((key) => (obj[key] == null) && delete obj[key]);
-                return this._findOneAndUpdate$(query, obj, externalReference);
-            });
+            partialUpdate = false;
         }
-        else {
-            query = {
-                $or: [{ 'name': name }, { 'shortName': name }, { 'aliases': name }]
-            };
-            Object.keys(obj).forEach((key) => (obj[key] == null) && delete obj[key]);
+        let query = {
+            $or: [{ 'name': name }, { 'shortName': name }, { 'aliases': name }]
+        };
+        Object.keys(obj).forEach(key => (obj[key] == null) && delete obj[key]);
+        if (partialUpdate) {
             return this._baseRepo.findOneAndUpdate$(query, obj);
         }
+        return this._converter.from(obj)
+            .flatMap((obj) => {
+            let { externalReference } = obj;
+            delete obj.externalReference;
+            return this._findOneAndUpdate$(query, obj, externalReference);
+        });
     }
     findEachByNameAndUpdate$(teams) {
         let obs = [];
