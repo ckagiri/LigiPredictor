@@ -9,7 +9,8 @@
     "watch": "mocha-typescript-watch",
     "prepare": "tsc",
     "mongodb": "mongod --dbpath=C:/data/db --port 27017",
-    "import:test": "SET NODE_ENV=test&& npm run prepare && node src/import/start.js"    
+    "import:test": "SET NODE_ENV=test&& npm run prepare && node src/import/start.js",
+    "drop:seed:test": "SET NODE_ENV=test&& npm run prepare && node src/db/tasks/drop.js && node src/db/tasks/seed.js"    
   },
   "author": "mimi",
   "license": "ISC",
