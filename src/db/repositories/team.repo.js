@@ -21,7 +21,6 @@ class TeamRepository extends baseProvider_repo_1.BaseProviderRepository {
         let query = {
             $or: [{ 'name': name }, { 'shortName': name }, { 'aliases': name }]
         };
-        Object.keys(obj).forEach(key => (obj[key] == null) && delete obj[key]);
         if (partialUpdate) {
             return this._baseRepo.findOneAndUpdate$(query, obj);
         }

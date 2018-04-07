@@ -20,6 +20,7 @@ class FixtureRepository extends baseProvider_repo_1.BaseProviderRepository {
             let { season, slug, externalReference } = obj;
             let query = { season, slug };
             delete obj.externalReference;
+            Object.keys(obj).forEach(key => (obj[key] == null) && delete obj[key]);
             return this._findOneAndUpdate$(query, obj, externalReference);
         });
     }

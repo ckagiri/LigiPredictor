@@ -30,7 +30,6 @@ export class TeamRepository extends BaseProviderRepository<ITeam> implements ITe
     let query = {
       $or: [{ 'name': name }, { 'shortName': name }, { 'aliases': name }]
     }
-    Object.keys(obj).forEach(key => (obj[key] == null) && delete obj[key])                  
     if(partialUpdate) {
       return this._baseRepo.findOneAndUpdate$(query, obj)      
     }

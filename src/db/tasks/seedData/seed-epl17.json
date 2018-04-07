@@ -174,7 +174,7 @@
   "seasons": {
     "_model": "Season",
     "epl_17": {
-      "api_detail": {
+      "externalReference": {
         "API_FOOTBALL_DATA": {
           "id": 445
         }
