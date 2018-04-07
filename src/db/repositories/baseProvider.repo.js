@@ -75,17 +75,9 @@ class BaseProviderRepository {
             if (externalReference == undefined) {
                 return rxjs_1.Observable.of(updatedObj);
             }
-            else {
-                let externalId = externalReference[this.Provider]['id'];
-                if (updatedObj.externalReference) {
-                    _.merge(updatedObj, { externalReference });
-                }
-                else {
-                    let data = _.merge(updatedObj, { externalReference });
-                    _.extend(updatedObj, data);
-                }
-                return this._baseRepo.save$(updatedObj);
-            }
+            let externalId = externalReference[this.Provider]['id'];
+            _.merge(updatedObj, { externalReference });
+            return this._baseRepo.save$(updatedObj);
         });
     }
 }

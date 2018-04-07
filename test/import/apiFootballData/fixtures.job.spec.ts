@@ -15,7 +15,7 @@ let clientStub: any = {
   }
 }
 let fixtureRepoStub: any = {
-  findEachByExternalIdAndUpdate$: () => {
+  findEachBySeasonAndSlugAndUpdate$: () => {
     return Observable.of(fixtures.fixtures)
   }
 }
@@ -39,8 +39,8 @@ describe('ApiFootballData:Fixtures Job', () => {
         .and.to.have.been.calledWith(competitionId);
     })
 
-    it('should call fixtureRepo.findEachByExternalIdAndUpdate$', async () => {
-      let spy = sinon.spy(fixtureRepoStub, 'findEachByExternalIdAndUpdate$');
+    it('should call fixtureRepo.findEachBySeasonAndSlugAndUpdate$', async () => {
+      let spy = sinon.spy(fixtureRepoStub, 'findEachBySeasonAndSlugAndUpdate$');
       
       await job.start(queueStub)   
             

@@ -54,7 +54,7 @@ export const fixtureSchema = new Schema({
   season: { type: ObjectId,  ref: 'Season', index: true, required: true },
   slug: { type: String, required: true, trim: true },
   matchRound: { type: Number, required: true },
-  gameRound: { type: Number, required: true },  
+  gameRound: { type: Number },  
  	date: { type: Date, required: true	},  
 	homeTeam: {
     name: { type: String, required: true },

@@ -51,8 +51,8 @@ describe('teamRepo', function () {
         });
     });
     it('should save a new Team', (done) => {
-        let teamRepo = team_repo_1.TeamRepository.getInstance(footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA);
-        teamRepo.insert$(manu)
+        let teamRepo = team_repo_1.TeamRepository.getInstance(footballApiProvider_1.FootballApiProvider.LIGI);
+        teamRepo.save$(manu)
             .subscribe((t) => {
             chai_1.expect(t.name).to.equal(manu.name);
             chai_1.expect(t.slug).to.equal(manu.slug);
@@ -102,6 +102,7 @@ describe('teamRepo', function () {
         })
             .subscribe((t) => {
             chai_1.expect(t.name).to.equal(manu.name);
+            chai_1.expect(t.externalReference).to.have.ownProperty(footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA);
             done();
         }, (err) => { console.log(err); done(); });
     });

@@ -12,6 +12,9 @@ class SeasonConverter {
             name: data.caption,
             year: data.year,
             currentMatchRound: data.currentMatchday,
+            numberOfRounds: data.numberOfMatchdays,
+            numberOfTeams: data.numberOfTeams,
+            numberOfGames: data.numberOfGames,
             externalReference: {
                 [this.provider]: {
                     id: data.id

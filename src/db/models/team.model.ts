@@ -15,9 +15,9 @@ export interface ITeam extends IEntity {
 interface ITeamModel extends ITeam, Document { }
 
 export const teamSchema = new Schema({
-  name: { type: Schema.Types.String, required: true },
+  name: { type: Schema.Types.String, required: true, trim: true },
   slug: { type: Schema.Types.String, required: true, trim: true },
-  shortName: { type: Schema.Types.String },
+  shortName: { type: Schema.Types.String, trim: true },
   code: { type: Schema.Types.String },
   aliases: { type: [Schema.Types.String] },
   crestUrl: { type: Schema.Types.String },

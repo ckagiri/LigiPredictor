@@ -23,13 +23,14 @@ export class FixtureConverter implements IFixtureConverter {
 
   from(data: any): any {
     return Observable.zip(
-			this.seasonRepo.findByExternalId$(data.seasonId),
+			this.seasonRepo.findByExternalId$(data.competitionId),
 			this.teamRepo.findByName$(data.homeTeamName),
 			this.teamRepo.findByName$(data.awayTeamName),
-			(season: any, homeTeam: any, awayTeam: any) => {
+			(season: any, homeTeam: any, awayTeam: any) => {        
 				return {
           season: season._id,
-					matchRound: data.matchday,
+          date: new Date(data.date),    
+          matchRound: data.matchday,          
           status: data.status,
 					homeTeam: {
             slug: homeTeam.slug,

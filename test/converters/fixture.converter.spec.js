@@ -8,7 +8,7 @@ const fixture_converter_2 = require("../../src/db/converters/apiFootballData/fix
 const fixture_model_1 = require("../../src/db/models/fixture.model");
 describe('Fixture Converter', () => {
     describe('Ligi FixtureConverter', () => {
-        const converter = new fixture_converter_1.FixtureConverter();
+        const converter = fixture_converter_1.FixtureConverter.getInstance();
         const fixture = {
             season: '4edd40c86762e0fb12000001',
             date: '2018-05-13T14:00:00Z',

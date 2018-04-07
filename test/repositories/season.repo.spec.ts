@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
-import { ILeagueRepository, LeagueRepository } from '../../src/db/repositories/league.repo';
-import { ISeasonRepository, SeasonRepository } from '../../src/db/repositories/season.repo';
+import { LeagueRepository } from '../../src/db/repositories/league.repo';
+import { SeasonRepository } from '../../src/db/repositories/season.repo';
 import { config } from '../../src/config/environment/index'
 import * as db from '../../src/db/index';
 import { FootballApiProvider as ApiProvider } from '../../src/common/footballApiProvider';

@@ -10,7 +10,7 @@ const league = {
     slug: 'english_premier_league',
     code: 'epl'
 };
-describe.only('LeagueRepo', function () {
+describe('LeagueRepo', function () {
     this.timeout(5000);
     before((done) => {
         db.init(index_1.config.mongo.uri, done, { drop: true });

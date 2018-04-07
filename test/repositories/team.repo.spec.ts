@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { ITeamRepository, TeamRepository } from '../../src/db/repositories/team.repo';
+import { TeamRepository } from '../../src/db/repositories/team.repo';
 import { config } from '../../src/config/environment/index'
 import * as db from '../../src/db/index';
 import { FootballApiProvider as ApiProvider } from '../../src/common/footballApiProvider';
@@ -56,9 +56,9 @@ describe('teamRepo', function() {
   })
 
   it('should save a new Team', (done) => {
-    let teamRepo = TeamRepository.getInstance(ApiProvider.API_FOOTBALL_DATA);
+    let teamRepo = TeamRepository.getInstance(ApiProvider.LIGI);
 
-    teamRepo.insert$(manu)
+    teamRepo.save$(manu)
       .subscribe((t: any) => {
         expect(t.name).to.equal(manu.name);
         expect(t.slug).to.equal(manu.slug);
@@ -118,6 +118,7 @@ describe('teamRepo', function() {
       })
       .subscribe((t: any) => {
         expect(t.name).to.equal(manu.name);
+        expect(t.externalReference).to.have.ownProperty(ApiProvider.API_FOOTBALL_DATA)
         
         done();
       }, (err) => { console.log(err); done(); });

@@ -14,6 +14,22 @@ class FixtureRepository extends baseProvider_repo_1.BaseProviderRepository {
     findSelectableFixtures$(seasonId, gameRound) {
         return rxjs_1.Observable.of([{}]);
     }
+    findBySeasonAndSlugAndUpdate$(obj) {
+        return this._converter.from(obj)
+            .flatMap((obj) => {
+            let { season, slug, externalReference } = obj;
+            let query = { season, slug };
+            delete obj.externalReference;
+            return this._findOneAndUpdate$(query, obj, externalReference);
+        });
+    }
+    findEachBySeasonAndSlugAndUpdate$(objs) {
+        let obs = [];
+        for (let obj of objs) {
+            obs.push(this.findBySeasonAndSlugAndUpdate$(obj));
+        }
+        return rxjs_1.Observable.forkJoin(obs);
+    }
 }
 exports.FixtureRepository = FixtureRepository;
 //# sourceMappingURL=fixture.repo.js.map

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { ILeagueRepository, LeagueRepository } from '../../src/db/repositories/league.repo';
+import { LeagueRepository } from '../../src/db/repositories/league.repo';
 import * as db from '../../src/db/index';
 import { config } from '../../src/config/environment/index'
 import { FootballApiProvider as ApiProvider } from '../../src/common/footballApiProvider';
@@ -11,7 +11,7 @@ const league = {
   code: 'epl'
 };
 
-describe.only('LeagueRepo', function() {
+describe('LeagueRepo', function() {
   this.timeout(5000);
   before((done) => {
     db.init(config.mongo.uri, done, { drop: true });
