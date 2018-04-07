@@ -131,7 +131,7 @@ describe('FixtureRepo', function () {
             done();
         });
     });
-    it('should findEach By SeasonAndSlug AndUpdateOrCreate', (done) => {
+    it('should findEach By SeasonAndTeams AndUpdateOrCreate', (done) => {
         rxjs_1.Observable.zip(leagueRepo.insert$(epl), teamRepo.insert$(manu), teamRepo.insert$(manc))
             .flatMap((arr) => {
             league = arr[0];
@@ -148,7 +148,7 @@ describe('FixtureRepo', function () {
             });
         })
             .flatMap(_ => {
-            return fixtureRepo.findBySeasonAndSlugAndUpdate$(afd_manuVmanc)
+            return fixtureRepo.findBySeasonAndTeamsAndUpdate$(afd_manuVmanc)
                 .map(f => {
                 fixture = f;
             });
