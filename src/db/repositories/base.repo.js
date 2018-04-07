@@ -42,8 +42,8 @@ class BaseRepository {
             return data;
         });
     }
-    findOneAndUpdate$(conditions, update) {
-        return this._baseDao.findOneAndUpdate$(conditions, update)
+    findOneAndUpdate$(conditions, update, options) {
+        return this._baseDao.findOneAndUpdate$(conditions, update, options)
             .catch((error) => {
             return rxjs_1.Observable.throw(error);
         })

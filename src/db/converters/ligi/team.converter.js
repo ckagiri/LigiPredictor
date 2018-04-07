@@ -10,8 +10,10 @@ class TeamConverter {
     from(data) {
         return rxjs_1.Observable.of({
             name: data.name,
+            shortName: data.shortName,
+            code: data.code,
             slug: data.slug,
-            crestUrl: data.crestUrl
+            aliases: data.aliases
         });
     }
 }

@@ -43,9 +43,9 @@ class BaseDao extends document_dao_1.DocumentDao {
             });
         });
     }
-    findOneAndUpdate$(conditions, update) {
+    findOneAndUpdate$(conditions, update, options) {
         return rxjs_1.Observable.create((observer) => {
-            super.findOneAndUpdate(conditions, update).exec().then((result) => {
+            super.findOneAndUpdate(conditions, update, options).exec().then((result) => {
                 observer.next(result);
                 observer.complete();
             }, (error) => {

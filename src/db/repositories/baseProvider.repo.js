@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const rxjs_1 = require("rxjs");
+const _ = require("lodash");
 const base_repo_1 = require("../repositories/base.repo");
 class BaseProviderRepository {
     constructor(schemaModel, converter) {
@@ -67,6 +68,25 @@ class BaseProviderRepository {
     }
     findOne$(conditions) {
         return this._baseRepo.findOne$(conditions);
+    }
+    _findOneAndUpdate$(conditions, obj, externalReference) {
+        return this._baseRepo.findOneAndUpdate$(conditions, obj, { new: true, upsert: true })
+            .flatMap((updatedObj) => {
+            if (externalReference == undefined) {
+                return rxjs_1.Observable.of(updatedObj);
+            }
+            else {
+                let externalId = externalReference[this.Provider]['id'];
+                if (updatedObj.externalReference) {
+                    _.merge(updatedObj, { externalReference });
+                }
+                else {
+                    let data = _.merge(updatedObj, { externalReference });
+                    _.extend(updatedObj, data);
+                }
+                return this._baseRepo.save$(updatedObj);
+            }
+        });
     }
 }
 exports.BaseProviderRepository = BaseProviderRepository;

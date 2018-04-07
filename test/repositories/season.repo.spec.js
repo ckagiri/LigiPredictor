@@ -49,7 +49,7 @@ const afdEpl16 = {
     numberOfTeams: 20,
     numberOfGames: 380
 };
-describe.only('seasonRepo', function () {
+describe('seasonRepo', function () {
     this.timeout(5000);
     before((done) => {
         db.init(index_1.config.mongo.uri, done, { drop: true });

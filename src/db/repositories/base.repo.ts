@@ -9,7 +9,7 @@ export interface IBaseRepository<T extends IEntity> {
   insert$(obj: IEntity): Observable<T>;
   insertMany$(objs: IEntity[]): Observable<T[]>;  
   findByIdAndUpdate$(id: string, update: any): Observable<T>;
-  findOneAndUpdate$(conditions: any, update: any): Observable<T>;
+  findOneAndUpdate$(conditions: any, update: any, options?: any): Observable<T>;
   findAll$(conditions?: any): Observable<T[]>;
   findById$(id: string): Observable<T>;
   findOne$(conditions?: any): Observable<T>;  
@@ -62,8 +62,8 @@ export class BaseRepository<T extends IEntity> implements IBaseRepository<T> {
       })     
   }
     
-  findOneAndUpdate$(conditions: any, update: any) {
-    return this._baseDao.findOneAndUpdate$(conditions, update)
+  findOneAndUpdate$(conditions: any, update: any, options?: any) {
+    return this._baseDao.findOneAndUpdate$(conditions, update, options)
       .catch((error: any) => {
         return Observable.throw(error);
       })

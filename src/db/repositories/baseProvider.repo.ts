@@ -1,5 +1,6 @@
 import { Observable, Observer, Subscriber } from 'rxjs';
 import { Model, Document } from 'mongoose';
+import * as _ from 'lodash';
 
 import { BaseRepository, IBaseRepository } from '../repositories/base.repo';
 import { IEntity } from '../models/base.model';
@@ -99,5 +100,24 @@ export class BaseProviderRepository<T extends IEntity> implements IBaseProviderR
 
   findOne$(conditions: any) {
     return this._baseRepo.findOne$(conditions);
+  }
+
+  protected _findOneAndUpdate$(conditions: any, obj: IEntity, externalReference: any) {   
+    return this._baseRepo.findOneAndUpdate$(conditions, obj, { new: true, upsert: true })
+      .flatMap((updatedObj: any) => {           
+        if(externalReference == undefined) {
+          return Observable.of(updatedObj);
+        } 
+        else {
+          let externalId = externalReference[this.Provider]['id']
+          if(updatedObj.externalReference) {
+            _.merge(updatedObj, { externalReference });
+          } else {
+            let data =  _.merge(updatedObj, { externalReference });   
+            _.extend(updatedObj, data);
+          }
+          return this._baseRepo.save$(updatedObj);
+        }
+      });      
   }
 }

@@ -16,8 +16,10 @@ export class TeamConverter implements ITeamConverter {
   from(data: any): Observable<ITeam> {
     return Observable.of({
       name: data.name,
+      shortName: data.shortName,
+      code: data.code,
       slug: data.slug,
-      crestUrl: data.crestUrl
+      aliases: data.aliases
      })
   }
 }

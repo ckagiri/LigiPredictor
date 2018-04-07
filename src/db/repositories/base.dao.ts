@@ -9,7 +9,7 @@ export interface IBaseDao<T extends Document> {
   insert$(obj: IEntity): Observable<T>;  
   insertMany$(objs: IEntity[]): Observable<T[]>;
   findByIdAndUpdate$(id: string, update: any): Observable<T>;
-  findOneAndUpdate$(conditions: any, update: any): Observable<T>;
+  findOneAndUpdate$(conditions: any, update: any, options?: any): Observable<T>;
   findAll$(conditions?: any, projection?: any, options?: any): Observable<T[]>;
   findOne$(conditions: any, projection?: any);
   findById$(id: string): Observable<T>;
@@ -62,9 +62,9 @@ export class BaseDao<T extends Document> extends DocumentDao<T> implements IBase
 		});
 	}
     
-  findOneAndUpdate$(conditions: any, update: any): Observable<T> {
+  findOneAndUpdate$(conditions: any, update: any, options?: any): Observable<T> {
     return Observable.create((observer: Subscriber<T>) => {
-			super.findOneAndUpdate(conditions, update).exec().then((result: T) => {
+			super.findOneAndUpdate(conditions, update, options).exec().then((result: T) => {
 				observer.next(result);
 				observer.complete();
 			}, (error: any) => {
