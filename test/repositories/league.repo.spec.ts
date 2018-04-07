@@ -1,11 +1,8 @@
-import * as mongoose from 'mongoose';
-import { assert } from 'chai';
-import * as sinon from 'sinon';
-import { Observable } from 'rxjs';
+import { expect } from 'chai';
 
-import { ILeague, LeagueModel as League } from '../../src/db/models/league.model';
 import { ILeagueRepository, LeagueRepository } from '../../src/db/repositories/league.repo';
-import { ILeagueConverter } from '../../src/db/converters/league.converter';
+import * as db from '../../src/db/index';
+import { config } from '../../src/config/environment/index'
 import { FootballApiProvider as ApiProvider } from '../../src/common/footballApiProvider';
 
 const league = {
@@ -14,59 +11,32 @@ const league = {
   code: 'epl'
 };
 
-let mockLeagueRepo: any = {
-  save$(obj: ILeague): Observable<ILeague> {
-    return Observable.create((observer) => {
-      observer.next(new League(league));
-      observer.complete();
-    }); 
-  }
-}
-
-describe('LeagueRepo', () => {
+describe.only('LeagueRepo', function() {
+  this.timeout(5000);
   before((done) => {
-    (<any>mongoose).Promise = global.Promise;    
-    mongoose.connect('mongodb://localhost:27017/test123-test');
-    mongoose.connection
-    .once('open', () => done())
-    .on('error', (error) => {
-      console.warn('Error', error);
+    db.init(config.mongo.uri, done, { drop: true });
+  })
+  afterEach((done) => {
+    db.drop().then(() => {
+      done();      
     })
-  });
-  
+  })
   after((done) => {
-    League.remove({}, (err) => {
-      mongoose.disconnect();
+    db.close().then(() => {
       done();
-    });
-  });
-  
-  it('should save a new league', (done) => {
-    let saveSpy = sinon.spy(mockLeagueRepo, 'save$');
-    let repo = mockLeagueRepo;
-   
-    repo.save$(league).subscribe((obj => {
-      assert.isTrue(saveSpy.calledOnce);
-      assert.equal(saveSpy.firstCall.args[0].name, 'English Premier League');
-      assert.equal(obj['name'], 'English Premier League');
-      saveSpy.restore();
-      done();
-    }));   
+    })
   })
 
-  describe('with real repo', function() {
-    this.timeout(5000);
-    let repo = LeagueRepository.getInstance(ApiProvider.LIGI);
-    
-    it('should save a new league', (done) => {
-      repo.save$(league).subscribe(l => {
-        assert.notEqual(l['_id'], undefined);
-        assert.equal(l.name, league.name);
-        assert.equal(l.slug, league.slug);
-        assert.equal(l.code, league.code);
-  
+  it('should save new league', (done) => {
+    let leagueRepo = LeagueRepository.getInstance(ApiProvider.LIGI);
+
+    leagueRepo.save$(league)
+      .subscribe((data: any) => {
+        let { name, slug, code } = data
+        expect(name).to.equal(league.name)
+        expect(slug).to.equal(league.slug)
+        expect(code).to.equal(league.code)
         done();
-      });
-    })
-  })  
+      }, (err) => { console.log(err); done(); });
+   });
 })

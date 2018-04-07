@@ -35,7 +35,7 @@ const afdManc = {
     squadMarketValue: null,
     crestUrl: 'http://upload.wikimedia.org/wikipedia/de/d/da/Manchester_City_FC.svg'
 };
-describe.only('teamRepo', function () {
+describe('teamRepo', function () {
     this.timeout(5000);
     before((done) => {
         db.init(index_1.config.mongo.uri, done, { drop: true });

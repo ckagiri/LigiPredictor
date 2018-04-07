@@ -39,7 +39,7 @@ const afdManc = {
   crestUrl: 'http://upload.wikimedia.org/wikipedia/de/d/da/Manchester_City_FC.svg'
 };
 
-describe.only('teamRepo', function() {
+describe('teamRepo', function() {
   this.timeout(5000);
   before((done) => {
     db.init(config.mongo.uri, done, { drop: true });
