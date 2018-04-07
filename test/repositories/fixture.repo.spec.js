@@ -85,7 +85,7 @@ let teamRepo = team_repo_1.TeamRepository.getInstance(footballApiProvider_1.Foot
 let fixtureRepo = fixture_repo_1.FixtureRepository.getInstance(footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA);
 let ligiFixtureRepo = fixture_repo_1.FixtureRepository.getInstance(footballApiProvider_1.FootballApiProvider.LIGI);
 let league, season, team1, team2, fixture;
-describe.only('FixtureRepo', function () {
+describe('FixtureRepo', function () {
     this.timeout(5000);
     before((done) => {
         db.init(index_1.config.mongo.uri, done, { drop: true });

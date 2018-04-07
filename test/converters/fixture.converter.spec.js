@@ -3,38 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const rxjs_1 = require("rxjs");
 const sinon = require("sinon");
 const chai_1 = require("chai");
-const fixture_converter_1 = require("../../src/db/converters/ligi/fixture.converter");
-const fixture_converter_2 = require("../../src/db/converters/apiFootballData/fixture.converter");
-const fixture_model_1 = require("../../src/db/models/fixture.model");
-describe('Fixture Converter', () => {
-    describe('Ligi FixtureConverter', () => {
-        const converter = fixture_converter_1.FixtureConverter.getInstance();
-        const fixture = {
-            season: '4edd40c86762e0fb12000001',
-            date: '2018-05-13T14:00:00Z',
-            status: fixture_model_1.FixtureStatus.SCHEDULED,
-            matchRound: 38,
-            homeTeam: {
-                id: '4edd40c86762e0fb12000001',
-                name: 'Arsenal',
-                slug: 'arsenal'
-            },
-            awayTeam: {
-                id: '4edd40c86762e0fb12000002',
-                name: 'Chelsea',
-                slug: 'chelsea'
-            },
-            slug: 'arsenal-chelsea'
-        };
-        it('should convert correctly', (done) => {
-            let conversion = converter.from(fixture);
-            conversion.subscribe(t => {
-                chai_1.expect(t.slug).to.equal(fixture.slug);
-                done();
-            });
-        });
-    });
-    describe('Afd FixtureConverter', () => {
+const fixture_converter_1 = require("../../src/db/converters/apiFootballData/fixture.converter");
+describe('Fixture Converter', function () {
+    describe('Afd FixtureConverter', function () {
         let season = {
             _id: '4edd40c86762e0fb12000001'
         };
@@ -60,7 +31,7 @@ describe('Fixture Converter', () => {
         };
         teamRepoStub.findByName$.withArgs(sinon.match('Arsenal')).returns(rxjs_1.Observable.of(homeTeam));
         teamRepoStub.findByName$.withArgs(sinon.match('Chelsea')).returns(rxjs_1.Observable.of(awayTeam));
-        const converter = new fixture_converter_2.FixtureConverter(seasonRepoStub, teamRepoStub);
+        const converter = new fixture_converter_1.FixtureConverter(seasonRepoStub, teamRepoStub);
         const fixture = {
             id: 158952,
             competitionId: 445,

@@ -27,12 +27,6 @@ describe('Fixture', () => {
                     done();
                 });
             });
-            it('should require gameRound', (done) => {
-                s.validate((err) => {
-                    chai_1.expect(err.errors.gameRound).to.exist;
-                    done();
-                });
-            });
             it('should require a home team', (done) => {
                 s.validate((err) => {
                     chai_1.expect(err.errors['homeTeam.id']).to.exist;

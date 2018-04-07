@@ -7,37 +7,8 @@ import { FixtureConverter as LigiFixtureConverter} from '../../src/db/converters
 import { FixtureConverter as AfdFixtureConverter} from '../../src/db/converters/apiFootballData/fixture.converter';
 import { FixtureStatus } from '../../src/db/models/fixture.model';
 
-describe('Fixture Converter', () => {
-  describe('Ligi FixtureConverter', () => {
-    const converter = LigiFixtureConverter.getInstance();
-    const fixture = {
-      season: '4edd40c86762e0fb12000001',
-      date: '2018-05-13T14:00:00Z',
-      status: FixtureStatus.SCHEDULED,
-      matchRound: 38,
-      homeTeam: {
-        id: '4edd40c86762e0fb12000001',
-        name: 'Arsenal',
-        slug: 'arsenal'
-      },
-      awayTeam: {
-        id: '4edd40c86762e0fb12000002',
-        name: 'Chelsea',
-        slug: 'chelsea'
-      },
-      slug: 'arsenal-chelsea'
-    };
-    it('should convert correctly', (done) => {
-      let conversion = converter.from(fixture);
-      conversion.subscribe(t => {
-        expect(t.slug).to.equal(fixture.slug);
-
-        done();
-      });
-    })
-  })
-
-  describe('Afd FixtureConverter', () => {
+describe('Fixture Converter', function() {
+  describe('Afd FixtureConverter', function() {
     let season = {
       _id: '4edd40c86762e0fb12000001'
     }
