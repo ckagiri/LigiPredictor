@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
 const bcrypt = require("bcrypt-nodejs");
 const user_model_1 = require("../../src/db/models/user.model");
-describe.only('Users', () => {
+describe('Users', () => {
     describe('schema', () => {
         describe('an empty user', () => {
             const u = new user_model_1.UserModel();

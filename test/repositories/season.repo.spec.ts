@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import { LeagueRepository } from '../../src/db/repositories/league.repo';
-import { SeasonRepository } from '../../src/db/repositories/season.repo';
+import { ISeasonRepository, SeasonRepository } from '../../src/db/repositories/season.repo';
 import { config } from '../../src/config/environment/index'
 import * as db from '../../src/db/index';
 import { FootballApiProvider as ApiProvider } from '../../src/common/footballApiProvider';
@@ -57,7 +57,7 @@ const afdEpl16 = {
 describe('seasonRepo', function() {
   this.timeout(5000);
   before((done) => {
-    db.init(config.mongo.uri, done, { drop: true });
+    db.init(config.testDb.uri, done, { drop: true });
   })
   afterEach((done) => {
     db.drop().then(() => {

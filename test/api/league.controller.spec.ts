@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'test';
+
 import { Observable } from 'rxjs';
 import * as _ from 'lodash';
 import * as request from 'supertest';
@@ -11,8 +13,9 @@ import chaiHttp = require('chai-http');
 chai.use(chaiHttp);
   const expect = chai.expect;
 
-//import { server as app } from '../../src/app/server'; 
-let app:any;
+import { config } from '../../src/config/environment/index'
+import { server as app } from '../../src/app/server';
+  
 import { LeagueModel as League } from '../../src/db/models/league.model';
 import { SeasonModel as Season } from '../../src/db/models/season.model';
 import { TeamModel as Team } from '../../src/db/models/team.model';
@@ -38,7 +41,7 @@ function addLeague(aLeague) {
   })
 }
 
-describe.skip('League API', function() {  
+describe.only('League API', function() {  
   this.timeout(5000);
   before(done => clearData(done))
   afterEach(done => clearData(done))
@@ -56,7 +59,7 @@ describe.skip('League API', function() {
       })
   })
 
-  it('should respond with a single league', done => {
+  it.only('should respond with a single league', done => {
     addLeague(epl).then(() => {
       request(app)
       .get(`/api/v1/leagues/${epl.slug}`)

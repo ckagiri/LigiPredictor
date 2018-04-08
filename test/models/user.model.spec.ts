@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt-nodejs';
 
 import { UserModel as User, IUser } from '../../src/db/models/user.model';
 
-describe.only('Users', () => {
+describe('Users', () => {
   describe('schema', () => {
     describe('an empty user', () => {
       const u = new User();

@@ -95,7 +95,7 @@ let league: any, season: any, team1: any, team2: any, fixture: any;
 describe('FixtureRepo', function() {
   this.timeout(5000);
   before((done) => {
-    db.init(config.mongo.uri, done, { drop: true });
+    db.init(config.testDb.uri, done, { drop: true });
   })
   beforeEach(() => {
     league = season = team1 = team2 = fixture = null;
@@ -141,7 +141,7 @@ describe('FixtureRepo', function() {
         done();
       })
   })
-  
+
   it('should findEach By SeasonAndTeams AndUpdateOrCreate', (done) => {
     Observable.zip(
       leagueRepo.insert$(epl),

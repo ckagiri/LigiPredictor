@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+process.env.NODE_ENV = 'test';
 const request = require("supertest");
 const mongoose = require("mongoose");
 const chai = require("chai");
@@ -8,8 +9,7 @@ chai.use(sinonChai);
 const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
 const expect = chai.expect;
-//import { server as app } from '../../src/app/server'; 
-let app;
+const server_1 = require("../../src/app/server");
 const league_model_1 = require("../../src/db/models/league.model");
 const season_model_1 = require("../../src/db/models/season.model");
 const team_model_1 = require("../../src/db/models/team.model");
@@ -33,13 +33,13 @@ function addLeague(aLeague) {
         });
     });
 }
-describe.skip('League API', function () {
+describe.only('League API', function () {
     this.timeout(5000);
     before(done => clearData(done));
     afterEach(done => clearData(done));
-    after(done => { mongoose.disconnect(); app.close(); done(); });
+    after(done => { mongoose.disconnect(); server_1.server.close(); done(); });
     it('should respond with JSON array', function (done) {
-        request(app)
+        request(server_1.server)
             .get('/api/v1/leagues')
             .expect(200)
             .expect('Content-Type', /json/)
@@ -51,9 +51,9 @@ describe.skip('League API', function () {
             done();
         });
     });
-    it('should respond with a single league', done => {
+    it.only('should respond with a single league', done => {
         addLeague(epl).then(() => {
-            request(app)
+            request(server_1.server)
                 .get(`/api/v1/leagues/${epl.slug}`)
                 .expect(200)
                 .expect('Content-Type', /json/)

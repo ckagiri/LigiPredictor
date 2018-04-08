@@ -52,7 +52,7 @@ const afdEpl16 = {
 describe('seasonRepo', function () {
     this.timeout(5000);
     before((done) => {
-        db.init(index_1.config.mongo.uri, done, { drop: true });
+        db.init(index_1.config.testDb.uri, done, { drop: true });
     });
     afterEach((done) => {
         db.drop().then(() => {
