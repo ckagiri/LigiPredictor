@@ -51,7 +51,7 @@ describe.only('League API', function () {
             done();
         });
     });
-    it.only('should respond with a single league', done => {
+    it('should respond with a single league', done => {
         addLeague(epl).then(() => {
             request(server_1.server)
                 .get(`/api/v1/leagues/${epl.slug}`)

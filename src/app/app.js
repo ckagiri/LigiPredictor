@@ -35,6 +35,6 @@ class ExpressApp {
         this.express.use('/api', apiRoutes_1.router);
     }
 }
-exports.app = { create: () => ExpressApp.create() };
-exports.default = exports.app;
+exports.App = { create: () => ExpressApp.create() };
+exports.default = exports.App;
 //# sourceMappingURL=app.js.map

@@ -7,9 +7,9 @@ import * as path from 'path';
 const chalk = require('chalk');
 
 import { config } from '../config/environment/index';
-import app from './app';
+import App from './app';
 
-const express = app.create();
+const app = App.create();
 
 console.log('About to crank up node');
 console.log('PORT=' + config.port);
@@ -18,12 +18,12 @@ console.log('NODE_ENV=' + config.env);
 mongoose.connect(config.mongo.uri, config.mongo.options);
 const db = mongoose.connection;
 
-const server = http.createServer(express);
+const server = http.createServer(app);
 server.listen(config.port, config.ip, () => {
 	const host = server.address().address;
   const port = server.address().port;
 	console.log(chalk.yellow(`${config.env} Express Server listening on http://localhost:${port}`));
-	console.log(chalk.yellow('env = ' + express.get('env') +
+	console.log(chalk.yellow('env = ' + app.get('env') +
 		'\n__dirname = ' + __dirname +
 		'\nprocess.cwd = ' + process.cwd()));
 

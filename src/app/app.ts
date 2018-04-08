@@ -43,5 +43,5 @@ class ExpressApp {
   }
 }
 
-export const app = { create: () => ExpressApp.create() };
-export default app;
+export const App = { create: () => ExpressApp.create() };
+export default App;

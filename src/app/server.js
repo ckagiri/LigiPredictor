@@ -5,19 +5,19 @@ const http = require("http");
 const chalk = require('chalk');
 const index_1 = require("../config/environment/index");
 const app_1 = require("./app");
-const express = app_1.default.create();
+const app = app_1.default.create();
 console.log('About to crank up node');
 console.log('PORT=' + index_1.config.port);
 console.log('NODE_ENV=' + index_1.config.env);
 mongoose.connect(index_1.config.mongo.uri, index_1.config.mongo.options);
 const db = mongoose.connection;
-const server = http.createServer(express);
+const server = http.createServer(app);
 exports.server = server;
 server.listen(index_1.config.port, index_1.config.ip, () => {
     const host = server.address().address;
     const port = server.address().port;
     console.log(chalk.yellow(`${index_1.config.env} Express Server listening on http://localhost:${port}`));
-    console.log(chalk.yellow('env = ' + express.get('env') +
+    console.log(chalk.yellow('env = ' + app.get('env') +
         '\n__dirname = ' + __dirname +
         '\nprocess.cwd = ' + process.cwd()));
     db.on('error', (err) => {
