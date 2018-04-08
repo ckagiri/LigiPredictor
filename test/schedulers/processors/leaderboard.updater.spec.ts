@@ -78,7 +78,7 @@ let userRepoStub: any = {
   findAll$: () => { return Observable.of([chalo, kagiri]) }
 }
 let predictionRepoStub: any = {
-  findOneByUserAndFixture$: () => { return Observable.of(pred1) }
+  findByUserAndFixture$: () => { return Observable.of(pred1) }
 }
 let userScoreRepoStub: any = {
   findOneAndUpdateOrCreate$: () => { return Observable.of({ _id: ObjectId().toHexString() }) },
@@ -139,7 +139,7 @@ describe('Leaderboard Updater', () => {
       expect(spy).to.have.been.calledWith(seasonId, gameRound, {status: LeaderboardStatus.UPDATING_SCORES})
     })
     it('should get fixture prediction for the user', async () => {
-      let spy = sinon.spy(predictionRepoStub, 'findOneByUserAndFixture$');
+      let spy = sinon.spy(predictionRepoStub, 'findByUserAndFixture$');
 
       await leaderboardUpdater.updateScores(finishedFixtures)
 

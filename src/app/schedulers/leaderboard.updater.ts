@@ -83,7 +83,7 @@ export class LeaderboardUpdater implements ILeaderboardUpdater {
       })
       .flatMap(data => {
         let { user, fixture, leaderboard } = data;
-        return this.predictionRepo.findOneByUserAndFixture$(user['_id'], fixture['_id'])
+        return this.predictionRepo.findByUserAndFixture$(user['_id'], fixture['_id'])
           .map(prediction => {
             return { user, fixture, leaderboard, prediction }
           })

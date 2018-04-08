@@ -86,7 +86,7 @@ let userRepoStub = {
     findAll$: () => { return rxjs_1.Observable.of([chalo, kagiri]); }
 };
 let predictionRepoStub = {
-    findOneByUserAndFixture$: () => { return rxjs_1.Observable.of(pred1); }
+    findByUserAndFixture$: () => { return rxjs_1.Observable.of(pred1); }
 };
 let userScoreRepoStub = {
     findOneAndUpdateOrCreate$: () => { return rxjs_1.Observable.of({ _id: ObjectId().toHexString() }); },
@@ -134,7 +134,7 @@ describe('Leaderboard Updater', () => {
             expect(spy).to.have.been.calledWith(seasonId, gameRound, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
         }));
         it('should get fixture prediction for the user', () => __awaiter(this, void 0, void 0, function* () {
-            let spy = sinon.spy(predictionRepoStub, 'findOneByUserAndFixture$');
+            let spy = sinon.spy(predictionRepoStub, 'findByUserAndFixture$');
             yield leaderboardUpdater.updateScores(finishedFixtures);
             expect(spy).to.have.been.called;
             expect(spy.firstCall).to.have.been.calledWith(chalo._id, ars_che._id);

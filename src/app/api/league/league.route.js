@@ -7,7 +7,7 @@ class LeagueRouter {
     constructor() {
         this.controller = league_controller_1.LeagueController.getInstance();
     }
-    get routes() {
+    get Routes() {
         router.get('/', this.controller.list);
         router.get('/:id', this.controller.show);
         router.get('/:leagueId/seasons', this.controller.listSeasons);

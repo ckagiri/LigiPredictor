@@ -10,10 +10,12 @@ export interface ILeague extends IEntity {
 
 interface ILeagueModel extends ILeague, Document { }
 
+const { String } = Schema.Types;
+
 export const leagueSchema = new Schema({
-  name: { type:  Schema.Types.String, required: true },
-  slug: { type: Schema.Types.String, required: true },
-  code: { type: Schema.Types.String, default: '' }
+  name: { type: String, required: true },
+  slug: { type: String, required: true },
+  code: { type: String, default: '' }
 });
 
 export const LeagueModel = model<ILeagueModel>('League', leagueSchema);

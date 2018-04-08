@@ -14,14 +14,16 @@ export interface ITeam extends IEntity {
 
 interface ITeamModel extends ITeam, Document { }
 
+const { String, Mixed } = Schema.Types;
+
 export const teamSchema = new Schema({
-  name: { type: Schema.Types.String, required: true, trim: true },
-  slug: { type: Schema.Types.String, required: true, trim: true },
-  shortName: { type: Schema.Types.String, trim: true },
-  code: { type: Schema.Types.String },
-  aliases: { type: [Schema.Types.String] },
-  crestUrl: { type: Schema.Types.String },
-  externalReference: { type: Schema.Types.Mixed }  
+  name: { type: String, required: true, trim: true },
+  slug: { type: String, required: true, trim: true },
+  shortName: { type: String, trim: true },
+  code: { type: String },
+  aliases: { type: [String] },
+  crestUrl: { type: String },
+  externalReference: { type: Mixed }  
 });
 
 export const TeamModel = model<ITeamModel>('Team', teamSchema);

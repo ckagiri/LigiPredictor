@@ -6,11 +6,11 @@ let router = Router();
 class LeagueRouter {
   private controller = LeagueController.getInstance();
 
-  get routes () {
-      router.get('/', this.controller.list);
-      router.get('/:id', this.controller.show)
-      router.get('/:leagueId/seasons', this.controller.listSeasons); 
-      return router;
+  get Routes () {
+    router.get('/', this.controller.list);
+    router.get('/:id', this.controller.show)
+    router.get('/:leagueId/seasons', this.controller.listSeasons); 
+    return router;
   }
 }
 

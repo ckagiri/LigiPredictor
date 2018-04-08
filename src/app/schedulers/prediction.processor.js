@@ -51,7 +51,7 @@ class PredictionProcessor {
             if (jokerPrediction.fixture === fixtureId) {
                 return rxjs_1.Observable.of(jokerPrediction);
             }
-            return this.predictionRepo.findOneOrCreate$(userId, fixtureId);
+            return this.predictionRepo.findByUserAndFixtureOrCreate$(userId, fixtureId);
         })
             .toArray();
     }

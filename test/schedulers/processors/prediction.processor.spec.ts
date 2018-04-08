@@ -46,7 +46,7 @@ let chaloPred = { user: chalo._id, fixture: ars_che._id,
 }
 let predictionRepoStub: any = {
   getOrCreateJoker$: sinon.stub(),
-  findOneOrCreate$: sinon.stub(),
+  findByUserAndFixture$: sinon.stub(),
   findByIdAndUpdate$: sinon.stub()
 }
 let predictionCalculatorStub: any = {
@@ -58,13 +58,13 @@ describe('Prediction Processor', () => {
     beforeEach(() => {
       predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(chalo._id)).returns(Observable.of(chaloJoker));
       predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(kagiri._id)).returns(Observable.of(kagiriJoker));   
-      predictionRepoStub.findOneOrCreate$.returns(Observable.of(chaloPred)); 
+      predictionRepoStub.findByUserAndFixture$.returns(Observable.of(chaloPred)); 
       predictionProcessor = new PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub, predictionCalculatorStub);     
     })
 
     afterEach(() => {
       predictionRepoStub.getOrCreateJoker$ = sinon.stub();
-      predictionRepoStub.findOneOrCreate$ = sinon.stub();
+      predictionRepoStub.findByUserAndFixture$ = sinon.stub();
     })  
 
     it('should get the selectable fixtures of gameRound', async () => {
@@ -98,7 +98,7 @@ describe('Prediction Processor', () => {
     })
 
     it('should getOrCreate prediction if joker fixure != fixture passed', async () => {
-      let spy = predictionRepoStub.findOneOrCreate$;
+      let spy = predictionRepoStub.findByUserAndFixture$;
       
       await predictionProcessor.getPredictions$(ars_che).toPromise();
 
@@ -107,7 +107,7 @@ describe('Prediction Processor', () => {
     })
 
     it('should not getOrCreate prediction if joker fixture == passedIn fixture', async () => {
-      let spy = predictionRepoStub.findOneOrCreate$;
+      let spy = predictionRepoStub.findByUserAndFixture$;
 
       await predictionProcessor.getPredictions$(liv_sou).toPromise();
 

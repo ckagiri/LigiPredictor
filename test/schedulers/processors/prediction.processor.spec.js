@@ -54,7 +54,7 @@ let chaloPred = { user: chalo._id, fixture: ars_che._id,
 };
 let predictionRepoStub = {
     getOrCreateJoker$: sinon.stub(),
-    findOneOrCreate$: sinon.stub(),
+    findByUserAndFixture$: sinon.stub(),
     findByIdAndUpdate$: sinon.stub()
 };
 let predictionCalculatorStub = {
@@ -66,12 +66,12 @@ describe('Prediction Processor', () => {
         beforeEach(() => {
             predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(chalo._id)).returns(rxjs_1.Observable.of(chaloJoker));
             predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(kagiri._id)).returns(rxjs_1.Observable.of(kagiriJoker));
-            predictionRepoStub.findOneOrCreate$.returns(rxjs_1.Observable.of(chaloPred));
+            predictionRepoStub.findByUserAndFixture$.returns(rxjs_1.Observable.of(chaloPred));
             predictionProcessor = new prediction_processor_1.PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub, predictionCalculatorStub);
         });
         afterEach(() => {
             predictionRepoStub.getOrCreateJoker$ = sinon.stub();
-            predictionRepoStub.findOneOrCreate$ = sinon.stub();
+            predictionRepoStub.findByUserAndFixture$ = sinon.stub();
         });
         it('should get the selectable fixtures of gameRound', () => __awaiter(this, void 0, void 0, function* () {
             let spy = sinon.spy(fixtureRepoStub, 'findSelectableFixtures$');
@@ -91,13 +91,13 @@ describe('Prediction Processor', () => {
             expect(spy.secondCall).to.have.been.calledWithExactly(kagiri._id, ars_che.season, ars_che.gameRound, [liv_sou._id, ars_che._id]);
         }));
         it('should getOrCreate prediction if joker fixure != fixture passed', () => __awaiter(this, void 0, void 0, function* () {
-            let spy = predictionRepoStub.findOneOrCreate$;
+            let spy = predictionRepoStub.findByUserAndFixture$;
             yield predictionProcessor.getPredictions$(ars_che).toPromise();
             expect(spy).to.have.been.calledOnce;
             expect(spy).to.have.been.calledWithExactly(chalo._id, ars_che._id);
         }));
         it('should not getOrCreate prediction if joker fixture == passedIn fixture', () => __awaiter(this, void 0, void 0, function* () {
-            let spy = predictionRepoStub.findOneOrCreate$;
+            let spy = predictionRepoStub.findByUserAndFixture$;
             yield predictionProcessor.getPredictions$(liv_sou).toPromise();
             expect(spy).to.have.been.calledOnce;
         }));
