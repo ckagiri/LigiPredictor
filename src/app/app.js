@@ -5,7 +5,7 @@ const express = require("express");
 const logger = require("morgan");
 const favicon = require("serve-favicon");
 const authorization_1 = require("./authorization");
-const apiRoutes_1 = require("./apiRoutes");
+const api_router_1 = require("./api.router");
 class ExpressApp {
     static create() {
         return new ExpressApp(new authorization_1.Authorization()).express;
@@ -32,7 +32,7 @@ class ExpressApp {
     }
     routes(authorization) {
         this.express.use('/auth/v1', authorization.router);
-        this.express.use('/api', apiRoutes_1.router);
+        this.express.use('/api', api_router_1.ApiRouter.create(authorization).router);
     }
 }
 exports.App = { create: () => ExpressApp.create() };

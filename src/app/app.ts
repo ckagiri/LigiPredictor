@@ -4,7 +4,7 @@ import * as logger from 'morgan';
 import * as favicon from 'serve-favicon';
 
 import { IAuthorization, Authorization } from './authorization';
-import { router as apiRouter } from './apiRoutes';
+import { ApiRouter }  from './api.router';
 
 class ExpressApp {
   private express: express.Application;
@@ -39,7 +39,7 @@ class ExpressApp {
 
   private routes(authorization: IAuthorization) {
     this.express.use('/auth/v1', authorization.router);
-    this.express.use('/api', apiRouter);    
+    this.express.use('/api', ApiRouter.create(authorization).router);    
   }
 }
 
