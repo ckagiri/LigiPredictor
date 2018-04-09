@@ -41,9 +41,9 @@ let newPrediction = (userId, fixture, status = PredictionStatus.PENDING) => {
 }
 let finishedFixtures = [ ars_che, liv_sou, eve_wat ];
 let leaderboardRepoStub:any = {
-  findSeasonBoardAndUpdate$: sinon.stub(),
-  findMonthBoardAndUpdate$: sinon.stub(),
-  findRoundBoardAndUpdate$: sinon.stub(),
+  findSeasonBoardAndUpsert$: sinon.stub(),
+  findMonthBoardAndUpsert$: sinon.stub(),
+  findRoundBoardAndUpsert$: sinon.stub(),
   findAll$: sinon.stub(),
   findByIdAndUpdate$: sinon.stub()
 }
@@ -90,16 +90,16 @@ let leaderboardUpdater = new LeaderboardUpdater(userRepoStub, leaderboardRepoStu
 describe('Leaderboard Updater', () => {
   describe('updateScores', () => {
     beforeEach(() => {
-      leaderboardRepoStub.findSeasonBoardAndUpdate$.returns(Observable.of({ id: 1 }))
-      leaderboardRepoStub.findMonthBoardAndUpdate$.returns(Observable.of({ id: 2 }))
-      leaderboardRepoStub.findRoundBoardAndUpdate$.returns(Observable.of({ id: 3 }))
+      leaderboardRepoStub.findSeasonBoardAndUpsert$.returns(Observable.of({ id: 1 }))
+      leaderboardRepoStub.findMonthBoardAndUpsert$.returns(Observable.of({ id: 2 }))
+      leaderboardRepoStub.findRoundBoardAndUpsert$.returns(Observable.of({ id: 3 }))
       leaderboardRepoStub.findAll$.returns(Observable.of([lb1]))
       leaderboardRepoStub.findByIdAndUpdate$.returns(Observable.of(lb1))
     })
     afterEach(() => {
-      leaderboardRepoStub.findSeasonBoardAndUpdate$ = sinon.stub()
-      leaderboardRepoStub.findMonthBoardAndUpdate$ = sinon.stub()
-      leaderboardRepoStub.findRoundBoardAndUpdate$ = sinon.stub()
+      leaderboardRepoStub.findSeasonBoardAndUpsert$ = sinon.stub()
+      leaderboardRepoStub.findMonthBoardAndUpsert$ = sinon.stub()
+      leaderboardRepoStub.findRoundBoardAndUpsert$ = sinon.stub()
     })
 
     it('should getUsers', async () => {
@@ -111,7 +111,7 @@ describe('Leaderboard Updater', () => {
     })
 
     it('should get Seasonboard and set status to UPDATING_SCORES ', async () => {
-      let spy = leaderboardRepoStub.findSeasonBoardAndUpdate$;
+      let spy = leaderboardRepoStub.findSeasonBoardAndUpsert$;
 
       await leaderboardUpdater.updateScores(finishedFixtures)
 
@@ -120,7 +120,7 @@ describe('Leaderboard Updater', () => {
     })
 
     it('should get Monthboard and set status to UPDATING_SCORES ', async () => {
-      let spy = leaderboardRepoStub.findMonthBoardAndUpdate$;
+      let spy = leaderboardRepoStub.findMonthBoardAndUpsert$;
 
       await leaderboardUpdater.updateScores(finishedFixtures)
 
@@ -131,7 +131,7 @@ describe('Leaderboard Updater', () => {
     })
 
     it('should get Roundboard and set status to UPDATING_SCORES ', async () => {
-      let spy = leaderboardRepoStub.findRoundBoardAndUpdate$;
+      let spy = leaderboardRepoStub.findRoundBoardAndUpsert$;
 
       await leaderboardUpdater.updateScores(finishedFixtures)
 
@@ -147,7 +147,7 @@ describe('Leaderboard Updater', () => {
       expect(spy).to.have.been.calledWith(sinon.match({ userId: chalo.id, fixtureId: ars_che.id }));
     })
     it('should cache boards', async () => {
-      let spy = leaderboardRepoStub.findSeasonBoardAndUpdate$;
+      let spy = leaderboardRepoStub.findSeasonBoardAndUpsert$;
       leaderboardUpdater.setCacheService(new CacheService);
       await leaderboardUpdater.updateScores(finishedFixtures)
       

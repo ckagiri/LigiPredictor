@@ -49,9 +49,9 @@ let newPrediction = (userId, fixture, status = prediction_model_1.PredictionStat
 };
 let finishedFixtures = [ars_che, liv_sou, eve_wat];
 let leaderboardRepoStub = {
-    findSeasonBoardAndUpdate$: sinon.stub(),
-    findMonthBoardAndUpdate$: sinon.stub(),
-    findRoundBoardAndUpdate$: sinon.stub(),
+    findSeasonBoardAndUpsert$: sinon.stub(),
+    findMonthBoardAndUpsert$: sinon.stub(),
+    findRoundBoardAndUpsert$: sinon.stub(),
     findAll$: sinon.stub(),
     findByIdAndUpdate$: sinon.stub()
 };
@@ -97,16 +97,16 @@ let leaderboardUpdater = new leaderboard_updater_1.LeaderboardUpdater(userRepoSt
 describe('Leaderboard Updater', () => {
     describe('updateScores', () => {
         beforeEach(() => {
-            leaderboardRepoStub.findSeasonBoardAndUpdate$.returns(rxjs_1.Observable.of({ id: 1 }));
-            leaderboardRepoStub.findMonthBoardAndUpdate$.returns(rxjs_1.Observable.of({ id: 2 }));
-            leaderboardRepoStub.findRoundBoardAndUpdate$.returns(rxjs_1.Observable.of({ id: 3 }));
+            leaderboardRepoStub.findSeasonBoardAndUpsert$.returns(rxjs_1.Observable.of({ id: 1 }));
+            leaderboardRepoStub.findMonthBoardAndUpsert$.returns(rxjs_1.Observable.of({ id: 2 }));
+            leaderboardRepoStub.findRoundBoardAndUpsert$.returns(rxjs_1.Observable.of({ id: 3 }));
             leaderboardRepoStub.findAll$.returns(rxjs_1.Observable.of([lb1]));
             leaderboardRepoStub.findByIdAndUpdate$.returns(rxjs_1.Observable.of(lb1));
         });
         afterEach(() => {
-            leaderboardRepoStub.findSeasonBoardAndUpdate$ = sinon.stub();
-            leaderboardRepoStub.findMonthBoardAndUpdate$ = sinon.stub();
-            leaderboardRepoStub.findRoundBoardAndUpdate$ = sinon.stub();
+            leaderboardRepoStub.findSeasonBoardAndUpsert$ = sinon.stub();
+            leaderboardRepoStub.findMonthBoardAndUpsert$ = sinon.stub();
+            leaderboardRepoStub.findRoundBoardAndUpsert$ = sinon.stub();
         });
         it('should getUsers', () => __awaiter(this, void 0, void 0, function* () {
             let spy = sinon.spy(userRepoStub, 'findAll$');
@@ -114,13 +114,13 @@ describe('Leaderboard Updater', () => {
             expect(spy).to.have.been.calledTwice;
         }));
         it('should get Seasonboard and set status to UPDATING_SCORES ', () => __awaiter(this, void 0, void 0, function* () {
-            let spy = leaderboardRepoStub.findSeasonBoardAndUpdate$;
+            let spy = leaderboardRepoStub.findSeasonBoardAndUpsert$;
             yield leaderboardUpdater.updateScores(finishedFixtures);
             expect(spy).to.have.been.called;
             expect(spy).to.have.been.calledWith(seasonId, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
         }));
         it('should get Monthboard and set status to UPDATING_SCORES ', () => __awaiter(this, void 0, void 0, function* () {
-            let spy = leaderboardRepoStub.findMonthBoardAndUpdate$;
+            let spy = leaderboardRepoStub.findMonthBoardAndUpsert$;
             yield leaderboardUpdater.updateScores(finishedFixtures);
             expect(spy).to.have.been.called;
             let month = ars_che.date.getUTCMonth() + 1;
@@ -128,7 +128,7 @@ describe('Leaderboard Updater', () => {
             expect(spy.firstCall).to.have.been.calledWith(seasonId, year, month, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
         }));
         it('should get Roundboard and set status to UPDATING_SCORES ', () => __awaiter(this, void 0, void 0, function* () {
-            let spy = leaderboardRepoStub.findRoundBoardAndUpdate$;
+            let spy = leaderboardRepoStub.findRoundBoardAndUpsert$;
             yield leaderboardUpdater.updateScores(finishedFixtures);
             expect(spy).to.have.been.called;
             expect(spy).to.have.been.calledWith(seasonId, gameRound, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
@@ -140,7 +140,7 @@ describe('Leaderboard Updater', () => {
             expect(spy).to.have.been.calledWith(sinon.match({ userId: chalo.id, fixtureId: ars_che.id }));
         }));
         it('should cache boards', () => __awaiter(this, void 0, void 0, function* () {
-            let spy = leaderboardRepoStub.findSeasonBoardAndUpdate$;
+            let spy = leaderboardRepoStub.findSeasonBoardAndUpsert$;
             leaderboardUpdater.setCacheService(new cacheService_1.CacheService);
             yield leaderboardUpdater.updateScores(finishedFixtures);
             expect(spy).to.have.callCount(4);

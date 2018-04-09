@@ -5,9 +5,9 @@ import { ILeaderboard, ILeaderboardModel, LeaderboardModel } from '../models/lea
 import { IBaseRepository, BaseRepository } from './base.repo';
 
 export interface ILeaderboardRepository extends IBaseRepository<ILeaderboard> {  
-  findSeasonBoardAndUpdate$(seasonId: string, update: any): Observable<ILeaderboard>
-  findMonthBoardAndUpdate$(seasonId: string, year: number, month: number, update: any): Observable<ILeaderboard>
-  findRoundBoardAndUpdate$(seasonId: string, gameRound: number, update: any): Observable<ILeaderboard>
+  findSeasonBoardAndUpsert$(seasonId: string, update: any): Observable<ILeaderboard>
+  findMonthBoardAndUpsert$(seasonId: string, year: number, month: number, update: any): Observable<ILeaderboard>
+  findRoundBoardAndUpsert$(seasonId: string, gameRound: number, update: any): Observable<ILeaderboard>
 }
 
 export class LeaderboardRepository extends BaseRepository<ILeaderboard> implements ILeaderboardRepository {
@@ -19,15 +19,15 @@ export class LeaderboardRepository extends BaseRepository<ILeaderboard> implemen
     super(LeaderboardModel)
   }
 
-  findSeasonBoardAndUpdate$(seasonId: string, update: any) {
+  findSeasonBoardAndUpsert$(seasonId: string, update: any) {
     return Observable.of(<ILeaderboard>{})    
   }  
 
-  findMonthBoardAndUpdate$(seasonId: string, year: number, month: number, update: any) {
+  findMonthBoardAndUpsert$(seasonId: string, year: number, month: number, update: any) {
     return Observable.of(<ILeaderboard>{})    
   }
 
-  findRoundBoardAndUpdate$(seasonId: string, gameRound: number, update: any) {
+  findRoundBoardAndUpsert$(seasonId: string, gameRound: number, update: any) {
     return Observable.of(<ILeaderboard>{})    
   }
 }

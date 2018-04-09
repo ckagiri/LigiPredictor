@@ -10,13 +10,13 @@ class LeaderboardRepository extends base_repo_1.BaseRepository {
     constructor() {
         super(leaderboard_model_1.LeaderboardModel);
     }
-    findSeasonBoardAndUpdate$(seasonId, update) {
+    findSeasonBoardAndUpsert$(seasonId, update) {
         return rxjs_1.Observable.of({});
     }
-    findMonthBoardAndUpdate$(seasonId, year, month, update) {
+    findMonthBoardAndUpsert$(seasonId, year, month, update) {
         return rxjs_1.Observable.of({});
     }
-    findRoundBoardAndUpdate$(seasonId, gameRound, update) {
+    findRoundBoardAndUpsert$(seasonId, gameRound, update) {
         return rxjs_1.Observable.of({});
     }
 }

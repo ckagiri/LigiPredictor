@@ -62,15 +62,15 @@ export class LeaderboardUpdater implements ILeaderboardUpdater {
         
         if(this.cacheService != null) {
           sBoard = this.cacheService.get(`${season}`, 
-            this.leaderboardRepo.findSeasonBoardAndUpdate$(season, {status: LeaderboardStatus.UPDATING_SCORES}));
+            this.leaderboardRepo.findSeasonBoardAndUpsert$(season, {status: LeaderboardStatus.UPDATING_SCORES}));
           mBoard = this.cacheService.get(`${season}-${year}-${month}`, 
-            this.leaderboardRepo.findMonthBoardAndUpdate$(season, year, month, {status: LeaderboardStatus.UPDATING_SCORES}));
+            this.leaderboardRepo.findMonthBoardAndUpsert$(season, year, month, {status: LeaderboardStatus.UPDATING_SCORES}));
           rBoard = this.cacheService.get(`${season}-${gameRound}`,
-            this.leaderboardRepo.findRoundBoardAndUpdate$(season, gameRound, {status: LeaderboardStatus.UPDATING_SCORES}));
+            this.leaderboardRepo.findRoundBoardAndUpsert$(season, gameRound, {status: LeaderboardStatus.UPDATING_SCORES}));
         } else {
-          sBoard = this.leaderboardRepo.findSeasonBoardAndUpdate$(season, {status: LeaderboardStatus.UPDATING_SCORES});
-          mBoard = this.leaderboardRepo.findMonthBoardAndUpdate$(season, year, month, {status: LeaderboardStatus.UPDATING_SCORES});
-          rBoard = this.leaderboardRepo.findRoundBoardAndUpdate$(season, gameRound, {status: LeaderboardStatus.UPDATING_SCORES});
+          sBoard = this.leaderboardRepo.findSeasonBoardAndUpsert$(season, {status: LeaderboardStatus.UPDATING_SCORES});
+          mBoard = this.leaderboardRepo.findMonthBoardAndUpsert$(season, year, month, {status: LeaderboardStatus.UPDATING_SCORES});
+          rBoard = this.leaderboardRepo.findRoundBoardAndUpsert$(season, gameRound, {status: LeaderboardStatus.UPDATING_SCORES});
         }
         boards.push(sBoard, mBoard, rBoard);
         return Observable.forkJoin(boards)
