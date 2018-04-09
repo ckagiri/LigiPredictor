@@ -64,7 +64,7 @@ export class PredictionProcessor implements IPredictionProcessor {
         if(jokerPrediction.fixture === fixtureId) {
           return Observable.of(jokerPrediction)
         }
-        return this.predictionRepo.findOneOrCreate$({userId, fixtureId})
+        return this.predictionRepo.findOneOrCreate$({ userId, fixtureId })
       })
       .toArray()
   }
