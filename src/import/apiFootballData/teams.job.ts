@@ -62,7 +62,7 @@ export class TeamsJob implements IJob {
     return Observable.fromPromise(this.apiClient.getTeams(this.competitionId))
       .flatMap((teamsRes: any) => {
         let teams = teamsRes.data.teams;        
-        return this.teamRepo.findEachByNameAndUpdate$(teams);
+        return this.teamRepo.findEachByNameAndUpsert$(teams);
     }).toPromise();
   }
 }

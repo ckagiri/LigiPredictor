@@ -11,7 +11,7 @@ class TeamRepository extends baseProvider_repo_1.BaseProviderRepository {
     constructor(converter) {
         super(team_model_1.TeamModel, converter);
     }
-    findByNameAndUpdate$(name, obj) {
+    findByNameAndUpsert$(name, obj) {
         let partialUpdate = true;
         if (obj == undefined) {
             obj = name;
@@ -31,10 +31,10 @@ class TeamRepository extends baseProvider_repo_1.BaseProviderRepository {
             return this._findOneAndUpsert$(query, obj, externalReference);
         });
     }
-    findEachByNameAndUpdate$(objs) {
+    findEachByNameAndUpsert$(objs) {
         let obs = [];
         for (let obj of objs) {
-            obs.push(this.findByNameAndUpdate$(obj));
+            obs.push(this.findByNameAndUpsert$(obj));
         }
         return rxjs_1.Observable.forkJoin(obs);
     }

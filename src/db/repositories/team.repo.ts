@@ -6,8 +6,8 @@ import { ITeamConverter, TeamConverter } from '../converters/team.converter';
 import { FootballApiProvider as ApiProvider } from '../../common/footballApiProvider';
 
 export interface ITeamRepository extends IBaseProviderRepository<ITeam> {
-  findByNameAndUpdate$(name: any, obj?: any): Observable<ITeam>;
-  findEachByNameAndUpdate$(objs: any[]): Observable<ITeam[]>;
+  findByNameAndUpsert$(name: any, obj?: any): Observable<ITeam>;
+  findEachByNameAndUpsert$(objs: any[]): Observable<ITeam[]>;
   findByName$(name: string): Observable<ITeam>;
 }
 
@@ -20,7 +20,7 @@ export class TeamRepository extends BaseProviderRepository<ITeam> implements ITe
     super(TeamModel, converter);
   }
 
-  findByNameAndUpdate$(name: any, obj?: any): Observable<ITeam> {
+  findByNameAndUpsert$(name: any, obj?: any): Observable<ITeam> {
     let partialUpdate = true;
     if (obj == undefined){
       obj = name;
@@ -41,11 +41,11 @@ export class TeamRepository extends BaseProviderRepository<ITeam> implements ITe
     });
   }  
 
-  findEachByNameAndUpdate$(objs: any[]): Observable<ITeam[]> {
+  findEachByNameAndUpsert$(objs: any[]): Observable<ITeam[]> {
     let obs: any[] = [];
     
     for (let obj of objs) {
-      obs.push(this.findByNameAndUpdate$(obj));
+      obs.push(this.findByNameAndUpsert$(obj));
     }
     return Observable.forkJoin(obs);  
   }  

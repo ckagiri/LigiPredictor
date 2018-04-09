@@ -109,12 +109,12 @@ describe('teamRepo', function() {
       }, (err) => { console.log(err); done(); });
   })
 
-  it('should findByNameAndUpdate', (done) => {
+  it('should findByNameAndUpsert', (done) => {
     let teamRepo = TeamRepository.getInstance(ApiProvider.API_FOOTBALL_DATA);
     
     teamRepo.insert$(manu)
       .flatMap(_ => {
-        return teamRepo.findByNameAndUpdate$(afdManu)
+        return teamRepo.findByNameAndUpsert$(afdManu)
       })
       .subscribe((t: any) => {
         expect(t.name).to.equal(manu.name);
@@ -124,12 +124,12 @@ describe('teamRepo', function() {
       }, (err) => { console.log(err); done(); });
   })
 
-  it('should retain external reference when findByNameAndUpdate', (done) => {
+  it('should retain external reference when findByNameAndUpsert', (done) => {
     let teamRepo = TeamRepository.getInstance(ApiProvider.API_FOOTBALL_DATA);
     manu['externalReference'] = { 'SomeOtherApi': { id: 'someExternalId' } }
     teamRepo.insert$(manu)
       .flatMap(_ => {
-        return teamRepo.findByNameAndUpdate$(afdManu)
+        return teamRepo.findByNameAndUpsert$(afdManu)
       })
       .subscribe(t => {
         expect(t.name).to.equal(manu.name);        
@@ -144,7 +144,7 @@ describe('teamRepo', function() {
     
     teamRepo.insertMany$([manu, manc])
       .flatMap(_ => {
-        return teamRepo.findEachByNameAndUpdate$([afdManu, afdManc])
+        return teamRepo.findEachByNameAndUpsert$([afdManu, afdManc])
       })
       .subscribe((ts: any) => {
         expect(ts[0].name).to.equal(manu.name);

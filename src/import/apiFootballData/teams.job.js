@@ -41,7 +41,7 @@ class TeamsJob {
         return rxjs_1.Observable.fromPromise(this.apiClient.getTeams(this.competitionId))
             .flatMap((teamsRes) => {
             let teams = teamsRes.data.teams;
-            return this.teamRepo.findEachByNameAndUpdate$(teams);
+            return this.teamRepo.findEachByNameAndUpsert$(teams);
         }).toPromise();
     }
 }
