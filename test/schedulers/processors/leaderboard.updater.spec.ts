@@ -81,7 +81,7 @@ let predictionRepoStub: any = {
   findOne$: () => { return Observable.of(pred1) }
 }
 let userScoreRepoStub: any = {
-  findOneAndUpdateOrCreate$: () => { return Observable.of({ id: ObjectId().toHexString() }) },
+  findOneAndUpsert$: () => { return Observable.of({ id: ObjectId().toHexString() }) },
   findByLeaderboardOrderByPoints$: () => { return Observable.of([standing2, standing1]) },
   findByIdAndUpdate$: () => { return Observable.of(standing1) }
 }
@@ -154,7 +154,7 @@ describe('Leaderboard Updater', () => {
       expect(spy).to.have.callCount(4);      
     })
     it('should save userScores', async () => {
-      let spy = sinon.spy(userScoreRepoStub, 'findOneAndUpdateOrCreate$');
+      let spy = sinon.spy(userScoreRepoStub, 'findOneAndUpsert$');
 
       let count = await leaderboardUpdater.updateScores(finishedFixtures);
 

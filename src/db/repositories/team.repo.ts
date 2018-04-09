@@ -37,7 +37,7 @@ export class TeamRepository extends BaseProviderRepository<ITeam> implements ITe
       .flatMap((obj: any) => { 
         let { externalReference } = obj;
         delete obj.externalReference;      
-        return this._findOneAndUpdate$(query, obj, externalReference)
+        return this._findOneAndUpsert$(query, obj, externalReference)
     });
   }  
 

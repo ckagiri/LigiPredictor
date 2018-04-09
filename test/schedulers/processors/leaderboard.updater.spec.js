@@ -89,7 +89,7 @@ let predictionRepoStub = {
     findOne$: () => { return rxjs_1.Observable.of(pred1); }
 };
 let userScoreRepoStub = {
-    findOneAndUpdateOrCreate$: () => { return rxjs_1.Observable.of({ id: ObjectId().toHexString() }); },
+    findOneAndUpsert$: () => { return rxjs_1.Observable.of({ id: ObjectId().toHexString() }); },
     findByLeaderboardOrderByPoints$: () => { return rxjs_1.Observable.of([standing2, standing1]); },
     findByIdAndUpdate$: () => { return rxjs_1.Observable.of(standing1); }
 };
@@ -146,7 +146,7 @@ describe('Leaderboard Updater', () => {
             expect(spy).to.have.callCount(4);
         }));
         it('should save userScores', () => __awaiter(this, void 0, void 0, function* () {
-            let spy = sinon.spy(userScoreRepoStub, 'findOneAndUpdateOrCreate$');
+            let spy = sinon.spy(userScoreRepoStub, 'findOneAndUpsert$');
             let count = yield leaderboardUpdater.updateScores(finishedFixtures);
             expect(spy).to.have.been.called;
             expect(spy.getCall(0).args.length).to.equal(6);

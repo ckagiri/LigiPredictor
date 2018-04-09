@@ -10,7 +10,7 @@ class UserScoreRepository extends base_repo_1.BaseRepository {
     constructor() {
         super(userScore_model_1.UserScoreModel);
     }
-    findOneAndUpdateOrCreate$(leaderboardId, userId, fixtureId, predictionId, points, hasJoker) {
+    findOneAndUpsert$(leaderboardId, userId, fixtureId, predictionId, points, hasJoker) {
         return rxjs_1.Observable.of({});
     }
     findByLeaderboardOrderByPoints$(leaderboardId) {

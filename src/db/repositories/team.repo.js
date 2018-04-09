@@ -28,7 +28,7 @@ class TeamRepository extends baseProvider_repo_1.BaseProviderRepository {
             .flatMap((obj) => {
             let { externalReference } = obj;
             delete obj.externalReference;
-            return this._findOneAndUpdate$(query, obj, externalReference);
+            return this._findOneAndUpsert$(query, obj, externalReference);
         });
     }
     findEachByNameAndUpdate$(objs) {

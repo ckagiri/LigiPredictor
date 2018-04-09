@@ -79,7 +79,7 @@ class LeaderboardUpdater {
             let leaderboardId = leaderboard.id;
             let predictionId = prediction.id;
             let { points, hasJoker } = prediction;
-            return this.userScoreRepo.findOneAndUpdateOrCreate$(leaderboardId, userId, fixtureId, predictionId, points, hasJoker);
+            return this.userScoreRepo.findOneAndUpsert$(leaderboardId, userId, fixtureId, predictionId, points, hasJoker);
         })
             .count()
             .toPromise();

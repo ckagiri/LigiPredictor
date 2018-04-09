@@ -7,8 +7,8 @@ import { FootballApiProvider as ApiProvider } from '../../common/footballApiProv
 
 export interface IFixtureRepository extends IBaseProviderRepository<IFixture> {
   findSelectableFixtures$(seasonId: string, gameRound: number): Observable<IFixture[]>;
-  findBySeasonAndTeamsAndUpdate$(obj: any): Observable<IFixture>;  
-  findEachBySeasonAndTeamsAndUpdate$(objs: any[]): Observable<IFixture[]>;
+  findBySeasonAndTeamsAndUpsert$(obj: any): Observable<IFixture>;  
+  findEachBySeasonAndTeamsAndUpsert$(objs: any[]): Observable<IFixture[]>;
   findAllFinishedWithPendingPredictions$(seasonId: string, gameRound?: number): Observable<IFixture[]>;
 }
 
@@ -38,22 +38,22 @@ export class FixtureRepository extends BaseProviderRepository<IFixture> implemen
   
     return this.findAll$(query, null, {sort: 'date'})  }  
 
-  findBySeasonAndTeamsAndUpdate$(obj: any) {
+  findBySeasonAndTeamsAndUpsert$(obj: any) {
     return this._converter.from(obj)
       .flatMap((obj: any) => { 
         let { season, homeTeam, awayTeam, externalReference } = obj;        
         let query = { season, 'homeTeam.id': homeTeam.id, 'awayTeam.id': awayTeam.id }    
         delete obj.externalReference;      
         Object.keys(obj).forEach(key => (obj[key] == null) && delete obj[key])                          
-        return this._findOneAndUpdate$(query, obj, externalReference)
+        return this._findOneAndUpsert$(query, obj, externalReference)
     })
   }
 
-  findEachBySeasonAndTeamsAndUpdate$(objs: any[]) {
+  findEachBySeasonAndTeamsAndUpsert$(objs: any[]) {
     let obs: any[] = [];
     
     for (let obj of objs) {
-      obs.push(this.findBySeasonAndTeamsAndUpdate$(obj));
+      obs.push(this.findBySeasonAndTeamsAndUpsert$(obj));
     }
     return Observable.forkJoin(obs);  
   }

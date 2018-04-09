@@ -62,7 +62,7 @@ export class FixturesJob implements IJob {
     return Observable.fromPromise(this.apiClient.getFixtures(this.competitionId))
       .flatMap((fixturesRes: any) => {
         let fixtures = fixturesRes.data.fixtures;
-        return this.fixtureRepo.findEachBySeasonAndTeamsAndUpdate$(fixtures);
+        return this.fixtureRepo.findEachBySeasonAndTeamsAndUpsert$(fixtures);
       }).toPromise();
   }
 }

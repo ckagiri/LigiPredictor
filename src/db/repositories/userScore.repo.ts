@@ -5,7 +5,7 @@ import { IUserScore, IUserScoreModel, UserScoreModel, ScorePoints } from '../mod
 import { IBaseRepository, BaseRepository } from './base.repo';
 
 export interface IUserScoreRepository extends IBaseRepository<IUserScore> { 
-  findOneAndUpdateOrCreate$(leaderboardId: string, userId: string, fixtureId: string, predictionId: string, 
+  findOneAndUpsert$(leaderboardId: string, userId: string, fixtureId: string, predictionId: string, 
     points: ScorePoints, hasJoker: boolean): Observable<IUserScore>;
   findByLeaderboardOrderByPoints$(leaderboardId: string): Observable<IUserScore[]>;
 }
@@ -19,7 +19,7 @@ export class UserScoreRepository extends BaseRepository<IUserScore> implements I
     super(UserScoreModel)
   }
 
-  findOneAndUpdateOrCreate$(leaderboardId: string, userId: string, fixtureId: string, predictionId: string, 
+  findOneAndUpsert$(leaderboardId: string, userId: string, fixtureId: string, predictionId: string, 
     points: ScorePoints, hasJoker: boolean) {
       return Observable.of(<IUserScore>{});
   }

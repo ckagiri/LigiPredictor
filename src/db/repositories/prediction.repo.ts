@@ -13,7 +13,7 @@ import { IPredictor, VosePredictor } from '../../common/predictor';
 export interface IPredictionRepository extends IBaseRepository<IPrediction> {
   findOrCreateJoker$(userId: string, seasonId: string, gameRound: number, pick: string[]): Observable<IPrediction>;  
   findOneOrCreate$({ userId, fixtureId }: { userId: string, fixtureId: string }): Observable<IPrediction>;
-  findOneAndUpdateOrCreate$({ userId, fixtureId }: { userId: string, fixtureId: string }, choice: any): Observable<IPrediction>;
+  findOneAndUpsert$({ userId, fixtureId }: { userId: string, fixtureId: string }, choice: any): Observable<IPrediction>;
 }
 
 export class PredictionRepository extends BaseRepository<IPrediction> implements IPredictionRepository {
@@ -111,7 +111,7 @@ export class PredictionRepository extends BaseRepository<IPrediction> implements
     return Observable.of(<IPrediction>{})
   }  
 
-  findOneAndUpdateOrCreate$({ userId, fixtureId }: { userId: string, fixtureId: string }, choice: any) {
+  findOneAndUpsert$({ userId, fixtureId }: { userId: string, fixtureId: string }, choice: any) {
     return Observable.of(<IPrediction>{})    
   }
 }

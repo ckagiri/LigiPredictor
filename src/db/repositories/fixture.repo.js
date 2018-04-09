@@ -28,20 +28,20 @@ class FixtureRepository extends baseProvider_repo_1.BaseProviderRepository {
         };
         return this.findAll$(query, null, { sort: 'date' });
     }
-    findBySeasonAndTeamsAndUpdate$(obj) {
+    findBySeasonAndTeamsAndUpsert$(obj) {
         return this._converter.from(obj)
             .flatMap((obj) => {
             let { season, homeTeam, awayTeam, externalReference } = obj;
             let query = { season, 'homeTeam.id': homeTeam.id, 'awayTeam.id': awayTeam.id };
             delete obj.externalReference;
             Object.keys(obj).forEach(key => (obj[key] == null) && delete obj[key]);
-            return this._findOneAndUpdate$(query, obj, externalReference);
+            return this._findOneAndUpsert$(query, obj, externalReference);
         });
     }
-    findEachBySeasonAndTeamsAndUpdate$(objs) {
+    findEachBySeasonAndTeamsAndUpsert$(objs) {
         let obs = [];
         for (let obj of objs) {
-            obs.push(this.findBySeasonAndTeamsAndUpdate$(obj));
+            obs.push(this.findBySeasonAndTeamsAndUpsert$(obj));
         }
         return rxjs_1.Observable.forkJoin(obs);
     }

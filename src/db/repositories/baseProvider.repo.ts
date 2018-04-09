@@ -102,7 +102,7 @@ export class BaseProviderRepository<T extends IEntity> implements IBaseProviderR
     return this._baseRepo.findOne$(conditions);
   }
 
-  protected _findOneAndUpdate$(conditions: any, obj: IEntity, externalReference: any): Observable<T> {   
+  protected _findOneAndUpsert$(conditions: any, obj: IEntity, externalReference: any): Observable<T> {   
     return this._baseRepo.findOneAndUpdate$(conditions, obj, { new: true, upsert: true })
       .flatMap((updatedObj: any) => {           
         if(externalReference == undefined) {

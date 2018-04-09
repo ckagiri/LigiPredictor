@@ -69,7 +69,7 @@ class BaseProviderRepository {
     findOne$(conditions) {
         return this._baseRepo.findOne$(conditions);
     }
-    _findOneAndUpdate$(conditions, obj, externalReference) {
+    _findOneAndUpsert$(conditions, obj, externalReference) {
         return this._baseRepo.findOneAndUpdate$(conditions, obj, { new: true, upsert: true })
             .flatMap((updatedObj) => {
             if (externalReference == undefined) {

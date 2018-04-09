@@ -148,7 +148,7 @@ describe('FixtureRepo', function() {
   it('should findEach By SeasonAndTeams AndUpdateOrCreate', (done) => {
     Observable$    
       .flatMap(_ => {
-        return fixtureRepo.findBySeasonAndTeamsAndUpdate$(afd_manuVmanc)
+        return fixtureRepo.findBySeasonAndTeamsAndUpsert$(afd_manuVmanc)
           .map(f => {
             fixture = f;
           })
@@ -163,7 +163,7 @@ describe('FixtureRepo', function() {
   it('should find finished fixtures with pending predictions', (done) => {
     Observable$
       .flatMap(_ => {
-        return fixtureRepo.findBySeasonAndTeamsAndUpdate$(afd_manuVmanc)
+        return fixtureRepo.findBySeasonAndTeamsAndUpsert$(afd_manuVmanc)
       })
       .flatMap(_ => {
         return fixtureRepo.findAllFinishedWithPendingPredictions$(season.id);
