@@ -17,6 +17,7 @@ interface Result {
 }
 
 export interface IFixture extends IEntity {
+  id?: string;        
   season?: string;
   slug?: string;
 	date?: any;
@@ -46,7 +47,9 @@ export interface IFixture extends IEntity {
   externalReference?: any;
 }
 
-interface IFixtureModel extends IFixture, Document { }
+interface IFixtureModel extends IFixture, Document {
+  id?: string;        
+ }
 
 const { String, Number, Date, Boolean, ObjectId, Mixed } = Schema.Types;
 

@@ -67,17 +67,17 @@ class LeaderboardUpdater {
         })
             .flatMap(data => {
             let { user, fixture, leaderboard } = data;
-            return this.predictionRepo.findByUserAndFixture$(user['_id'], fixture['_id'])
+            return this.predictionRepo.findOne$({ userId: user.id, fixtureId: fixture.id })
                 .map(prediction => {
                 return { user, fixture, leaderboard, prediction };
             });
         })
             .concatMap(data => {
             let { user, fixture, leaderboard, prediction } = data;
-            let userId = user['_id'];
-            let fixtureId = fixture['_id'];
-            let leaderboardId = leaderboard['_id'];
-            let predictionId = prediction['_id'];
+            let userId = user.id;
+            let fixtureId = fixture.id;
+            let leaderboardId = leaderboard.id;
+            let predictionId = prediction.id;
             let { points, hasJoker } = prediction;
             return this.userScoreRepo.findOneAndUpdateOrCreate$(leaderboardId, userId, fixtureId, predictionId, points, hasJoker);
         })
@@ -90,10 +90,10 @@ class LeaderboardUpdater {
             return rxjs_1.Observable.from(leaderboards);
         })
             .flatMap(leaderboard => {
-            return this.leaderboardRepo.findByIdAndUpdate$(leaderboard['_id'], { status: leaderboard_model_1.LeaderboardStatus.UPDATING_RANKINGS });
+            return this.leaderboardRepo.findByIdAndUpdate$(leaderboard.id, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_RANKINGS });
         })
             .flatMap(leaderboard => {
-            return this.userScoreRepo.findByLeaderboardOrderByPoints$(leaderboard['_id']);
+            return this.userScoreRepo.findByLeaderboardOrderByPoints$(leaderboard.id);
         })
             .flatMap(userScores => {
             return rxjs_1.Observable.from(userScores);
@@ -103,7 +103,7 @@ class LeaderboardUpdater {
             let prevPosition = standing.positionNew || 0;
             let positionOld = prevPosition;
             let positionNew = index;
-            return this.userScoreRepo.findByIdAndUpdate$(standing['_id'], { positionNew, positionOld });
+            return this.userScoreRepo.findByIdAndUpdate$(standing.id, { positionNew, positionOld });
         })
             .count()
             .toPromise();
@@ -114,7 +114,7 @@ class LeaderboardUpdater {
             return rxjs_1.Observable.from(leaderboards);
         })
             .flatMap(leaderboard => {
-            return this.leaderboardRepo.findByIdAndUpdate$(leaderboard['_id'], { status: leaderboard_model_1.LeaderboardStatus.REFRESHED });
+            return this.leaderboardRepo.findByIdAndUpdate$(leaderboard.id, { status: leaderboard_model_1.LeaderboardStatus.REFRESHED });
         })
             .count()
             .toPromise();

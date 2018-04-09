@@ -8,12 +8,12 @@ export class LeagueRouter {
   public router: Router;
 
   static create(authorization: IAuthorization) {
-    return new LeagueRouter(authorization);
+    return new LeagueRouter(authorization, LeagueController.getInstance());
   }
 
-  constructor(authorization: IAuthorization) {
+  constructor(authorization: IAuthorization, leagueController: LeagueController) {
     this.router = Router();    
-    this.controller = LeagueController.getInstance();
+    this.controller = leagueController;
 
     this.router.get('/', this.controller.list);
     this.router.get('/:id', this.controller.show)

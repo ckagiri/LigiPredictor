@@ -7,9 +7,10 @@ import { IPrediction, IPredictionModel, PredictionModel } from '../models/predic
 import { IBaseRepository, BaseRepository } from './base.repo';
 
 export interface IPredictionRepository extends IBaseRepository<IPrediction> {
-  getOrCreateJoker$(userId: string, seasonId: string, gameRound: number, pick: string[]): Observable<IPrediction>;  
-  findByUserAndFixtureOrCreate$(userId: string, fixtureId: string): Observable<IPrediction>;
-  findByUserAndFixture$(userId: string, fixtureId: string): Observable<IPrediction>;
+  findOrCreateJoker$(userId: string, seasonId: string, gameRound: number, pick: string[]): Observable<IPrediction>;  
+  findOneOrCreate$({ userId, fixtureId}: {userId: string, fixtureId: string }): Observable<IPrediction>;
+  findOne$({ userId, fixtureId}: {userId: string, fixtureId: string }): Observable<IPrediction>;  
+  findOneAndUpdateOrCreate$({ userId, fixtureId}: {userId: string, fixtureId: string }, choice: any): Observable<IPrediction>;
 }
 
 export class PredictionRepository extends BaseRepository<IPrediction> implements IPredictionRepository {
@@ -23,15 +24,19 @@ export class PredictionRepository extends BaseRepository<IPrediction> implements
     super(PredictionModel)
   }
 
-  getOrCreateJoker$(userId: string, seasonId: string, gameRound: number, pick: string[]) {
+  findOrCreateJoker$(userId: string, seasonId: string, gameRound: number, pick: string[]) {
     return Observable.of(<IPrediction>{})
   }
 
-  findByUserAndFixtureOrCreate$(userId: string, fixtureId: string){
+  findOne$({ userId, fixtureId}: {userId: string, fixtureId: string }) {
+    return super.findOne$({ userId, fixtureId });
+  }  
+
+  findOneOrCreate$({ userId, fixtureId}: {userId: string, fixtureId: string }) {
     return Observable.of(<IPrediction>{})
   }  
 
-  findByUserAndFixture$(userId: string, fixtureId: string) {
-    return Observable.of(<IPrediction>{})
-  } 
+  findOneAndUpdateOrCreate$({ userId, fixtureId}: {userId: string, fixtureId: string }, choice: any) {
+    return Observable.of(<IPrediction>{})    
+  }
 }

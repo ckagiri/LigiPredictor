@@ -10,13 +10,16 @@ class PredictionRepository extends base_repo_1.BaseRepository {
     constructor() {
         super(prediction_model_1.PredictionModel);
     }
-    getOrCreateJoker$(userId, seasonId, gameRound, pick) {
+    findOrCreateJoker$(userId, seasonId, gameRound, pick) {
         return rxjs_1.Observable.of({});
     }
-    findByUserAndFixtureOrCreate$(userId, fixtureId) {
+    findOne$({ userId, fixtureId }) {
+        return super.findOne$({ userId, fixtureId });
+    }
+    findOneOrCreate$({ userId, fixtureId }) {
         return rxjs_1.Observable.of({});
     }
-    findByUserAndFixture$(userId, fixtureId) {
+    findOneAndUpdateOrCreate$({ userId, fixtureId }, choice) {
         return rxjs_1.Observable.of({});
     }
 }

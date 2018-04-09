@@ -83,17 +83,17 @@ export class LeaderboardUpdater implements ILeaderboardUpdater {
       })
       .flatMap(data => {
         let { user, fixture, leaderboard } = data;
-        return this.predictionRepo.findByUserAndFixture$(user['_id'], fixture['_id'])
+        return this.predictionRepo.findOne$({ userId: user.id, fixtureId: fixture.id })
           .map(prediction => {
             return { user, fixture, leaderboard, prediction }
           })
       })
       .concatMap(data => {
         let { user, fixture, leaderboard, prediction } = data;
-        let userId = user['_id'];
-        let fixtureId = fixture['_id'];
-        let leaderboardId = leaderboard['_id'];
-        let predictionId = prediction['_id'];
+        let userId = user.id
+        let fixtureId = fixture.id
+        let leaderboardId = leaderboard.id
+        let predictionId = prediction.id
         let { points, hasJoker } = prediction;
         return this.userScoreRepo.findOneAndUpdateOrCreate$(
           leaderboardId, userId, fixtureId, predictionId, points, hasJoker)
@@ -108,10 +108,10 @@ export class LeaderboardUpdater implements ILeaderboardUpdater {
         return Observable.from(leaderboards)
       })
       .flatMap(leaderboard => {
-        return this.leaderboardRepo.findByIdAndUpdate$(leaderboard['_id'], { status: LeaderboardStatus.UPDATING_RANKINGS })
+        return this.leaderboardRepo.findByIdAndUpdate$(leaderboard.id, { status: LeaderboardStatus.UPDATING_RANKINGS })
       })
       .flatMap(leaderboard => {
-        return this.userScoreRepo.findByLeaderboardOrderByPoints$(leaderboard['_id']);
+        return this.userScoreRepo.findByLeaderboardOrderByPoints$(leaderboard.id);
       })
       .flatMap(userScores => {
         return Observable.from(userScores);
@@ -121,7 +121,7 @@ export class LeaderboardUpdater implements ILeaderboardUpdater {
         let prevPosition = standing.positionNew || 0;
         let positionOld = prevPosition;
         let positionNew = index;
-        return this.userScoreRepo.findByIdAndUpdate$(standing['_id'], { positionNew, positionOld })
+        return this.userScoreRepo.findByIdAndUpdate$(standing.id, { positionNew, positionOld })
       })
       .count()
       .toPromise();
@@ -133,7 +133,7 @@ export class LeaderboardUpdater implements ILeaderboardUpdater {
       return Observable.from(leaderboards)
     })
     .flatMap(leaderboard => {
-      return this.leaderboardRepo.findByIdAndUpdate$(leaderboard['_id'], { status: LeaderboardStatus.REFRESHED })
+      return this.leaderboardRepo.findByIdAndUpdate$(leaderboard.id, { status: LeaderboardStatus.REFRESHED })
     })
     .count()
     .toPromise();

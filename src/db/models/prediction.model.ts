@@ -14,6 +14,7 @@ interface Choice {
 }
 
 export interface IPrediction extends IEntity {
+  id?: string;        
   user: string;
   fixture: string;
   choice: Choice;
@@ -22,7 +23,9 @@ export interface IPrediction extends IEntity {
   hasJoker?: boolean;
 }
 
-export interface IPredictionModel extends IPrediction, Document {}
+export interface IPredictionModel extends IPrediction, Document {
+  id?: string;        
+}
 
 const predictionSchema = new Schema({
 

@@ -2,9 +2,13 @@ import { Schema, Model, model, Document } from 'mongoose';
 
 import { IEntity } from './base.model';
 
-export interface ILeaderboard extends IEntity {}
+export interface ILeaderboard extends IEntity {
+  id?: string;        
+}
 
-export interface ILeaderboardModel extends ILeaderboard, Document {}
+export interface ILeaderboardModel extends ILeaderboard, Document {
+  id?: string;        
+}
 
 export enum LeaderboardStatus {
   UPDATING_SCORES = 'UPDATING_SCORES',

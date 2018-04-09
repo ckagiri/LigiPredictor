@@ -21,7 +21,7 @@ const fixture_model_1 = require("../../../src/db/models/fixture.model");
 const prediction_processor_1 = require("../../../src/app/schedulers/prediction.processor");
 let newFixture = (id, homeTeam, awayTeam, status = fixture_model_1.FixtureStatus.FINISHED) => {
     return {
-        _id: ObjectId().toHexString(),
+        id: ObjectId().toHexString(),
         season: '4edd40c86762e0fb12000001',
         gameRound: 2,
         homeTeam, awayTeam, status,
@@ -32,11 +32,11 @@ let newFixture = (id, homeTeam, awayTeam, status = fixture_model_1.FixtureStatus
     };
 };
 let chalo = {
-    _id: ObjectId().toHexString(),
+    id: ObjectId().toHexString(),
     userName: 'chalo'
 };
 let kagiri = {
-    _id: ObjectId().toHexString(),
+    id: ObjectId().toHexString(),
     userName: 'kagiri'
 };
 let ars_che = newFixture(1, 'Arsenal', 'Chelsea');
@@ -47,14 +47,14 @@ let fixtureRepoStub = {
 let userRepoStub = {
     findAll$: () => { return rxjs_1.Observable.of([chalo, kagiri]); }
 };
-let chaloJoker = { user: chalo._id, fixture: liv_sou._id };
-let kagiriJoker = { user: kagiri._id, fixture: ars_che._id };
-let chaloPred = { user: chalo._id, fixture: ars_che._id,
+let chaloJoker = { id: ObjectId().toHexString(), user: chalo.id, fixture: liv_sou.id };
+let kagiriJoker = { id: ObjectId().toHexString(), user: kagiri.id, fixture: ars_che.id };
+let chaloPred = { id: ObjectId().toHexString(), user: chalo.id, fixture: ars_che.id,
     choice: { goalsHomeTeam: 1, goalsAwayTeam: 1 }
 };
 let predictionRepoStub = {
-    getOrCreateJoker$: sinon.stub(),
-    findByUserAndFixture$: sinon.stub(),
+    findOrCreateJoker$: sinon.stub(),
+    findOneOrCreate$: sinon.stub(),
     findByIdAndUpdate$: sinon.stub()
 };
 let predictionCalculatorStub = {
@@ -64,14 +64,14 @@ let predictionProcessor;
 describe('Prediction Processor', () => {
     describe('getPredictions$', () => __awaiter(this, void 0, void 0, function* () {
         beforeEach(() => {
-            predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(chalo._id)).returns(rxjs_1.Observable.of(chaloJoker));
-            predictionRepoStub.getOrCreateJoker$.withArgs(sinon.match(kagiri._id)).returns(rxjs_1.Observable.of(kagiriJoker));
-            predictionRepoStub.findByUserAndFixture$.returns(rxjs_1.Observable.of(chaloPred));
+            predictionRepoStub.findOrCreateJoker$.withArgs(sinon.match(chalo.id)).returns(rxjs_1.Observable.of(chaloJoker));
+            predictionRepoStub.findOrCreateJoker$.withArgs(sinon.match(kagiri.id)).returns(rxjs_1.Observable.of(kagiriJoker));
+            predictionRepoStub.findOneOrCreate$.returns(rxjs_1.Observable.of(chaloPred));
             predictionProcessor = new prediction_processor_1.PredictionProcessor(fixtureRepoStub, userRepoStub, predictionRepoStub, predictionCalculatorStub);
         });
         afterEach(() => {
-            predictionRepoStub.getOrCreateJoker$ = sinon.stub();
-            predictionRepoStub.findByUserAndFixture$ = sinon.stub();
+            predictionRepoStub.findOrCreateJoker$ = sinon.stub();
+            predictionRepoStub.findOneOrCreate$ = sinon.stub();
         });
         it('should get the selectable fixtures of gameRound', () => __awaiter(this, void 0, void 0, function* () {
             let spy = sinon.spy(fixtureRepoStub, 'findSelectableFixtures$');
@@ -83,21 +83,21 @@ describe('Prediction Processor', () => {
             yield predictionProcessor.getPredictions$(ars_che).toPromise();
             expect(spy).to.have.been.calledOnce;
         }));
-        it('should getOrCreate jokerPrediction for user', () => __awaiter(this, void 0, void 0, function* () {
-            let spy = predictionRepoStub.getOrCreateJoker$;
+        it('should findOrCreate jokerPrediction for user', () => __awaiter(this, void 0, void 0, function* () {
+            let spy = predictionRepoStub.findOrCreateJoker$;
             yield predictionProcessor.getPredictions$(ars_che).toPromise();
             expect(spy).to.have.been.calledTwice;
-            expect(spy.firstCall).to.have.been.calledWithExactly(chalo._id, ars_che.season, ars_che.gameRound, [liv_sou._id, ars_che._id]);
-            expect(spy.secondCall).to.have.been.calledWithExactly(kagiri._id, ars_che.season, ars_che.gameRound, [liv_sou._id, ars_che._id]);
+            expect(spy.firstCall).to.have.been.calledWithExactly(chalo.id, ars_che.season, ars_che.gameRound, [liv_sou.id, ars_che.id]);
+            expect(spy.secondCall).to.have.been.calledWithExactly(kagiri.id, ars_che.season, ars_che.gameRound, [liv_sou.id, ars_che.id]);
         }));
-        it('should getOrCreate prediction if joker fixure != fixture passed', () => __awaiter(this, void 0, void 0, function* () {
-            let spy = predictionRepoStub.findByUserAndFixture$;
+        it('should findOrCreate prediction if joker fixure != fixture passed', () => __awaiter(this, void 0, void 0, function* () {
+            let spy = predictionRepoStub.findOneOrCreate$;
             yield predictionProcessor.getPredictions$(ars_che).toPromise();
             expect(spy).to.have.been.calledOnce;
-            expect(spy).to.have.been.calledWithExactly(chalo._id, ars_che._id);
+            expect(spy).to.have.been.calledWith(sinon.match({ userId: chalo.id, fixtureId: ars_che.id }));
         }));
-        it('should not getOrCreate prediction if joker fixture == passedIn fixture', () => __awaiter(this, void 0, void 0, function* () {
-            let spy = predictionRepoStub.findByUserAndFixture$;
+        it('should not findOrCreate prediction if joker fixture == passedIn fixture', () => __awaiter(this, void 0, void 0, function* () {
+            let spy = predictionRepoStub.findOneOrCreate$;
             yield predictionProcessor.getPredictions$(liv_sou).toPromise();
             expect(spy).to.have.been.calledOnce;
         }));
@@ -129,7 +129,7 @@ describe('Prediction Processor', () => {
             predictionProcessor.processPrediction$(chaloPred, ars_che)
                 .subscribe(_ => {
                 expect(spy).to.have.been.called;
-                expect(spy).to.have.been.calledWithMatch(chaloPred['_id']);
+                expect(spy).to.have.been.calledWithMatch(chaloPred.id);
                 done();
             });
         });

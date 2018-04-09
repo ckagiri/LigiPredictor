@@ -26,7 +26,7 @@ let seasonId = '4edd40c86762e0fb12000001';
 let gameRound = 2;
 let newFixture = (id, homeTeam, awayTeam, status = fixture_model_1.FixtureStatus.FINISHED) => {
     return {
-        _id: ObjectId().toHexString(),
+        id: ObjectId().toHexString(),
         season: seasonId,
         gameRound,
         date: new Date(),
@@ -43,7 +43,7 @@ let liv_sou = newFixture(2, 'Liverpool', 'Southampton');
 let eve_wat = newFixture(3, 'Everton', 'Watford', fixture_model_1.FixtureStatus.IN_PLAY);
 let newPrediction = (userId, fixture, status = prediction_model_1.PredictionStatus.PENDING) => {
     return {
-        _id: ObjectId().toHexString(), user: userId, fixture, status, choice: { goalsHomeTeam: 1, goalsAwayTeam: 1 }, hasJoker: false,
+        id: ObjectId().toHexString(), user: userId, fixture, status, choice: { goalsHomeTeam: 1, goalsAwayTeam: 1 }, hasJoker: false,
         points: { points: 0, pointsFor: 0, pointsAgainst: 0, MatchOutcomePoints: 0, GoalDifferencePoints: 0, TeamScorePoints: 0 }
     };
 };
@@ -56,28 +56,28 @@ let leaderboardRepoStub = {
     findByIdAndUpdate$: sinon.stub()
 };
 let chalo = {
-    _id: ObjectId().toHexString(),
+    id: ObjectId().toHexString(),
     userName: 'chalo'
 };
 let kagiri = {
-    _id: ObjectId().toHexString(),
+    id: ObjectId().toHexString(),
     userName: 'kagiri'
 };
-let pred1 = newPrediction(chalo._id, ars_che);
-let lb1 = { _id: ObjectId().toHexString() };
-let lb2 = { _id: ObjectId().toHexString() };
+let pred1 = newPrediction(chalo.id, ars_che);
+let lb1 = { id: ObjectId().toHexString() };
+let lb2 = { id: ObjectId().toHexString() };
 let standing1 = {
-    _id: ObjectId().toHexString(),
-    leaderboard: lb1._id,
-    user: kagiri._id,
+    id: ObjectId().toHexString(),
+    leaderboard: lb1.id,
+    user: kagiri.id,
     points: 20,
     positionOld: 1,
     positionNew: 1
 };
 let standing2 = {
-    _id: ObjectId().toHexString(),
-    leaderboard: lb1._id,
-    user: chalo._id,
+    id: ObjectId().toHexString(),
+    leaderboard: lb1.id,
+    user: chalo.id,
     points: 30,
     positionOld: 2,
     positionNew: 2
@@ -86,10 +86,10 @@ let userRepoStub = {
     findAll$: () => { return rxjs_1.Observable.of([chalo, kagiri]); }
 };
 let predictionRepoStub = {
-    findByUserAndFixture$: () => { return rxjs_1.Observable.of(pred1); }
+    findOne$: () => { return rxjs_1.Observable.of(pred1); }
 };
 let userScoreRepoStub = {
-    findOneAndUpdateOrCreate$: () => { return rxjs_1.Observable.of({ _id: ObjectId().toHexString() }); },
+    findOneAndUpdateOrCreate$: () => { return rxjs_1.Observable.of({ id: ObjectId().toHexString() }); },
     findByLeaderboardOrderByPoints$: () => { return rxjs_1.Observable.of([standing2, standing1]); },
     findByIdAndUpdate$: () => { return rxjs_1.Observable.of(standing1); }
 };
@@ -97,9 +97,9 @@ let leaderboardUpdater = new leaderboard_updater_1.LeaderboardUpdater(userRepoSt
 describe('Leaderboard Updater', () => {
     describe('updateScores', () => {
         beforeEach(() => {
-            leaderboardRepoStub.findSeasonBoardAndUpdate$.returns(rxjs_1.Observable.of({ _id: 1 }));
-            leaderboardRepoStub.findMonthBoardAndUpdate$.returns(rxjs_1.Observable.of({ _id: 2 }));
-            leaderboardRepoStub.findRoundBoardAndUpdate$.returns(rxjs_1.Observable.of({ _id: 3 }));
+            leaderboardRepoStub.findSeasonBoardAndUpdate$.returns(rxjs_1.Observable.of({ id: 1 }));
+            leaderboardRepoStub.findMonthBoardAndUpdate$.returns(rxjs_1.Observable.of({ id: 2 }));
+            leaderboardRepoStub.findRoundBoardAndUpdate$.returns(rxjs_1.Observable.of({ id: 3 }));
             leaderboardRepoStub.findAll$.returns(rxjs_1.Observable.of([lb1]));
             leaderboardRepoStub.findByIdAndUpdate$.returns(rxjs_1.Observable.of(lb1));
         });
@@ -134,10 +134,10 @@ describe('Leaderboard Updater', () => {
             expect(spy).to.have.been.calledWith(seasonId, gameRound, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
         }));
         it('should get fixture prediction for the user', () => __awaiter(this, void 0, void 0, function* () {
-            let spy = sinon.spy(predictionRepoStub, 'findByUserAndFixture$');
+            let spy = sinon.spy(predictionRepoStub, 'findOne$');
             yield leaderboardUpdater.updateScores(finishedFixtures);
             expect(spy).to.have.been.called;
-            expect(spy.firstCall).to.have.been.calledWith(chalo._id, ars_che._id);
+            expect(spy).to.have.been.calledWith(sinon.match({ userId: chalo.id, fixtureId: ars_che.id }));
         }));
         it('should cache boards', () => __awaiter(this, void 0, void 0, function* () {
             let spy = leaderboardRepoStub.findSeasonBoardAndUpdate$;

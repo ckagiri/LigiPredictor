@@ -33,7 +33,7 @@ function addLeague(aLeague) {
         });
     });
 }
-describe.only('League API', function () {
+describe('League API', function () {
     this.timeout(5000);
     before(done => clearData(done));
     afterEach(done => clearData(done));

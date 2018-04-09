@@ -12,6 +12,7 @@ export interface ScorePoints {
 }
 
 export interface IUserScore extends IEntity {
+  id?: string;
   leaderboard: string;
   user: string;
   fixtures?: string[];
@@ -29,7 +30,9 @@ export interface IUserScore extends IEntity {
   positionNew?: number;
 }
 
-export interface IUserScoreModel extends IUserScore, Document {}
+export interface IUserScoreModel extends IUserScore, Document {
+  id?: string;  
+}
 
 const userScoreSchema = new Schema({
 });

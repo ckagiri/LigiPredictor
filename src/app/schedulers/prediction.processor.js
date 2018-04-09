@@ -20,7 +20,7 @@ class PredictionProcessor {
         let { season: seasonId, gameRound } = fixture;
         return this.fixtureRepo.findSelectableFixtures$(seasonId, gameRound)
             .map(selectableFixtures => {
-            return [...selectableFixtures, fixture].map(n => n['_id']);
+            return [...selectableFixtures, fixture].map(n => n.id);
         })
             .flatMap(fixtureIds => {
             return this.userRepo.findAll$()
@@ -37,8 +37,8 @@ class PredictionProcessor {
             .flatMap(data => {
             let { season: seasonId, gameRound } = fixture;
             let selectableFixtureIds = data.selectableFixtureIds;
-            let userId = data.user['_id'];
-            return this.predictionRepo.getOrCreateJoker$(userId, seasonId, gameRound, selectableFixtureIds)
+            let userId = data.user.id;
+            return this.predictionRepo.findOrCreateJoker$(userId, seasonId, gameRound, selectableFixtureIds)
                 .map(jokerPrediction => {
                 return {
                     userId, jokerPrediction
@@ -46,12 +46,12 @@ class PredictionProcessor {
             });
         })
             .flatMap(data => {
-            let fixtureId = fixture['_id'];
+            let fixtureId = fixture.id;
             let { userId, jokerPrediction } = data;
             if (jokerPrediction.fixture === fixtureId) {
                 return rxjs_1.Observable.of(jokerPrediction);
             }
-            return this.predictionRepo.findByUserAndFixtureOrCreate$(userId, fixtureId);
+            return this.predictionRepo.findOneOrCreate$({ userId, fixtureId });
         })
             .toArray();
     }
@@ -59,7 +59,7 @@ class PredictionProcessor {
         let { choice } = prediction;
         let { result } = fixture;
         let score = this.predictionCalculator.calculateScore(choice, result);
-        return this.predictionRepo.findByIdAndUpdate$(prediction['_id'], { score });
+        return this.predictionRepo.findByIdAndUpdate$(prediction.id, { score });
     }
 }
 exports.PredictionProcessor = PredictionProcessor;
