@@ -94,7 +94,7 @@ let ligiFixtureRepo = FixtureRepository.getInstance(ApiProvider.LIGI)
 let league: any, season: any, team1: any, team2: any, fixture: any;
 let Observable$: any;
 
-describe.only('FixtureRepo', function() {
+describe('FixtureRepo', function() {
   this.timeout(5000);
   before((done) => {
     db.init(config.testDb.uri, done, { drop: true });

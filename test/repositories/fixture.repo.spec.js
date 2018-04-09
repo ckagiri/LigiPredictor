@@ -87,7 +87,7 @@ let fixtureRepo = fixture_repo_1.FixtureRepository.getInstance(footballApiProvid
 let ligiFixtureRepo = fixture_repo_1.FixtureRepository.getInstance(footballApiProvider_1.FootballApiProvider.LIGI);
 let league, season, team1, team2, fixture;
 let Observable$;
-describe.only('FixtureRepo', function () {
+describe('FixtureRepo', function () {
     this.timeout(5000);
     before((done) => {
         db.init(index_1.config.testDb.uri, done, { drop: true });
@@ -173,7 +173,6 @@ describe.only('FixtureRepo', function () {
             return fixtureRepo.findSelectableFixtures$(season.id, season.currentGameRound);
         })
             .subscribe(fs => {
-            console.log(fs);
             chai_1.expect(fs).to.have.length(1);
             done();
         });
