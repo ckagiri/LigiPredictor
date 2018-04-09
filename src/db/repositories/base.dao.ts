@@ -11,7 +11,7 @@ export interface IBaseDao<T extends Document> {
   findByIdAndUpdate$(id: string, update: any): Observable<T>;
   findOneAndUpdate$(conditions: any, update: any, options?: any): Observable<T>;
   findAll$(conditions?: any, projection?: any, options?: any): Observable<T[]>;
-  findOne$(conditions: any, projection?: any);
+  findOne$(conditions: any, projection?: any): Observable<T>;
   findById$(id: string): Observable<T>;
   remove$(id: string): Observable<void>;
   count$(conditions: any): Observable<number>;    

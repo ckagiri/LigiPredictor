@@ -85,14 +85,14 @@ export class BaseRepository<T extends IEntity> implements IBaseRepository<T> {
   findById$(id: string) {
     return this._baseDao.findById$(id)
       .catch((error: any) => {
-        return Observable.throw( error );
+        return Observable.throw(error);
       })
       .map((data: T) => {
         return data;
       })   
   }
 
-  findOne$(conditions?: any ) {
+  findOne$(conditions?: any) {
 		return this._baseDao.findOne$(conditions)
 			.catch((error: any) => {
 				return Observable.throw(error);

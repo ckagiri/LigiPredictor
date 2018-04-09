@@ -8,6 +8,8 @@ export interface ScorePoints {
   pointsAgainst: number;
   MatchOutcomePoints: number;
   GoalDifferencePoints: number;
+  ExactScorePoints: number;
+  ScoreDifferencePoints: number;
   TeamScorePoints: number;
 }
 

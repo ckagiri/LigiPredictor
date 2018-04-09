@@ -9,7 +9,9 @@ export interface IPredictionCalculator {
 export class PredictionCalculator implements IPredictionCalculator {
   calculateScore(choice: MatchScore, result: MatchScore) {
     return {
-      points: 0, pointsFor: 0, pointsAgainst: 0, MatchOutcomePoints: 0, GoalDifferencePoints: 0, TeamScorePoints: 0
+      points: 0, pointsFor: 0, pointsAgainst: 0, 
+      MatchOutcomePoints: 0, ScoreDifferencePoints: 0, TeamScorePoints: 0,
+      ExactScorePoints: 0, GoalDifferencePoints: 0
     }
   }
 }

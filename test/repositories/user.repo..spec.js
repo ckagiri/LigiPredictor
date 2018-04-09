@@ -6,7 +6,7 @@ const user_repo_1 = require("../../src/db/repositories/user.repo");
 const db = require("../../src/db/index");
 const index_1 = require("../../src/config/environment/index");
 let userRepo = user_repo_1.UserRepository.getInstance();
-describe.only('User Repo', function () {
+describe('User Repo', function () {
     this.timeout(5000);
     before(done => {
         db.init(index_1.config.testDb.uri, done, { drop: true });

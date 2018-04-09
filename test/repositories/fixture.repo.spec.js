@@ -29,7 +29,7 @@ const afdEpl17 = {
     caption: 'Premier League 2017/18',
     league: 'PL',
     year: '2017',
-    currentMatchday: 32,
+    currentMatchday: 20,
     numberOfMatchdays: 38,
     numberOfTeams: 20,
     numberOfGames: 380,
