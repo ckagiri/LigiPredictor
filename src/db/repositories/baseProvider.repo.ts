@@ -90,8 +90,8 @@ export class BaseProviderRepository<T extends IEntity> implements IBaseProviderR
     return this._baseRepo.findOneAndUpdate$(conditions, update);   
   }
 
-  findAll$(conditions?: any): Observable<T[]> {
-    return this._baseRepo.findAll$(conditions);
+  findAll$(conditions?: any, projection?: any, options?: any): Observable<T[]> {
+    return this._baseRepo.findAll$(conditions, projection, options);
   }
 
   findById$(id: string) {

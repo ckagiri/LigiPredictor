@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import { ITaskRunner, TaskRunner } from './taskRunner';
 import { IEventMediator, EventMediator } from '../../common/eventMediator';
+import { IFixtureRepository, FixtureRepository } from '../../db/repositories/fixture.repo'
 import { IFinishedFixturesProcessor, FinishedFixturesProcessor} from './finishedFixtures.processor';
 import { IScheduler } from '../schedulers';
 
@@ -8,8 +9,10 @@ export class FinishedFixturesScheduler extends EventEmitter implements ISchedule
   private _processing = false;
   private _running = false;
   private RUN_INTERVAL = 10 * 60 * 60 * 1000;
+
   constructor(
     private taskRunner: ITaskRunner,
+    //private fixtureRepo: IFixtureRepository,
     private finishedFixturesProcessor: IFinishedFixturesProcessor,
     private eventMediator: IEventMediator
   ) {
@@ -32,7 +35,7 @@ export class FinishedFixturesScheduler extends EventEmitter implements ISchedule
         whenToExecute: this.RUN_INTERVAL,
         context: this,
         task: async () => {
-          await Promise.resolve(); //processFinishedFixtures;
+          await this.processFinishedFixtures();
           this.emit('task:executed')               
         }
       })
@@ -46,9 +49,9 @@ export class FinishedFixturesScheduler extends EventEmitter implements ISchedule
     })
   }
 
-  processFinishedFixtures = () => {
-    // if _processing return
-    // let fs = await fixtureRepo.findAllFinishedWithPendingPredictions$();
+  processFinishedFixtures = async () => {
+    if (this._processing) { return; }
+    //let fixtures = await this.fixtureRepo.findAllFinishedWithPendingPredictions$();
     // await processPredictions(fs);
   }
 

@@ -9,12 +9,12 @@ class SeasonUpdater {
     static getInstance(provider) {
         return new SeasonUpdater(season_repo_1.SeasonRepository.getInstance(provider));
     }
-    updateCurrentMatchRound(seasons) {
-        let externalIdToSeasonMap = new Map();
+    updateCurrentMatchRound(apiSeasons) {
+        let externalIdToApiSeasonMap = new Map();
         let externalIds = [];
-        for (let season of seasons) {
-            externalIdToSeasonMap[season.id] = season;
-            externalIds.push(season.id);
+        for (let apiSeason of apiSeasons) {
+            externalIdToApiSeasonMap[apiSeason.id] = apiSeason;
+            externalIds.push(apiSeason.id);
         }
         return this.seasonRepo.findByExternalIds$(externalIds)
             .flatMap((dbSeasons) => {
@@ -23,9 +23,9 @@ class SeasonUpdater {
             .flatMap((dbSeason) => {
             let provider = this.seasonRepo.Provider;
             let extId = dbSeason['externalReference'][provider]['id'];
-            let extCurrentMatchRound = externalIdToSeasonMap[extId].currentMatchRound;
+            let extCurrentMatchRound = externalIdToApiSeasonMap[extId].currentMatchRound;
             if (dbSeason.currentMatchRound !== extCurrentMatchRound) {
-                let id = dbSeason['_id'];
+                let id = dbSeason.id;
                 let update = { currentMatchRound: extCurrentMatchRound };
                 return this.seasonRepo.findByIdAndUpdate$(id, update);
             }

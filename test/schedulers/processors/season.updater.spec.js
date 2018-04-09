@@ -14,38 +14,32 @@ const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 const expect = chai.expect;
 const rxjs_1 = require("rxjs");
+const mongoose_1 = require("mongoose");
+const ObjectId = mongoose_1.Types.ObjectId;
 const season_updater_1 = require("../../../src/app/schedulers/footballApi/season.updater");
 const footballApiProvider_1 = require("../../../src/common/footballApiProvider");
 let provider = footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA;
-let newDbSeason = () => {
-    return {
-        _id: 'a',
-        currentMatchRound: 1,
-        externalReference: {
-            [provider]: { id: 1
-            }
-        }
-    };
-};
 let newApiSeason = () => {
     return {
         id: 1,
         currentMatchRound: 2,
     };
 };
+let newDbSeason = () => {
+    return {
+        id: ObjectId().toHexString(),
+        currentMatchRound: 1,
+        externalReference: { [provider]: { id: 1 } }
+    };
+};
 let dbSeason = newDbSeason();
 let apiSeason = newApiSeason();
 let dbSeasons = [dbSeason];
 let apiSeasons = [apiSeason];
-let seasonConverterStub;
 let seasonRepoStub;
 let seasonUpdater;
 describe('SeasonUpdater', () => {
     beforeEach(() => {
-        seasonConverterStub = {
-            provider,
-            from: () => { }
-        };
         seasonRepoStub = {
             Provider: provider,
             findByIdAndUpdate$: () => { return rxjs_1.Observable.of(dbSeason); },
@@ -67,7 +61,7 @@ describe('SeasonUpdater', () => {
             let spy = sinon.spy(seasonRepoStub, 'findByIdAndUpdate$');
             let res = yield seasonUpdater.updateCurrentMatchRound(apiSeasons);
             expect(spy).to.have.been.calledOnce;
-            expect(spy).to.have.been.calledWith(sinon.match(dbSeason._id));
+            expect(spy).to.have.been.calledWith(sinon.match(dbSeason.id));
         }));
         it('should not update currentRound if similar', () => __awaiter(this, void 0, void 0, function* () {
             let apiSeason = newApiSeason();

@@ -31,10 +31,10 @@ class TeamRepository extends baseProvider_repo_1.BaseProviderRepository {
             return this._findOneAndUpdate$(query, obj, externalReference);
         });
     }
-    findEachByNameAndUpdate$(teams) {
+    findEachByNameAndUpdate$(objs) {
         let obs = [];
-        for (let team of teams) {
-            obs.push(this.findByNameAndUpdate$(team));
+        for (let obj of objs) {
+            obs.push(this.findByNameAndUpdate$(obj));
         }
         return rxjs_1.Observable.forkJoin(obs);
     }

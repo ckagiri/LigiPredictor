@@ -12,7 +12,21 @@ class FixtureRepository extends baseProvider_repo_1.BaseProviderRepository {
         super(fixture_model_1.FixtureModel, converter);
     }
     findSelectableFixtures$(seasonId, gameRound) {
-        return rxjs_1.Observable.of([{}]);
+        const { SCHEDULED, TIMED, IN_PLAY, CANCELED, POSTPONED, FINISHED } = fixture_model_1.FixtureStatus;
+        let query = {
+            $or: [
+                { $and: [
+                        { season: seasonId }, { gameRound },
+                        { status: { $in: [SCHEDULED, TIMED, IN_PLAY] } }
+                    ] },
+                { $and: [
+                        { season: seasonId }, { gameRound },
+                        { status: { $in: [CANCELED, POSTPONED, FINISHED] } },
+                        { allPredictionsProcessed: false }
+                    ] }
+            ]
+        };
+        return this.findAll$(query, null, { sort: 'date' });
     }
     findBySeasonAndTeamsAndUpdate$(obj) {
         return this._converter.from(obj)
@@ -30,6 +44,19 @@ class FixtureRepository extends baseProvider_repo_1.BaseProviderRepository {
             obs.push(this.findBySeasonAndTeamsAndUpdate$(obj));
         }
         return rxjs_1.Observable.forkJoin(obs);
+    }
+    findAllFinishedWithPendingPredictions$(seasonId, gameRound) {
+        let query = {
+            $and: [
+                { season: seasonId },
+                { allPredictionsProcessed: false },
+                { status: { $in: ['CANCELED', 'POSTPONED', 'FINISHED'] } }
+            ]
+        };
+        if (gameRound) {
+            query.$and.push({ gameRound });
+        }
+        return this.findAll$(query);
     }
 }
 exports.FixtureRepository = FixtureRepository;

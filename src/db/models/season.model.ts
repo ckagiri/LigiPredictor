@@ -3,6 +3,7 @@ import { Schema, Model, model, Document } from 'mongoose';
 import { IEntity } from './base.model';
 
 export interface ISeason extends IEntity {
+  id?: string;
   name: string;
   year: string;
   slug?: string;  
@@ -19,7 +20,9 @@ export interface ISeason extends IEntity {
   externalReference?: any
 }
 
-interface ISeasonModel extends ISeason, Document { }
+interface ISeasonModel extends ISeason, Document { 
+  id?: string;
+}
 
 const { String, Number, ObjectId, Mixed } = Schema.Types;
 

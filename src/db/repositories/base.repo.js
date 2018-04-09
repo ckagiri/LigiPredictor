@@ -51,8 +51,8 @@ class BaseRepository {
             return data;
         });
     }
-    findAll$(conditions = {}) {
-        return this._baseDao.findAll$(conditions)
+    findAll$(conditions = {}, projection, options) {
+        return this._baseDao.findAll$(conditions, projection, options)
             .catch((error) => {
             return rxjs_1.Observable.throw(error);
         })

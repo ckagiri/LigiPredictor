@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { IFixture, FixtureModel } from '../models/fixture.model';
+import { IFixture, FixtureModel, FixtureStatus } from '../models/fixture.model';
 import { IBaseProviderRepository, BaseProviderRepository } from './baseProvider.repo';
 import { IFixtureConverter, FixtureConverter } from '../converters/fixture.converter';
 import { FootballApiProvider as ApiProvider } from '../../common/footballApiProvider';
@@ -9,6 +9,7 @@ export interface IFixtureRepository extends IBaseProviderRepository<IFixture> {
   findSelectableFixtures$(seasonId: string, gameRound: number): Observable<IFixture[]>;
   findBySeasonAndTeamsAndUpdate$(obj: any): Observable<IFixture>;  
   findEachBySeasonAndTeamsAndUpdate$(objs: any[]): Observable<IFixture[]>;
+  findAllFinishedWithPendingPredictions$(seasonId: string, gameRound?: number): Observable<IFixture[]>;
 }
 
 export class FixtureRepository extends BaseProviderRepository<IFixture> implements IFixtureRepository {
@@ -21,8 +22,21 @@ export class FixtureRepository extends BaseProviderRepository<IFixture> implemen
   }
 
   findSelectableFixtures$(seasonId: string, gameRound: number) {
-    return Observable.of([<IFixture>{}])    
-  }  
+    const { SCHEDULED, TIMED, IN_PLAY, CANCELED, POSTPONED, FINISHED } = FixtureStatus;
+    let query = { 
+      $or: [
+        { $and: [
+          { season: seasonId }, { gameRound }, 
+          { status: { $in: [SCHEDULED, TIMED, IN_PLAY] } }
+        ] },
+        { $and: [
+          { season: seasonId}, { gameRound }, 
+          { status: { $in: [CANCELED, POSTPONED, FINISHED] } },
+          { allPredictionsProcessed: false }
+        ] }
+      ] }
+  
+    return this.findAll$(query, null, {sort: 'date'})  }  
 
   findBySeasonAndTeamsAndUpdate$(obj: any) {
     return this._converter.from(obj)
@@ -43,4 +57,18 @@ export class FixtureRepository extends BaseProviderRepository<IFixture> implemen
     }
     return Observable.forkJoin(obs);  
   }
+
+  findAllFinishedWithPendingPredictions$(seasonId: string, gameRound?: number) {
+		let query: any = {
+			$and: [
+					{ season: seasonId },
+					{ allPredictionsProcessed: false }, 
+					{ status: { $in: ['CANCELED', 'POSTPONED', 'FINISHED'] } }
+				]
+			}
+		if(gameRound) {
+			query.$and.push({ gameRound });
+		}
+		return this.findAll$(query)
+	}
 }

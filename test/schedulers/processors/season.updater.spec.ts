@@ -4,25 +4,24 @@ const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 const expect = chai.expect;
 import { Observable } from 'rxjs';
+import { Types } from 'mongoose';
+const ObjectId = Types.ObjectId;
 
 import { SeasonUpdater } from '../../../src/app/schedulers/footballApi/season.updater'
 import { FootballApiProvider as ApiProvider } from '../../../src/common/footballApiProvider'
 
 let provider = ApiProvider.API_FOOTBALL_DATA;
-let newDbSeason = () => { 
-  return { 
-    _id: 'a',
-    currentMatchRound: 1,
-    externalReference: {
-      [provider]: { id: 1
-      }
-    }
-  }
-}
 let newApiSeason = () => { 
   return { 
     id: 1,     
     currentMatchRound: 2,
+  }
+}
+let newDbSeason = () => { 
+  return { 
+    id: ObjectId().toHexString(),
+    currentMatchRound: 1,
+    externalReference: { [provider]: { id: 1 } }
   }
 }
 let dbSeason = newDbSeason();
@@ -30,16 +29,11 @@ let apiSeason = newApiSeason();
 let dbSeasons = [dbSeason]
 let apiSeasons = [apiSeason]
 
-let seasonConverterStub: any;
 let seasonRepoStub: any;
 let seasonUpdater: SeasonUpdater;
 
 describe('SeasonUpdater', () => {  
   beforeEach(() => {
-    seasonConverterStub = {
-      provider,
-      from: () => {}
-    }
     seasonRepoStub = {
       Provider: provider,
       findByIdAndUpdate$: () => { return Observable.of(dbSeason) },
@@ -59,6 +53,7 @@ describe('SeasonUpdater', () => {
       expect(spy).to.have.been.calledOnce
         .and.to.have.been.calledWith(sinon.match(externalIds));
     })
+
     it('should update currentRound of season if different from stored', async () => {
       let spy = sinon.spy(seasonRepoStub, 'findByIdAndUpdate$');      
   
@@ -66,8 +61,9 @@ describe('SeasonUpdater', () => {
 
       expect(spy).to.have.been.calledOnce;
       
-      expect(spy).to.have.been.calledWith(sinon.match(dbSeason._id))      
+      expect(spy).to.have.been.calledWith(sinon.match(dbSeason.id))      
     })
+
     it('should not update currentRound if similar', async () => {
       let apiSeason = newApiSeason();
       apiSeason.currentMatchRound = 1;

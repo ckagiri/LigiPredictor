@@ -7,7 +7,7 @@ import { FootballApiProvider as ApiProvider } from '../../common/footballApiProv
 
 export interface ITeamRepository extends IBaseProviderRepository<ITeam> {
   findByNameAndUpdate$(name: any, obj?: any): Observable<ITeam>;
-  findEachByNameAndUpdate$(teams: ITeam[]): Observable<ITeam[]>;
+  findEachByNameAndUpdate$(objs: any[]): Observable<ITeam[]>;
   findByName$(name: string): Observable<ITeam>;
 }
 
@@ -41,11 +41,11 @@ export class TeamRepository extends BaseProviderRepository<ITeam> implements ITe
     });
   }  
 
-  findEachByNameAndUpdate$(teams: ITeam[]): Observable<ITeam[]> {
+  findEachByNameAndUpdate$(objs: any[]): Observable<ITeam[]> {
     let obs: any[] = [];
     
-    for (let team of teams) {
-      obs.push(this.findByNameAndUpdate$(team));
+    for (let obj of objs) {
+      obs.push(this.findByNameAndUpdate$(obj));
     }
     return Observable.forkJoin(obs);  
   }  

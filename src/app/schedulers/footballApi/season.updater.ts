@@ -3,7 +3,7 @@ import { ISeasonRepository, SeasonRepository }  from '../../../db/repositories/s
 import { FootballApiProvider as ApiProvider } from '../../../common/footballApiProvider';
 
 export interface ISeasonUpdater {
-  updateCurrentMatchRound(seasons: any[]);
+  updateCurrentMatchRound(apiSeasons: any[]);
 }
 
 export class SeasonUpdater implements ISeasonUpdater {
@@ -14,12 +14,12 @@ export class SeasonUpdater implements ISeasonUpdater {
   constructor(private seasonRepo: ISeasonRepository) {
   }
 
-  updateCurrentMatchRound(seasons: any[]) {
-    let externalIdToSeasonMap = new Map<string, any>();
+  updateCurrentMatchRound(apiSeasons: any[]) {
+    let externalIdToApiSeasonMap = new Map<string, any>();
     let externalIds: Array<string> = [];
-    for (let season of seasons) {
-      externalIdToSeasonMap[season.id] = season;
-      externalIds.push(season.id);      
+    for (let apiSeason of apiSeasons) {
+      externalIdToApiSeasonMap[apiSeason.id] = apiSeason;
+      externalIds.push(apiSeason.id);      
     }
     return this.seasonRepo.findByExternalIds$(externalIds)
       .flatMap((dbSeasons) => {
@@ -28,10 +28,10 @@ export class SeasonUpdater implements ISeasonUpdater {
       .flatMap((dbSeason) => {
         let provider = this.seasonRepo.Provider;
         let extId = dbSeason['externalReference'][provider]['id'];
-        let extCurrentMatchRound = externalIdToSeasonMap[extId].currentMatchRound;
+        let extCurrentMatchRound = externalIdToApiSeasonMap[extId].currentMatchRound;
         
         if (dbSeason.currentMatchRound !== extCurrentMatchRound) {          
-          let id = dbSeason['_id'];
+          let id = dbSeason.id;
           let update = { currentMatchRound: extCurrentMatchRound };
           return this.seasonRepo.findByIdAndUpdate$(id, update);
         } else {          

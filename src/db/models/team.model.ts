@@ -3,6 +3,7 @@ import { Schema, Model, model, Document } from 'mongoose';
 import { IEntity } from './base.model';
 
 export interface ITeam extends IEntity {
+  id?: string;
   name: string;
   slug?: string;
   shortName?: string;
@@ -12,7 +13,9 @@ export interface ITeam extends IEntity {
   externalReference?: any
 }
 
-interface ITeamModel extends ITeam, Document { }
+interface ITeamModel extends ITeam, Document {
+  id?: string;
+ }
 
 const { String, Mixed } = Schema.Types;
 

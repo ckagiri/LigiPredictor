@@ -22,6 +22,7 @@ let epl17 = {
   seasonStart: '2017-08-11T00:00:00+0200',
   seasonEnd: '2018-05-13T16:00:00+0200',
   currentMatchRound: 20,
+  currentGameRound: 20,
   leagueId: null
 }
 
@@ -57,8 +58,8 @@ const manc = {
 const manuVmanc = {
   date: "2017-09-10T11:30:00Z",
   status: "SCHEDULED",
-  matchRound: 4,
-  gameRound: 4,
+  matchRound: 20,
+  gameRound: 20,
   seasonId: null,
   homeTeamId: null,
   awayTeamId: null,
@@ -70,7 +71,7 @@ const afd_manuVmanc = {
   competitionId: 445,
   date: "2017-09-10T11:30:00Z",
   status: "FINISHED",
-  matchday: 4,
+  matchday: 20,
   homeTeamName: "Manchester United FC",
   homeTeamId: 66,
   awayTeamName: "Manchester City FC",
@@ -91,14 +92,30 @@ let teamRepo = TeamRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
 let fixtureRepo = FixtureRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
 let ligiFixtureRepo = FixtureRepository.getInstance(ApiProvider.LIGI)
 let league: any, season: any, team1: any, team2: any, fixture: any;
+let Observable$: any;
 
-describe('FixtureRepo', function() {
+describe.only('FixtureRepo', function() {
   this.timeout(5000);
   before((done) => {
     db.init(config.testDb.uri, done, { drop: true });
   })
   beforeEach(() => {
     league = season = team1 = team2 = fixture = null;
+    Observable$ = Observable.zip(
+      leagueRepo.insert$(epl),
+      teamRepo.insert$(manu),
+      teamRepo.insert$(manc))
+      .flatMap((arr: any[]) => {
+        league = arr[0];
+        team1 = arr[1];
+        team2 = arr[2];
+        epl17['league'] = { id: league.id, name: league.name, slug: league.slug }
+        epl17['externalReference'] = { [ApiProvider.API_FOOTBALL_DATA]: { id: afdEpl17.id } }
+        return seasonRepo.insert$(epl17)
+          .map(s => {
+            season = s;
+          })
+      })
   })
   afterEach((done) => {
     db.drop().then(() => {
@@ -111,56 +128,25 @@ describe('FixtureRepo', function() {
     })
   })
   it('should save a fixture', (done) => {
-    Observable.zip(
-      leagueRepo.insert$(epl),
-      teamRepo.insert$(manu),
-      teamRepo.insert$(manc))
-      .flatMap((arr: any[]) => {
-        league = arr[0];
-        team1 = arr[1];
-        team2 = arr[2];
-        epl17['league'] = { id: league._id, name: league.name, slug: league.slug }
-        epl17['externalReference'] = { [ApiProvider.API_FOOTBALL_DATA]: { id: afdEpl17.id } }
-        return seasonRepo.insert$(epl17)
-          .map(s => {
-            season = s;
-          })
-      })
+    Observable$
       .flatMap(_ => {
-        manuVmanc.seasonId = season._id;
-        manuVmanc.homeTeamId = team1._id;
-        manuVmanc.awayTeamId = team2._id;
+        manuVmanc.seasonId = season.id;
+        manuVmanc.homeTeamId = team1.id;
+        manuVmanc.awayTeamId = team2.id;
         return ligiFixtureRepo.save$(manuVmanc)
           .map(f => {
             fixture = f;
           })
       })
       .subscribe(_ => {
-        expect(fixture.season).to.deep.equal(season._id)
+        expect(fixture.season.toString()).to.equal(season.id)
         expect(fixture.slug).to.equal(`${team1.slug}-${team2.slug}`)
         done();
       })
   })
 
   it('should findEach By SeasonAndTeams AndUpdateOrCreate', (done) => {
-    Observable.zip(
-      leagueRepo.insert$(epl),
-      teamRepo.insert$(manu),
-      teamRepo.insert$(manc))
-      .flatMap((arr: any[]) => {
-        league = arr[0];
-        team1 = arr[1];
-        team2 = arr[2];
-        epl17['league'] = { id: league._id, name: league.name, slug: league.slug }
-        epl17['externalReference'] = { [ApiProvider.API_FOOTBALL_DATA]: { id: afdEpl17.id } }
-        return seasonRepo.insert$(epl17);
-      })
-      .flatMap(_ => {
-        return seasonRepo.findByExternalIdAndUpdate$(afdEpl17)
-          .map(s => {
-            season = s;
-          })
-      })
+    Observable$    
       .flatMap(_ => {
         return fixtureRepo.findBySeasonAndTeamsAndUpdate$(afd_manuVmanc)
           .map(f => {
@@ -168,10 +154,40 @@ describe('FixtureRepo', function() {
           })
       })
       .subscribe(_ => {
-        expect(fixture.season).to.deep.equal(season._id)
+        expect(fixture.season.toString()).to.equal(season.id)
         expect(fixture.slug).to.equal(`${team1.slug}-${team2.slug}`)
         done();
       })
+  })
 
+  it('should find finished fixtures with pending predictions', (done) => {
+    Observable$
+      .flatMap(_ => {
+        return fixtureRepo.findBySeasonAndTeamsAndUpdate$(afd_manuVmanc)
+      })
+      .flatMap(_ => {
+        return fixtureRepo.findAllFinishedWithPendingPredictions$(season.id);
+      })
+      .subscribe(fs => {
+        expect(fs).to.have.length(1);
+        done();
+      })
+  })
+
+  it('should find selectable fixtures for game round', (done) => {
+    Observable$
+      .flatMap(_ => {
+        manuVmanc.seasonId = season.id;
+        manuVmanc.homeTeamId = team1.id;
+        manuVmanc.awayTeamId = team2.id;
+        return ligiFixtureRepo.save$(manuVmanc)
+      })
+      .flatMap(_ => {
+        return fixtureRepo.findSelectableFixtures$(season.id, season.currentGameRound)
+      })
+      .subscribe(fs => {
+        expect(fs).to.have.length(1);
+        done();
+      })
   })
 })

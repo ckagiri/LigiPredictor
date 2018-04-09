@@ -10,7 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const events_1 = require("events");
 class FinishedFixturesScheduler extends events_1.EventEmitter {
-    constructor(taskRunner, finishedFixturesProcessor, eventMediator) {
+    constructor(taskRunner, 
+    //private fixtureRepo: IFixtureRepository,
+    finishedFixturesProcessor, eventMediator) {
         super();
         this.taskRunner = taskRunner;
         this.finishedFixturesProcessor = finishedFixturesProcessor;
@@ -25,7 +27,7 @@ class FinishedFixturesScheduler extends events_1.EventEmitter {
                     whenToExecute: this.RUN_INTERVAL,
                     context: this,
                     task: () => __awaiter(this, void 0, void 0, function* () {
-                        yield Promise.resolve(); //processFinishedFixtures;
+                        yield this.processFinishedFixtures();
                         this.emit('task:executed');
                     })
                 });
@@ -37,11 +39,13 @@ class FinishedFixturesScheduler extends events_1.EventEmitter {
                 this.emit('stopped');
             });
         });
-        this.processFinishedFixtures = () => {
-            // if _processing return
-            // let fs = await fixtureRepo.findAllFinishedWithPendingPredictions$();
+        this.processFinishedFixtures = () => __awaiter(this, void 0, void 0, function* () {
+            if (this._processing) {
+                return;
+            }
+            //let fixtures = await this.fixtureRepo.findAllFinishedWithPendingPredictions$();
             // await processPredictions(fs);
-        };
+        });
         this.processPredictions = (finishedFixtures) => __awaiter(this, void 0, void 0, function* () {
             if (Array.isArray(finishedFixtures) && finishedFixtures.length) {
                 yield this.finishedFixturesProcessor.processPredictions(finishedFixtures);

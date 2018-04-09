@@ -60,8 +60,8 @@ class BaseProviderRepository {
     findOneAndUpdate$(conditions, update) {
         return this._baseRepo.findOneAndUpdate$(conditions, update);
     }
-    findAll$(conditions) {
-        return this._baseRepo.findAll$(conditions);
+    findAll$(conditions, projection, options) {
+        return this._baseRepo.findAll$(conditions, projection, options);
     }
     findById$(id) {
         return this._baseRepo.findById$(id);
