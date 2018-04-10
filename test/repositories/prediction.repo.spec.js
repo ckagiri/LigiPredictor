@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
+const mongoose_1 = require("mongoose");
+const ObjectId = mongoose_1.Types.ObjectId;
 const user_model_1 = require("../../src/db/models/user.model");
 const league_model_1 = require("../../src/db/models/league.model");
 const season_model_1 = require("../../src/db/models/season.model");
@@ -160,6 +162,33 @@ describe('Prediction Repo', function () {
             predictionRepo.findOrCreateJoker$(user1.id, season.id, season.currentGameRound, [fixture1.id])
                 .subscribe(p => {
                 chai_1.expect(p).to.have.property('hasJoker', true);
+                chai_1.expect(p).to.have.property('jokerAutoPicked', true);
+                done();
+            });
+        });
+    });
+    describe('findOneOrCreate prediction', () => {
+        it('should create prediction if it doesnt exist', done => {
+            predictionRepo.findOneOrCreate$({ userId: user1.id, fixtureId: fixture1.id })
+                .subscribe(p => {
+                chai_1.expect(p.user.toString()).to.equal(user1.id);
+                chai_1.expect(p.fixture.toString()).to.equal(fixture1.id);
+                chai_1.expect(p.fixtureSlug).to.equal(fixture1.slug);
+                chai_1.expect(p).to.have.property('hasJoker', false);
+                chai_1.expect(p).to.have.property('jokerAutoPicked', false);
+                done();
+            });
+        });
+        it('should return existing prediction', done => {
+            let prediction;
+            predictionRepo.findOneOrCreate$({ userId: user1.id, fixtureId: fixture1.id })
+                .flatMap(p => {
+                prediction = p;
+                return predictionRepo.findOneOrCreate$({ userId: user1.id, fixtureId: fixture1.id });
+            })
+                .subscribe((p) => {
+                chai_1.expect(p.toObject()).to.eql(prediction.toObject());
+                chai_1.expect(p.id).to.equal(prediction.id);
                 done();
             });
         });

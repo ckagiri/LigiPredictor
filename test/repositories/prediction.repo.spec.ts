@@ -1,11 +1,14 @@
 import { Observable } from 'rxjs'
 import { expect } from 'chai';
+import { Types } from 'mongoose';
+const ObjectId = Types.ObjectId;
 
 import { UserModel as User } from '../../src/db/models/user.model';
 import { LeagueModel as League } from '../../src/db/models/league.model';
 import { SeasonModel as Season } from '../../src/db/models/season.model';
 import { TeamModel as Team } from '../../src/db/models/team.model';
 import { FixtureModel as Fixture } from '../../src/db/models/fixture.model';
+import { IPredictionModel as Prediction } from '../../src/db/models/prediction.model';
 
 import { UserRepository } from '../../src/db/repositories/user.repo';
 import { PredictionRepository } from '../../src/db/repositories/prediction.repo';
@@ -172,8 +175,37 @@ describe('Prediction Repo', function() {
      predictionRepo.findOrCreateJoker$(user1.id, season.id, season.currentGameRound, [fixture1.id])
       .subscribe(p => {
         expect(p).to.have.property('hasJoker', true)
+        expect(p).to.have.property('jokerAutoPicked', true)
         done();
       })
     })      
+  })
+
+  describe('findOneOrCreate prediction', () => {
+    it('should create prediction if it doesnt exist', done => {
+      predictionRepo.findOneOrCreate$({ userId: user1.id, fixtureId: fixture1.id })
+        .subscribe(p => {     
+          expect(p.user.toString()).to.equal(user1.id)
+          expect(p.fixture.toString()).to.equal(fixture1.id)    
+          expect(p.fixtureSlug).to.equal(fixture1.slug) 
+          expect(p).to.have.property('hasJoker', false)
+          expect(p).to.have.property('jokerAutoPicked', false) 
+          done()
+        })
+
+    })    
+    it('should return existing prediction', done => {
+      let prediction: Prediction;
+      predictionRepo.findOneOrCreate$({ userId: user1.id, fixtureId: fixture1.id })
+        .flatMap(p => {
+          prediction = p as Prediction;
+          return predictionRepo.findOneOrCreate$({ userId: user1.id, fixtureId: fixture1.id })
+        })
+        .subscribe((p: Prediction) => {     
+          expect(p.toObject()).to.eql(prediction.toObject())
+          expect(p.id).to.equal(prediction.id)
+          done()
+        })
+    })
   })
 })

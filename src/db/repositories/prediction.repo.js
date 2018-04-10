@@ -20,7 +20,7 @@ class PredictionRepository extends base_repo_1.BaseRepository {
         let query = {
             user: userId, season: seasonId, gameRound, hasJoker: true
         };
-        return super.findOne$(query)
+        return this.findOne$(query)
             .flatMap(currentJoker => {
             let newJokerFixtureId;
             if (pick instanceof Array) {
@@ -96,7 +96,21 @@ class PredictionRepository extends base_repo_1.BaseRepository {
         };
     }
     findOneOrCreate$({ userId, fixtureId }) {
-        return rxjs_1.Observable.of({});
+        let query = { user: userId, fixture: fixtureId };
+        return this.findOne$(query)
+            .flatMap(prediction => {
+            if (prediction) {
+                return rxjs_1.Observable.of(prediction);
+            }
+            return this.fixtureRepo.findById$(fixtureId)
+                .flatMap(fixture => {
+                let { slug: fixtureSlug, season, gameRound, odds } = fixture;
+                let pred = { user: userId, fixture: fixtureId, fixtureSlug, season, gameRound, choice: null };
+                let randomMatchScore = this.getRandomMatchScore(odds);
+                pred.choice = randomMatchScore;
+                return this.save$(pred);
+            });
+        });
     }
     findOneAndUpsert$({ userId, fixtureId }, choice) {
         return rxjs_1.Observable.of({});

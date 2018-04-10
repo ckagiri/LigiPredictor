@@ -31,7 +31,7 @@ export class PredictionRepository extends BaseRepository<IPrediction> implements
     let query: any = {
       user: userId, season: seasonId, gameRound, hasJoker: true
     }
-    return super.findOne$(query)
+    return this.findOne$(query)
       .flatMap(currentJoker => {
         let newJokerFixtureId: string;
         if(pick instanceof Array) {
@@ -107,8 +107,22 @@ export class PredictionRepository extends BaseRepository<IPrediction> implements
 	}
 
   findOneOrCreate$({ userId, fixtureId }: { userId: string, fixtureId: string }) {
-    return Observable.of(<IPrediction>{})
-  }  
+    let query = { user: userId, fixture: fixtureId }
+    return this.findOne$(query)
+      .flatMap(prediction => {
+        if(prediction) {
+          return Observable.of(prediction)
+        }
+        return this.fixtureRepo.findById$(fixtureId)
+          .flatMap(fixture => {
+            let { slug: fixtureSlug, season, gameRound, odds } = fixture;
+            let pred = { user: userId, fixture: fixtureId, fixtureSlug, season, gameRound, choice: null }
+            let randomMatchScore = this.getRandomMatchScore(odds);
+            pred.choice = randomMatchScore;
+            return this.save$(pred);
+          })
+      })
+  }
 
   findOneAndUpsert$({ userId, fixtureId }: { userId: string, fixtureId: string }, choice: any) {
     return Observable.of(<IPrediction>{})    

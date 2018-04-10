@@ -9,10 +9,10 @@ var PredictionStatus;
 const { String, Number, Boolean, ObjectId, Mixed } = mongoose_1.Schema.Types;
 const Status = PredictionStatus;
 const predictionSchema = new mongoose_1.Schema({
-    user: { type: ObjectId, ref: 'User', required: true },
+    user: { type: ObjectId, ref: 'User', required: true, index: true },
     fixture: { type: ObjectId, ref: 'Fixture', required: true, index: true },
-    fixtureSlug: { type: String, required: true, trim: true },
-    season: { type: ObjectId, ref: 'Season', index: true },
+    fixtureSlug: { type: String, trim: true },
+    season: { type: ObjectId, ref: 'Season' },
     gameRound: { type: Number },
     choice: {
         goalsHomeTeam: { type: Number },

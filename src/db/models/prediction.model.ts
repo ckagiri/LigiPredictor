@@ -19,7 +19,7 @@ export interface IPrediction extends IEntity {
   points?: ScorePoints;
   status?: PredictionStatus;
   hasJoker?: boolean;
-  jokerAutoPicked?: boolean,  
+  jokerAutoPicked?: boolean;
 }
 
 export interface IPredictionModel extends IPrediction, Document {
@@ -30,10 +30,10 @@ const { String, Number, Boolean, ObjectId, Mixed } = Schema.Types;
 const Status = PredictionStatus;
 
 const predictionSchema = new Schema({
-  user: { type: ObjectId, ref: 'User', required: true	},
-	fixture: { type: ObjectId, ref: 'Fixture', required: true,index: true },
-	fixtureSlug: { type: String, required: true, trim: true },
-	season: { type: ObjectId, ref: 'Season', index: true },
+  user: { type: ObjectId, ref: 'User', required: true, index: true },
+	fixture: { type: ObjectId, ref: 'Fixture', required: true, index: true },
+	fixtureSlug: { type: String, trim: true },
+	season: { type: ObjectId, ref: 'Season' },
   gameRound: { type: Number },
 	choice: {
 		goalsHomeTeam: { type: Number },
