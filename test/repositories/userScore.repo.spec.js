@@ -7,6 +7,8 @@ const league_model_1 = require("../../src/db/models/league.model");
 const season_model_1 = require("../../src/db/models/season.model");
 const team_model_1 = require("../../src/db/models/team.model");
 const fixture_model_1 = require("../../src/db/models/fixture.model");
+const prediction_model_1 = require("../../src/db/models/prediction.model");
+const leaderboard_model_1 = require("../../src/db/models/leaderboard.model");
 const userScore_repo_1 = require("../../src/db/repositories/userScore.repo");
 let userScoreRepo = userScore_repo_1.UserScoreRepository.getInstance();
 let user1, user2, league, season, team1, team2, team3, team4, fixture1, fixture2, user1Pred1, user2Pred1, sBoard, rBoard;
@@ -87,7 +89,7 @@ const kagiri = {
     username: 'kagiri',
     email: 'kagiri@example.com'
 };
-describe.skip('UserScore Repo', function () {
+describe.only('UserScore Repo', function () {
     this.timeout(5000);
     before(done => {
         db.init(index_1.config.testDb.uri, done, { drop: true });
@@ -143,10 +145,41 @@ describe.skip('UserScore Repo', function () {
             .then(fixtures => {
             fixture1 = fixtures[0];
             fixture2 = fixtures[1];
+            let pred1 = {
+                user: user1.id, fixture: fixture1.id, fixtureSlug: fixture1.slug, season: season.id, gameRound: fixture1.gameRound,
+                choice: { goalsHomeTeam: 1, goalsAwayTeam: 0, isComputerGenerated: true }
+            };
+            let pred2 = {
+                user: user1.id, fixture: fixture2.id, fixtureSlug: fixture2.slug, season: season.id, gameRound: fixture2.gameRound,
+                choice: { goalsHomeTeam: 2, goalsAwayTeam: 0, isComputerGenerated: true }
+            };
+            let pred3 = {
+                user: user2.id, fixture: fixture1.id, fixtureSlug: fixture1.slug, season: season.id, gameRound: fixture1.gameRound,
+                choice: { goalsHomeTeam: 3, goalsAwayTeam: 0, isComputerGenerated: true }
+            };
+            return prediction_model_1.PredictionModel.create([pred1, pred2, pred3]);
         })
             .then(predictions => {
+            user1Pred1 = predictions[0];
+            user1Pred1 = predictions[1];
+            user2Pred1 = predictions[2];
+            return leaderboard_model_1.LeaderboardModel.create([
+                {
+                    status: leaderboard_model_1.BoardStatus.UPDATING_SCORES,
+                    boardType: leaderboard_model_1.BoardType.GLOBAL_SEASON,
+                    season: season.id
+                }, {
+                    status: leaderboard_model_1.BoardStatus.REFRESHED,
+                    boardType: leaderboard_model_1.BoardType.GLOBAL_ROUND,
+                    season: season.id,
+                    gameRound: 20
+                }
+            ]);
         })
             .then(leaderboards => {
+            sBoard = leaderboards[0];
+            rBoard = leaderboards[1];
+            done();
         });
     });
     afterEach(done => {
@@ -155,12 +188,16 @@ describe.skip('UserScore Repo', function () {
     after(done => {
         db.close().then(() => { done(); });
     });
-    describe('find and upsert', () => {
+    describe.only('find and upsert', () => {
         it('should create a userScore if it does not exist', done => {
             let leaderboardId = sBoard.id;
+            console.log('l', sBoard);
             let userId = user1.id;
+            console.log('u', user1);
             let fixtureId = fixture1.id;
+            console.log('f', fixture1);
             let predictionId = user1Pred1.id;
+            console.log('p', user1Pred1);
             let points = {
                 points: 7,
                 APoints: 7,
@@ -172,16 +209,21 @@ describe.skip('UserScore Repo', function () {
                 TeamScoreMinusPoints: 0
             };
             let hasJoker = true;
-            userScoreRepo.findOneAndUpsert$(leaderboardId, userId, fixtureId, predictionId, points, hasJoker);
-            done();
+            userScoreRepo.findOneAndUpsert$(leaderboardId, userId, fixtureId, predictionId, points, hasJoker)
+                .subscribe(score => {
+                console.log(score);
+                done();
+            });
         });
-        it('should update a userScore if it exists', done => {
+        xit('should update a userScore if it exists', done => {
             done();
         });
     });
-    it('should find by leaderboard and order by points', done => {
+    xit('should find by leaderboard and order by points', done => {
+        done();
     });
-    it('should find by id and update positions', done => {
+    xit('should find by id and update positions', done => {
+        done();
     });
 });
 //# sourceMappingURL=userScore.repo.spec.js.map

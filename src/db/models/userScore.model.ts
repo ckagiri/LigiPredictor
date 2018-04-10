@@ -2,7 +2,6 @@ import { Schema, Model, model, Document } from 'mongoose';
 
 import { IEntity } from './base.model';
 
-
 export interface IUserScore extends IEntity {
   id?: string;
   leaderboard: string;

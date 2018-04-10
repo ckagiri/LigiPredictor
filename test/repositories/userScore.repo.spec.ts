@@ -9,7 +9,7 @@ import { SeasonModel as Season } from '../../src/db/models/season.model';
 import { TeamModel as Team } from '../../src/db/models/team.model';
 import { FixtureModel as Fixture } from '../../src/db/models/fixture.model';
 import { PredictionModel as Prediction } from '../../src/db/models/prediction.model';
-import { UserScoreModel } from '../../src/db/models/userScore.model';
+import { LeaderboardModel as Leaderboard, BoardStatus, BoardType } from '../../src/db/models/leaderboard.model';
 
 import { ScorePoints } from '../../src/common/score'
 import { UserScoreRepository } from '../../src/db/repositories/userScore.repo';
@@ -103,7 +103,7 @@ const kagiri = {
   email: 'kagiri@example.com'
 }
 
-describe.skip('UserScore Repo', function () {
+describe.only('UserScore Repo', function () {
   this.timeout(5000);
   before(done => {
     db.init(config.testDb.uri, done, { drop: true });
@@ -151,19 +151,42 @@ describe.skip('UserScore Repo', function () {
         id: team4._id
       };
       cheVars.slug = `${team3.slug}-${team4.slug}`;      
-      
       return Fixture.create([manuVmanc, cheVars])
     })
     .then(fixtures => {
-      fixture1 = fixtures[0];
-      fixture2 = fixtures[1];    
-
+      fixture1 = fixtures[0]; fixture2 = fixtures[1];    
+      let pred1 = { 
+        user: user1.id, fixture: fixture1.id, fixtureSlug: fixture1.slug, season: season.id, gameRound: fixture1.gameRound, 
+        choice: { goalsHomeTeam: 1, goalsAwayTeam: 0, isComputerGenerated: true }
+      }
+      let pred2 = { 
+        user: user1.id, fixture: fixture2.id, fixtureSlug: fixture2.slug, season: season.id, gameRound: fixture2.gameRound, 
+        choice: { goalsHomeTeam: 2, goalsAwayTeam: 0, isComputerGenerated: true }
+      }
+      let pred3 = {
+        user: user2.id, fixture: fixture1.id, fixtureSlug: fixture1.slug, season: season.id, gameRound: fixture1.gameRound, 
+        choice: { goalsHomeTeam: 3, goalsAwayTeam: 0, isComputerGenerated: true }
+      }
+      return Prediction.create([pred1, pred2, pred3])
     })
     .then(predictions => {
-
+      user1Pred1 = predictions[0]; user1Pred1 = predictions[1]; user2Pred1 = predictions[2];
+      return Leaderboard.create([
+        {
+          status: BoardStatus.UPDATING_SCORES,
+          boardType: BoardType.GLOBAL_SEASON,
+          season: season.id
+        }, {
+          status: BoardStatus.REFRESHED,
+          boardType: BoardType.GLOBAL_ROUND,
+          season: season.id,
+          gameRound: 20         
+        }
+      ])
     })
     .then(leaderboards => {
-
+      sBoard = leaderboards[0]; rBoard = leaderboards[1];
+      done();
     })
   })
   afterEach(done => { 
@@ -173,7 +196,7 @@ describe.skip('UserScore Repo', function () {
     db.close().then(() => { done(); })
   })
 
-  describe('find and upsert', () => {
+  describe.only('find and upsert', () => {
     it('should create a userScore if it does not exist', done => {
       let leaderboardId = sBoard.id;
       let userId = user1.id;
@@ -191,18 +214,21 @@ describe.skip('UserScore Repo', function () {
       }
       let hasJoker = true;
       userScoreRepo.findOneAndUpsert$(leaderboardId, userId, fixtureId, predictionId, points, hasJoker)
-      done();
+        .subscribe(score => {
+          console.log(score);
+          done();          
+        })
     })
-    it('should update a userScore if it exists', done => {
+    xit('should update a userScore if it exists', done => {
       done();
     });
   })
 
-  it('should find by leaderboard and order by points', done => {
-
+  xit('should find by leaderboard and order by points', done => {
+    done()
   })
 
-  it('should find by id and update positions', done => {
-
+  xit('should find by id and update positions', done => {
+    done()
   })
 })
