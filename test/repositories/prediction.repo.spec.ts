@@ -3,6 +3,8 @@ import { expect } from 'chai';
 import { Types } from 'mongoose';
 const ObjectId = Types.ObjectId;
 
+import * as db from '../../src/db/index';
+import { config } from '../../src/config/environment/index';
 import { UserModel as User } from '../../src/db/models/user.model';
 import { LeagueModel as League } from '../../src/db/models/league.model';
 import { SeasonModel as Season } from '../../src/db/models/season.model';
@@ -10,13 +12,9 @@ import { TeamModel as Team } from '../../src/db/models/team.model';
 import { FixtureModel as Fixture } from '../../src/db/models/fixture.model';
 import { IPrediction, IPredictionModel, PredictionModel as Prediction } from '../../src/db/models/prediction.model';
 
-import { UserRepository } from '../../src/db/repositories/user.repo';
-import { PredictionRepository } from '../../src/db/repositories/prediction.repo';
-import * as db from '../../src/db/index';
-import { config } from '../../src/config/environment/index'
 import { ScorePoints } from '../../src/common/score'
+import { PredictionRepository } from '../../src/db/repositories/prediction.repo';
 
-let userRepo = UserRepository.getInstance();
 let predictionRepo = PredictionRepository.getInstance();
 let user1: any, user2: any, league: any, season: any, team1: any, team2: any, 
 team3: any, team4: any, fixture1: any, fixture2: any;

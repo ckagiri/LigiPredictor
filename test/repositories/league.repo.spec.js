@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
-const league_repo_1 = require("../../src/db/repositories/league.repo");
 const db = require("../../src/db/index");
 const index_1 = require("../../src/config/environment/index");
 const footballApiProvider_1 = require("../../src/common/footballApiProvider");
+const league_repo_1 = require("../../src/db/repositories/league.repo");
 const league = {
     name: 'English Premier League',
     slug: 'english_premier_league',

@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 
-import { TeamRepository } from '../../src/db/repositories/team.repo';
 import { config } from '../../src/config/environment/index'
 import * as db from '../../src/db/index';
 import { FootballApiProvider as ApiProvider } from '../../src/common/footballApiProvider';
+import { TeamRepository } from '../../src/db/repositories/team.repo';
 
 const manu = {
   name: 'Manchester United FC',
@@ -68,7 +68,7 @@ describe('teamRepo', function() {
       }, (err) => { console.log(err); done(); });
   });
 
-  it('should findByName$ using name', (done) => {
+  it('should findByName using name', (done) => {
     let teamRepo = TeamRepository.getInstance(ApiProvider.API_FOOTBALL_DATA);
   
     teamRepo.insert$(manu)
@@ -81,7 +81,7 @@ describe('teamRepo', function() {
       }, (err) => { console.log(err); done(); });
   })
 
-  it('should findByName$ using shortName', (done) => {
+  it('should findByName using shortName', (done) => {
     let teamRepo = TeamRepository.getInstance(ApiProvider.API_FOOTBALL_DATA);
     
     teamRepo.insert$(manu)
@@ -95,7 +95,7 @@ describe('teamRepo', function() {
       }, (err) => { console.log(err); done(); });
   })
 
-  it('should findByName$ using alias', (done) => {
+  it('should findByName using alias', (done) => {
     let teamRepo = TeamRepository.getInstance(ApiProvider.API_FOOTBALL_DATA);
     
     teamRepo.insert$(manu)
@@ -124,7 +124,7 @@ describe('teamRepo', function() {
       }, (err) => { console.log(err); done(); });
   })
 
-  it('should retain external reference when findByNameAndUpsert', (done) => {
+  it('should retain external reference when doing findByNameAndUpsert', (done) => {
     let teamRepo = TeamRepository.getInstance(ApiProvider.API_FOOTBALL_DATA);
     manu['externalReference'] = { 'SomeOtherApi': { id: 'someExternalId' } }
     teamRepo.insert$(manu)
@@ -139,7 +139,7 @@ describe('teamRepo', function() {
       }, (err) => { console.log(err); done(); });
   })
    
-  it('should findEachByNameAndUpdate', (done) => {
+  it('should findEachByNameAndUpert', (done) => {
     let teamRepo = TeamRepository.getInstance(ApiProvider.LIGI);
     
     teamRepo.insertMany$([manu, manc])

@@ -1,13 +1,14 @@
 import { Observable } from 'rxjs'
 import { expect } from 'chai';
 
-import { LeagueRepository } from '../../src/db/repositories/league.repo';
-import { SeasonRepository } from '../../src/db/repositories/season.repo';
-import { TeamRepository } from '../../src/db/repositories/team.repo';
-import { FixtureRepository } from '../../src/db/repositories/fixture.repo';
 import * as db from '../../src/db/index';
 import { config } from '../../src/config/environment/index'
 import { FootballApiProvider as ApiProvider } from '../../src/common/footballApiProvider';
+import { LeagueModel as League } from '../../src/db/models/league.model';
+import { SeasonModel as Season } from '../../src/db/models/season.model';
+import { TeamModel as Team } from '../../src/db/models/team.model';
+
+import { FixtureRepository } from '../../src/db/repositories/fixture.repo';
 
 const epl = {
   name: 'English Premier League',
@@ -23,7 +24,8 @@ let epl17 = {
   seasonEnd: '2018-05-13T16:00:00+0200',
   currentMatchRound: 20,
   currentGameRound: 20,
-  leagueId: null
+  league: null,
+  externalReference: null
 }
 
 const afdEpl17 = {
@@ -86,35 +88,32 @@ const afd_manuVmanc = {
     "awayWin": 3.4
   }
 }
-let leagueRepo = LeagueRepository.getInstance(ApiProvider.API_FOOTBALL_DATA);
-let seasonRepo = SeasonRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
-let teamRepo = TeamRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
 let fixtureRepo = FixtureRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
 let ligiFixtureRepo = FixtureRepository.getInstance(ApiProvider.LIGI)
 let league: any, season: any, team1: any, team2: any, fixture: any;
-let Observable$: any;
 
 describe('FixtureRepo', function() {
   this.timeout(5000);
   before((done) => {
     db.init(config.testDb.uri, done, { drop: true });
   })
-  beforeEach(() => {
-    league = season = team1 = team2 = fixture = null;
-    Observable$ = Observable.zip(
-      leagueRepo.insert$(epl),
-      teamRepo.insert$(manu),
-      teamRepo.insert$(manc))
-      .flatMap((arr: any[]) => {
-        league = arr[0];
-        team1 = arr[1];
-        team2 = arr[2];
+  beforeEach((done) => {
+    League.create(epl)
+      .then(l => {
+        league = l;
+        let { name, slug, id } = l;
+        epl17.league = { name, slug, id };
         epl17['league'] = { id: league.id, name: league.name, slug: league.slug }
         epl17['externalReference'] = { [ApiProvider.API_FOOTBALL_DATA]: { id: afdEpl17.id } }
-        return seasonRepo.insert$(epl17)
-          .map(s => {
-            season = s;
-          })
+        return Season.create(epl17);
+      })
+      .then(s => {
+        season = s;
+        return Team.create([manu, manc])
+      })
+      .then(teams => {
+        team1 = teams[0]; team2 = teams[1]; 
+        done();
       })
   })
   afterEach((done) => {
@@ -128,17 +127,12 @@ describe('FixtureRepo', function() {
     })
   })
   it('should save a fixture', (done) => {
-    Observable$
-      .flatMap(_ => {
-        manuVmanc.seasonId = season.id;
-        manuVmanc.homeTeamId = team1.id;
-        manuVmanc.awayTeamId = team2.id;
-        return ligiFixtureRepo.save$(manuVmanc)
-          .map(f => {
-            fixture = f;
-          })
-      })
-      .subscribe(_ => {
+    manuVmanc.seasonId = season.id;
+    manuVmanc.homeTeamId = team1.id;
+    manuVmanc.awayTeamId = team2.id;
+    
+    ligiFixtureRepo.save$(manuVmanc)
+      .subscribe(fixture => {
         expect(fixture.season.toString()).to.equal(season.id)
         expect(fixture.slug).to.equal(`${team1.slug}-${team2.slug}`)
         done();
@@ -146,14 +140,8 @@ describe('FixtureRepo', function() {
   })
 
   it('should findEach By SeasonAndTeams AndUpdateOrCreate', (done) => {
-    Observable$    
-      .flatMap(_ => {
-        return fixtureRepo.findBySeasonAndTeamsAndUpsert$(afd_manuVmanc)
-          .map(f => {
-            fixture = f;
-          })
-      })
-      .subscribe(_ => {
+    fixtureRepo.findBySeasonAndTeamsAndUpsert$(afd_manuVmanc)
+      .subscribe(fixture => {
         expect(fixture.season.toString()).to.equal(season.id)
         expect(fixture.slug).to.equal(`${team1.slug}-${team2.slug}`)
         done();
@@ -161,10 +149,7 @@ describe('FixtureRepo', function() {
   })
 
   it('should find finished fixtures with pending predictions', (done) => {
-    Observable$
-      .flatMap(_ => {
-        return fixtureRepo.findBySeasonAndTeamsAndUpsert$(afd_manuVmanc)
-      })
+    fixtureRepo.findBySeasonAndTeamsAndUpsert$(afd_manuVmanc)
       .flatMap(_ => {
         return fixtureRepo.findAllFinishedWithPendingPredictions$(season.id);
       })
@@ -175,13 +160,11 @@ describe('FixtureRepo', function() {
   })
 
   it('should find selectable fixtures for game round', (done) => {
-    Observable$
-      .flatMap(_ => {
-        manuVmanc.seasonId = season.id;
-        manuVmanc.homeTeamId = team1.id;
-        manuVmanc.awayTeamId = team2.id;
-        return ligiFixtureRepo.save$(manuVmanc)
-      })
+    manuVmanc.seasonId = season.id;
+    manuVmanc.homeTeamId = team1.id;
+    manuVmanc.awayTeamId = team2.id;
+    
+    ligiFixtureRepo.save$(manuVmanc)
       .flatMap(_ => {
         return fixtureRepo.findSelectableFixtures$(season.id, season.currentGameRound)
       })

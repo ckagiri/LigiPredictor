@@ -1,10 +1,12 @@
 import { expect } from 'chai';
 
-import { LeagueRepository } from '../../src/db/repositories/league.repo';
-import { ISeasonRepository, SeasonRepository } from '../../src/db/repositories/season.repo';
 import { config } from '../../src/config/environment/index'
 import * as db from '../../src/db/index';
+import { LeagueModel as League } from '../../src/db/models/league.model';
+import { SeasonModel as Season } from '../../src/db/models/season.model';
+
 import { FootballApiProvider as ApiProvider } from '../../src/common/footballApiProvider';
+import { ISeasonRepository, SeasonRepository } from '../../src/db/repositories/season.repo';
 
 const epl = {
   name: 'English Premier League',
@@ -19,6 +21,7 @@ let epl17 = {
   seasonStart: '2017-08-11T00:00:00+0200',
   seasonEnd: '2018-05-13T16:00:00+0200',
   currentMatchRound: 20,
+  league: null,
   leagueId: null
 }
 
@@ -53,11 +56,19 @@ const afdEpl16 = {
   numberOfTeams: 20,
   numberOfGames: 380
 }
+let league: any;
 
 describe('seasonRepo', function() {
   this.timeout(5000);
   before((done) => {
     db.init(config.testDb.uri, done, { drop: true });
+  })
+  beforeEach(done => {
+    League.create(epl)
+    .then(l => {
+      league = l;
+      done();
+    })
   })
   afterEach((done) => {
     db.drop().then(() => {
@@ -71,14 +82,10 @@ describe('seasonRepo', function() {
   })
 
   it('should save new season', (done) => {
-    let leagueRepo = LeagueRepository.getInstance(ApiProvider.LIGI);
     let seasonRepo = SeasonRepository.getInstance(ApiProvider.LIGI)
-
-    leagueRepo.save$(epl)
-      .flatMap((l: any) => {
-        epl17.leagueId = l._id;
-        return seasonRepo.save$(epl17);
-      })
+    epl17.leagueId = league._id;
+    
+    seasonRepo.save$(epl17)
       .subscribe((data: any) => {
         let { league, name, slug, year } = data
         expect(name).to.equal(epl17.name)
@@ -91,19 +98,12 @@ describe('seasonRepo', function() {
    });
 
    it('should find by externalId', (done) => {
-    let leagueRepo = LeagueRepository.getInstance(ApiProvider.LIGI);
     let seasonRepo = SeasonRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
-        
-    leagueRepo.save$(epl)
-      .flatMap((l: any) => {
-        epl17['league'] = { id: l._id, name: l.name, slug: l.slug };
-        epl17['externalReference'] = {
-          [ApiProvider.API_FOOTBALL_DATA]: {
-            id: afdEpl17.id
-          }
-        }
-        return seasonRepo.insert$(epl17);
-      })
+    let { _id, name, slug } = league;
+    epl17['league'] = { id: _id, name, slug };
+    epl17['externalReference'] = { [ApiProvider.API_FOOTBALL_DATA]: { id: afdEpl17.id } }
+    
+    seasonRepo.insert$(epl17)
       .flatMap(_ => {
         return seasonRepo.findByExternalId$(afdEpl17.id)
       })
@@ -114,24 +114,13 @@ describe('seasonRepo', function() {
   })
 
   it('should find by externalIds', (done) => {
-    let leagueRepo = LeagueRepository.getInstance(ApiProvider.LIGI);
     let seasonRepo = SeasonRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
+    let { _id, name, slug } = league    
+    epl17['league'] = epl16['league'] = { id: _id, name, slug };
+    epl17['externalReference'] = { [ApiProvider.API_FOOTBALL_DATA]: { id: afdEpl17.id } }
+    epl16['externalReference'] = { [ApiProvider.API_FOOTBALL_DATA]: { id: afdEpl16.id } }
     
-    leagueRepo.save$(epl)
-      .flatMap((l: any) => {
-        epl17['league'] = epl16['league'] = { id: l._id, name: l.name, slug: l.slug };
-        epl17['externalReference'] = {
-          [ApiProvider.API_FOOTBALL_DATA]: {
-            id: afdEpl17.id
-          }
-        }
-        epl16['externalReference'] = {
-          [ApiProvider.API_FOOTBALL_DATA]: {
-            id: afdEpl16.id
-          }
-        }
-        return seasonRepo.insertMany$([epl16, epl17]);
-      })
+    seasonRepo.insertMany$([epl16, epl17])
       .flatMap(_ => {
         return seasonRepo.findByExternalIds$([afdEpl16.id, afdEpl17.id]);
       })
@@ -143,18 +132,13 @@ describe('seasonRepo', function() {
   })
 
   it('should findByIdAndUpdate currentMatchRound', (done) => {
-    let leagueRepo = LeagueRepository.getInstance(ApiProvider.LIGI);
     let seasonRepo = SeasonRepository.getInstance(ApiProvider.LIGI)
-
-    leagueRepo.save$(epl)
-      .flatMap((l: any) => {
-        epl17.leagueId = l._id;
-        return seasonRepo.save$(epl17);
-      })
+    epl17.leagueId = league._id;
+    
+    seasonRepo.save$(epl17)
       .flatMap(s => {
         let update = { currentMatchRound: 21 };
-
-        return seasonRepo.findByIdAndUpdate$(s['_id'], update);
+        return seasonRepo.findByIdAndUpdate$(s.id, update);
       })
       .subscribe(s => {
         expect(s.currentMatchRound).to.equal(21);
@@ -163,47 +147,31 @@ describe('seasonRepo', function() {
   })
 
   it('should findByExternalIdAndUpdate currentMatchRound', (done) => {
-    let leagueRepo = LeagueRepository.getInstance(ApiProvider.LIGI);
     let seasonRepo = SeasonRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
-
-    leagueRepo.save$(epl)
-    .flatMap((l: any) => {
-      epl17['league'] = { id: l._id, name: l.name, slug: l.slug };
-      epl17['externalReference'] = {
-        [ApiProvider.API_FOOTBALL_DATA]: {
-          id: afdEpl17.id
-        }
-      }
-      return seasonRepo.insert$(epl17);
-    })
-    .flatMap(s => {
-      afdEpl17.currentMatchday = 21
-
-      return seasonRepo.findByExternalIdAndUpdate$(afdEpl17);
-    })
-    .subscribe(s => {
-      expect(s.currentMatchRound).to.equal(21);
-      done();
-    })    
+    let { _id, name, slug } = league;
+    epl17['league'] = { id: _id, name, slug };
+    epl17['externalReference'] = { [ApiProvider.API_FOOTBALL_DATA]: { id: afdEpl17.id } }
+    
+    seasonRepo.insert$(epl17)
+      .flatMap(s => {
+        afdEpl17.currentMatchday = 21;
+        return seasonRepo.findByExternalIdAndUpdate$(afdEpl17);
+      })
+      .subscribe(s => {
+        expect(s.currentMatchRound).to.equal(21);
+        done();
+      })    
   })
 
   it('should findByExternalIdAndUpdate currentMatchRound (version2)', (done) => {
-    let leagueRepo = LeagueRepository.getInstance(ApiProvider.LIGI);
     let seasonRepo = SeasonRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
-
-    leagueRepo.save$(epl)
-      .flatMap((l: any) => {
-        epl17['league'] = { id: l._id, name: l.name, slug: l.slug };
-        epl17['externalReference'] = {
-          [ApiProvider.API_FOOTBALL_DATA]: {
-            id: afdEpl17.id
-          }
-        }
-        return seasonRepo.insert$(epl17);
-      })
+    let { _id, name, slug } = league;
+    epl17['league'] = { id: _id, name, slug };
+    epl17['externalReference'] = { [ApiProvider.API_FOOTBALL_DATA]: { id: afdEpl17.id } }
+    
+    seasonRepo.insert$(epl17)
       .flatMap(s => {
         let update = { currentMatchRound: 21 };      
-
         return seasonRepo.findByExternalIdAndUpdate$(afdEpl17.id, update);
       })
       .subscribe(s => {
@@ -213,25 +181,17 @@ describe('seasonRepo', function() {
   })
 
   it('should findByExternalIdAndUpdate while preserving ExternalReference', (done) => {
-    let leagueRepo = LeagueRepository.getInstance(ApiProvider.LIGI);
     let seasonRepo = SeasonRepository.getInstance(ApiProvider.API_FOOTBALL_DATA)
-
-    leagueRepo.save$(epl)
-      .flatMap((l: any) => {
-        epl17['league'] = { id: l._id, name: l.name, slug: l.slug };
-        epl17['externalReference'] = {
-          ['SomeOtherApi']: {
-            id: 'someExternalId'
-          },
-          [ApiProvider.API_FOOTBALL_DATA]: {
-            id: afdEpl17.id
-          }
-        }
-        return seasonRepo.insert$(epl17);
-      })
+    let { _id, name, slug } = league;
+    epl17['league'] = { id: _id, name, slug };
+    epl17['externalReference'] = { 
+      ['SomeOtherApi']: { id: 'someExternalId' },
+      [ApiProvider.API_FOOTBALL_DATA]: { id: afdEpl17.id }
+    }
+    
+    seasonRepo.insert$(epl17)
       .flatMap(s => {        
         afdEpl17.currentMatchday = 21
-        
         return seasonRepo.findByExternalIdAndUpdate$(afdEpl17);
       })
       .subscribe(s => {

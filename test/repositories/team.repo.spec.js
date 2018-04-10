@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const chai_1 = require("chai");
-const team_repo_1 = require("../../src/db/repositories/team.repo");
 const index_1 = require("../../src/config/environment/index");
 const db = require("../../src/db/index");
 const footballApiProvider_1 = require("../../src/common/footballApiProvider");
+const team_repo_1 = require("../../src/db/repositories/team.repo");
 const manu = {
     name: 'Manchester United FC',
     shortName: 'Man United',
@@ -61,7 +61,7 @@ describe('teamRepo', function () {
             done();
         }, (err) => { console.log(err); done(); });
     });
-    it('should findByName$ using name', (done) => {
+    it('should findByName using name', (done) => {
         let teamRepo = team_repo_1.TeamRepository.getInstance(footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA);
         teamRepo.insert$(manu)
             .flatMap(_ => {
@@ -72,7 +72,7 @@ describe('teamRepo', function () {
             done();
         }, (err) => { console.log(err); done(); });
     });
-    it('should findByName$ using shortName', (done) => {
+    it('should findByName using shortName', (done) => {
         let teamRepo = team_repo_1.TeamRepository.getInstance(footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA);
         teamRepo.insert$(manu)
             .flatMap(_ => {
@@ -83,7 +83,7 @@ describe('teamRepo', function () {
             done();
         }, (err) => { console.log(err); done(); });
     });
-    it('should findByName$ using alias', (done) => {
+    it('should findByName using alias', (done) => {
         let teamRepo = team_repo_1.TeamRepository.getInstance(footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA);
         teamRepo.insert$(manu)
             .flatMap(_ => {
@@ -106,7 +106,7 @@ describe('teamRepo', function () {
             done();
         }, (err) => { console.log(err); done(); });
     });
-    it('should retain external reference when findByNameAndUpsert', (done) => {
+    it('should retain external reference when doing findByNameAndUpsert', (done) => {
         let teamRepo = team_repo_1.TeamRepository.getInstance(footballApiProvider_1.FootballApiProvider.API_FOOTBALL_DATA);
         manu['externalReference'] = { 'SomeOtherApi': { id: 'someExternalId' } };
         teamRepo.insert$(manu)
@@ -120,7 +120,7 @@ describe('teamRepo', function () {
             done();
         }, (err) => { console.log(err); done(); });
     });
-    it('should findEachByNameAndUpdate', (done) => {
+    it('should findEachByNameAndUpert', (done) => {
         let teamRepo = team_repo_1.TeamRepository.getInstance(footballApiProvider_1.FootballApiProvider.LIGI);
         teamRepo.insertMany$([manu, manc])
             .flatMap(_ => {

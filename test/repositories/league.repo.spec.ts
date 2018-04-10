@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 
-import { LeagueRepository } from '../../src/db/repositories/league.repo';
 import * as db from '../../src/db/index';
 import { config } from '../../src/config/environment/index'
 import { FootballApiProvider as ApiProvider } from '../../src/common/footballApiProvider';
+import { LeagueRepository } from '../../src/db/repositories/league.repo';
 
 const league = {
   name: 'English Premier League',

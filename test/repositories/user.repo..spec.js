@@ -32,7 +32,6 @@ describe('User Repo', function () {
     it('should find all users', (done) => {
         userRepo.findAll$()
             .subscribe(users => {
-            console.log(users);
             chai_1.expect(users).to.have.length(2);
             done();
         });

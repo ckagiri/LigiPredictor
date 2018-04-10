@@ -1,4 +1,3 @@
-import { Observable } from 'rxjs'
 import { expect } from 'chai';
 
 import * as db from '../../src/db/index';
