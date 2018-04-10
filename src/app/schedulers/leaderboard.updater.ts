@@ -94,7 +94,7 @@ export class LeaderboardUpdater implements ILeaderboardUpdater {
         let fixtureId = fixture.id
         let leaderboardId = leaderboard.id
         let predictionId = prediction.id
-        let { points, hasJoker } = prediction;
+        let { scorePoints: points, hasJoker } = prediction;
         return this.userScoreRepo.findOneAndUpsert$(
           leaderboardId, userId, fixtureId, predictionId, points, hasJoker)
       })

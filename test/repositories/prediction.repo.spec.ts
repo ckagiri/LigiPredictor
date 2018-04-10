@@ -8,12 +8,13 @@ import { LeagueModel as League } from '../../src/db/models/league.model';
 import { SeasonModel as Season } from '../../src/db/models/season.model';
 import { TeamModel as Team } from '../../src/db/models/team.model';
 import { FixtureModel as Fixture } from '../../src/db/models/fixture.model';
-import { IPredictionModel as Prediction } from '../../src/db/models/prediction.model';
+import { IPrediction, IPredictionModel as Prediction } from '../../src/db/models/prediction.model';
 
 import { UserRepository } from '../../src/db/repositories/user.repo';
 import { PredictionRepository } from '../../src/db/repositories/prediction.repo';
 import * as db from '../../src/db/index';
 import { config } from '../../src/config/environment/index'
+import { ScorePoints } from '../../src/common/score'
 
 let userRepo = UserRepository.getInstance();
 let predictionRepo = PredictionRepository.getInstance();
@@ -206,6 +207,29 @@ describe('Prediction Repo', function() {
           expect(p.id).to.equal(prediction.id)
           done()
         })
+    })
+  })
+
+  it('should findById And update score', done => {
+    let scorePoints: ScorePoints;
+    predictionRepo.findOneOrCreate$({ userId: user1.id, fixtureId: fixture1.id })
+    .flatMap(p => {
+      scorePoints = {
+        points: 7,
+        APoints: 7,
+        BPoints: 0,
+        MatchOutcomePoints: 4,  
+        TeamScorePlusPoints: 3,
+        GoalDifferencePoints: 0,
+        ExactScorePoints: 0,
+        TeamScoreMinusPoints: 0
+      }
+      return predictionRepo.findByIdAndUpdate$(p.id, { scorePoints})
+    })
+    .subscribe((p: Prediction) => {
+      let pred = p.toObject() as IPrediction;
+      expect(pred.scorePoints).to.eql(scorePoints)
+      done();
     })
   })
 })

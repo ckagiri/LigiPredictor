@@ -34,11 +34,11 @@ export class DocumentDao<T extends Document> {
     return this._model.findById(id)
   }
   
-  findByIdAndUpdate(id: string, update?: any, options: any = { overwrite: false, new: true }) {
+  findByIdAndUpdate(id: string, update: any, options: any = { overwrite: false, new: true }) {
     return this._model.findByIdAndUpdate(id, update, options);
   }
 
-  findOneAndUpdate(conditions: any, update?: any, options: any = { overwrite: false, new: true }){
+  findOneAndUpdate(conditions: any, update: any, options: any = { overwrite: false, new: true }){
     return this._model.findOneAndUpdate(conditions, update, options);
   }
 

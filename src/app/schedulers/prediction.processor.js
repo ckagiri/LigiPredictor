@@ -14,7 +14,7 @@ class PredictionProcessor {
         this.predictionCalculator = predictionCalculator;
     }
     static getInstance() {
-        return new PredictionProcessor(fixture_repo_1.FixtureRepository.getInstance(footballApiProvider_1.FootballApiProvider.LIGI), user_repo_1.UserRepository.getInstance(), prediction_repo_1.PredictionRepository.getInstance(), new prediction_calculator_1.PredictionCalculator());
+        return new PredictionProcessor(fixture_repo_1.FixtureRepository.getInstance(footballApiProvider_1.FootballApiProvider.LIGI), user_repo_1.UserRepository.getInstance(), prediction_repo_1.PredictionRepository.getInstance(), prediction_calculator_1.PredictionCalculator.getInstance());
     }
     getPredictions$(fixture) {
         let { season: seasonId, gameRound } = fixture;

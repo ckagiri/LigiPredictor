@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { IFixtureRepository, FixtureRepository }  from '../../db/repositories/fixture.repo';
 import { IUserRepository, UserRepository }  from '../../db/repositories/user.repo';
 import { IPredictionRepository, PredictionRepository }  from '../../db/repositories/prediction.repo';
-import { IPredictionCalculator, PredictionCalculator } from './prediction.calculator';
+import { PredictionCalculator } from './prediction.calculator';
 
 import { IFixture }  from '../../db/models/fixture.model';
 import { IPrediction }  from '../../db/models/prediction.model';
@@ -20,13 +20,13 @@ export class PredictionProcessor implements IPredictionProcessor {
       FixtureRepository.getInstance(ApiProvider.LIGI),
       UserRepository.getInstance(),
       PredictionRepository.getInstance(),
-      new PredictionCalculator());
+      PredictionCalculator.getInstance());
   }
   constructor(
     private fixtureRepo: IFixtureRepository, 
     private userRepo: IUserRepository,
     private predictionRepo: IPredictionRepository,
-    private predictionCalculator: IPredictionCalculator
+    private predictionCalculator: PredictionCalculator
     ) { }
 
   getPredictions$(fixture: IFixture) {

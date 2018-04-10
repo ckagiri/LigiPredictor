@@ -16,7 +16,7 @@ export interface IPrediction extends IEntity {
   season?: string;
   gameRound?: number;
   choice: Score;
-  points?: ScorePoints;
+  scorePoints?: ScorePoints;
   status?: PredictionStatus;
   hasJoker?: boolean;
   jokerAutoPicked?: boolean;
@@ -43,13 +43,13 @@ const predictionSchema = new Schema({
 	timestamp: { type: Schema.Types.Date,	default: Date.now() },
 	scorePoints: {
     points: { type: Number },
-    pointsFor: { type: Number },
-    pointsAgainst: { type: Number },
-    MatchOutcomePoints: { type: Number },
+    APoints: { type: Number },
+    BPoints: { type: Number },
+    MatchOutcomePoints: { type: Number },  
+    TeamScorePlusPoints: { type: Number },
     GoalDifferencePoints: { type: Number },
     ExactScorePoints: { type: Number },
-    ScoreDifferencePoints: { type: Number },
-    TeamScorePoints: { type: Number }
+    TeamScoreMinusPoints: { type: Number }
   },
 	hasJoker: { type: Boolean, default: false },
 	jokerAutoPicked: { type: Boolean, default: false },

@@ -193,5 +193,27 @@ describe('Prediction Repo', function () {
             });
         });
     });
+    it('should findById And update score', done => {
+        let scorePoints;
+        predictionRepo.findOneOrCreate$({ userId: user1.id, fixtureId: fixture1.id })
+            .flatMap(p => {
+            scorePoints = {
+                points: 7,
+                APoints: 7,
+                BPoints: 0,
+                MatchOutcomePoints: 4,
+                TeamScorePlusPoints: 3,
+                GoalDifferencePoints: 0,
+                ExactScorePoints: 0,
+                TeamScoreMinusPoints: 0
+            };
+            return predictionRepo.findByIdAndUpdate$(p.id, { scorePoints });
+        })
+            .subscribe((p) => {
+            let pred = p.toObject();
+            chai_1.expect(pred.scorePoints).to.eql(scorePoints);
+            done();
+        });
+    });
 });
 //# sourceMappingURL=prediction.repo.spec.js.map

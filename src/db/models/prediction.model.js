@@ -22,13 +22,13 @@ const predictionSchema = new mongoose_1.Schema({
     timestamp: { type: mongoose_1.Schema.Types.Date, default: Date.now() },
     scorePoints: {
         points: { type: Number },
-        pointsFor: { type: Number },
-        pointsAgainst: { type: Number },
+        APoints: { type: Number },
+        BPoints: { type: Number },
         MatchOutcomePoints: { type: Number },
+        TeamScorePlusPoints: { type: Number },
         GoalDifferencePoints: { type: Number },
         ExactScorePoints: { type: Number },
-        ScoreDifferencePoints: { type: Number },
-        TeamScorePoints: { type: Number }
+        TeamScoreMinusPoints: { type: Number }
     },
     hasJoker: { type: Boolean, default: false },
     jokerAutoPicked: { type: Boolean, default: false },
