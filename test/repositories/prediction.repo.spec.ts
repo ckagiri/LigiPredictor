@@ -8,7 +8,7 @@ import { LeagueModel as League } from '../../src/db/models/league.model';
 import { SeasonModel as Season } from '../../src/db/models/season.model';
 import { TeamModel as Team } from '../../src/db/models/team.model';
 import { FixtureModel as Fixture } from '../../src/db/models/fixture.model';
-import { IPrediction, IPredictionModel } from '../../src/db/models/prediction.model';
+import { IPrediction, IPredictionModel, PredictionModel as Prediction } from '../../src/db/models/prediction.model';
 
 import { UserRepository } from '../../src/db/repositories/user.repo';
 import { PredictionRepository } from '../../src/db/repositories/prediction.repo';
@@ -183,7 +183,21 @@ describe('Prediction Repo', function (){
   })
 
   it('should findOne prediction by user and fixture', done => {
-    done();
+    let prediction: IPrediction;
+    let { slug: fixtureSlug, season, gameRound, odds, id: fixtureId } = fixture1;
+    let pred = { 
+      user: user1.id, fixture: fixtureId, fixtureSlug, season, gameRound, 
+      choice: { goalsHomeTeam: 0, goalsAwayTeam: 0, isComputerGenerated: true }
+    }
+    Prediction.create(pred)
+      .then((p) => {
+        prediction = p;
+        return predictionRepo.findOne$({ userId: user1.id, fixtureId: fixture1.id }).toPromise()
+      })
+      .then(p => {
+        expect(p.id).to.equal(prediction.id);
+        done();        
+      })
   })
 
   describe('findOneOrCreate prediction', () => {

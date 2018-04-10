@@ -8,7 +8,7 @@ export interface ILeaderboard extends IEntity {
   year?: number;
   month?: number;
   gameRound?: number;
-  boardStatus?: BoardStatus;
+  status?: BoardStatus;
   boardType?: BoardType;
   userCount?: number;
   lastStatusUpdate?: Date;
@@ -32,16 +32,17 @@ export enum BoardType {
 }
 
 const { Number, String, ObjectId } = Schema.Types;
+const Status = BoardStatus;
 
 const leaderboardSchema = new Schema({
   season: { type: ObjectId, ref: "Season", index: true },
   gameRound: { type: Number, index: true },
   year: { type: Number, index: true },
   month: { type: Number, index: true },
-  boardStatus: { 
+  status: { 
     type: String,
-    enum: [BoardStatus.REFRESHED, BoardStatus.UPDATING_SCORES, BoardStatus.UPDATING_RANKINGS],
-    default: BoardStatus.REFRESHED
+    enum: [Status.REFRESHED, Status.UPDATING_SCORES, Status.UPDATING_RANKINGS],
+    default: Status.REFRESHED
   },
   boardType: {
     type: String,

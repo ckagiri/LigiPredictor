@@ -8,6 +8,7 @@ const league_model_1 = require("../../src/db/models/league.model");
 const season_model_1 = require("../../src/db/models/season.model");
 const team_model_1 = require("../../src/db/models/team.model");
 const fixture_model_1 = require("../../src/db/models/fixture.model");
+const prediction_model_1 = require("../../src/db/models/prediction.model");
 const user_repo_1 = require("../../src/db/repositories/user.repo");
 const prediction_repo_1 = require("../../src/db/repositories/prediction.repo");
 const db = require("../../src/db/index");
@@ -168,7 +169,21 @@ describe('Prediction Repo', function () {
         });
     });
     it('should findOne prediction by user and fixture', done => {
-        done();
+        let prediction;
+        let { slug: fixtureSlug, season, gameRound, odds, id: fixtureId } = fixture1;
+        let pred = {
+            user: user1.id, fixture: fixtureId, fixtureSlug, season, gameRound,
+            choice: { goalsHomeTeam: 0, goalsAwayTeam: 0, isComputerGenerated: true }
+        };
+        prediction_model_1.PredictionModel.create(pred)
+            .then((p) => {
+            prediction = p;
+            return predictionRepo.findOne$({ userId: user1.id, fixtureId: fixture1.id }).toPromise();
+        })
+            .then(p => {
+            chai_1.expect(p.id).to.equal(prediction.id);
+            done();
+        });
     });
     describe('findOneOrCreate prediction', () => {
         it('should create prediction if it doesnt exist', done => {

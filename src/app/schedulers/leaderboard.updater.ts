@@ -103,7 +103,7 @@ export class LeaderboardUpdater implements ILeaderboardUpdater {
   }
 
   updateRankings(seasonId: string) {
-    return this.leaderboardRepo.findAll$({season: seasonId, status: BoardStatus.UPDATING_SCORES})
+    return this.leaderboardRepo.findAll$({ season: seasonId, status: BoardStatus.UPDATING_SCORES })
       .flatMap(leaderboards => {
         return Observable.from(leaderboards)
       })

@@ -113,7 +113,17 @@ class PredictionRepository extends base_repo_1.BaseRepository {
         });
     }
     findOneAndUpsert$({ userId, fixtureId }, choice) {
-        return rxjs_1.Observable.of({});
+        return rxjs_1.Observable.throw(new Error('method not implemented'));
+    }
+    findOne$(query) {
+        let { userId, fixtureId } = query;
+        if (userId !== undefined && fixtureId !== undefined) {
+            query.user = userId;
+            query.fixture = fixtureId;
+            delete query.userId;
+            delete query.fixtureId;
+        }
+        return super.findOne$(query);
     }
 }
 exports.PredictionRepository = PredictionRepository;

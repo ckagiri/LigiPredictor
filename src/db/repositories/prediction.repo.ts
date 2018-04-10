@@ -125,6 +125,17 @@ export class PredictionRepository extends BaseRepository<IPrediction> implements
   }
 
   findOneAndUpsert$({ userId, fixtureId }: { userId: string, fixtureId: string }, choice: any) {
-    return Observable.of(<IPrediction>{})    
+    return Observable.throw(new Error('method not implemented'))    
   }
+
+  findOne$(query?: any) {
+    let { userId, fixtureId } = query;    
+    if(userId !== undefined && fixtureId !== undefined) {
+      query.user = userId; 
+      query.fixture = fixtureId;
+      delete query.userId; 
+      delete query.fixtureId;
+    }
+    return super.findOne$(query);
+  }  
 }

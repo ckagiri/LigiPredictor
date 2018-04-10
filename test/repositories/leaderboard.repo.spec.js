@@ -24,7 +24,7 @@ let epl17 = {
 };
 let leaderboardRepo = leaderboard_repo_1.LeaderboardRepository.getInstance();
 let season;
-describe.only('Leaderboard Repo', function () {
+describe('Leaderboard Repo', function () {
     this.timeout(5000);
     before(done => {
         db.init(index_1.config.testDb.uri, done, { drop: true });
@@ -47,15 +47,15 @@ describe.only('Leaderboard Repo', function () {
     after(done => {
         db.close().then(() => { done(); });
     });
-    describe.only('findBoardAndUpsert$', () => {
+    describe('findBoardAndUpsert$', () => {
         let now = new Date();
         let month = now.getUTCMonth() + 1;
         let year = now.getFullYear();
         let gameRound = 20;
         it('should create seasonBoard if it doesnt exist', done => {
-            leaderboardRepo.findSeasonBoardAndUpsert$(season.id, { boardStatus: leaderboard_model_1.BoardStatus.UPDATING_SCORES })
+            leaderboardRepo.findSeasonBoardAndUpsert$(season.id, { status: leaderboard_model_1.BoardStatus.UPDATING_SCORES })
                 .subscribe(lb => {
-                chai_1.expect(lb.boardStatus).to.equal(leaderboard_model_1.BoardStatus.UPDATING_SCORES);
+                chai_1.expect(lb.status).to.equal(leaderboard_model_1.BoardStatus.UPDATING_SCORES);
                 chai_1.expect(lb.season.toString()).to.equal(season.id);
                 chai_1.expect(lb.boardType).to.equal(leaderboard_model_1.BoardType.GLOBAL_SEASON);
                 done();
@@ -63,21 +63,21 @@ describe.only('Leaderboard Repo', function () {
         });
         it('should update seasonBoard if it exists', done => {
             let leaderboard;
-            leaderboardRepo.findSeasonBoardAndUpsert$(season.id, { boardStatus: leaderboard_model_1.BoardStatus.UPDATING_SCORES })
+            leaderboardRepo.findSeasonBoardAndUpsert$(season.id, { status: leaderboard_model_1.BoardStatus.UPDATING_SCORES })
                 .flatMap(lb => {
                 leaderboard = lb;
-                return leaderboardRepo.findSeasonBoardAndUpsert$(season.id, { boardStatus: leaderboard_model_1.BoardStatus.UPDATING_RANKINGS });
+                return leaderboardRepo.findSeasonBoardAndUpsert$(season.id, { status: leaderboard_model_1.BoardStatus.UPDATING_RANKINGS });
             })
                 .subscribe(lb => {
                 chai_1.expect(lb.id).to.equal(leaderboard.id);
-                chai_1.expect(lb.boardStatus).to.equal(leaderboard_model_1.BoardStatus.UPDATING_RANKINGS);
+                chai_1.expect(lb.status).to.equal(leaderboard_model_1.BoardStatus.UPDATING_RANKINGS);
                 done();
             });
         });
         it('should create monthBoard if it doesnt exist', done => {
-            leaderboardRepo.findMonthBoardAndUpsert$(season.id, year, month, { boardStatus: leaderboard_model_1.BoardStatus.UPDATING_SCORES })
+            leaderboardRepo.findMonthBoardAndUpsert$(season.id, year, month, { status: leaderboard_model_1.BoardStatus.UPDATING_SCORES })
                 .subscribe(lb => {
-                chai_1.expect(lb.boardStatus).to.equal(leaderboard_model_1.BoardStatus.UPDATING_SCORES);
+                chai_1.expect(lb.status).to.equal(leaderboard_model_1.BoardStatus.UPDATING_SCORES);
                 chai_1.expect(lb.season.toString()).to.equal(season.id);
                 chai_1.expect(lb.boardType).to.equal(leaderboard_model_1.BoardType.GLOBAL_MONTH);
                 chai_1.expect(lb.year).to.equal(year);
@@ -86,9 +86,9 @@ describe.only('Leaderboard Repo', function () {
             });
         });
         it('should create roundBoard if it doesnt exist', done => {
-            leaderboardRepo.findRoundBoardAndUpsert$(season.id, gameRound, { boardStatus: leaderboard_model_1.BoardStatus.UPDATING_SCORES })
+            leaderboardRepo.findRoundBoardAndUpsert$(season.id, gameRound, { status: leaderboard_model_1.BoardStatus.UPDATING_SCORES })
                 .subscribe(lb => {
-                chai_1.expect(lb.boardStatus).to.equal(leaderboard_model_1.BoardStatus.UPDATING_SCORES);
+                chai_1.expect(lb.status).to.equal(leaderboard_model_1.BoardStatus.UPDATING_SCORES);
                 chai_1.expect(lb.season.toString()).to.equal(season.id);
                 chai_1.expect(lb.boardType).to.equal(leaderboard_model_1.BoardType.GLOBAL_ROUND);
                 chai_1.expect(lb.gameRound).to.equal(gameRound);
@@ -96,7 +96,45 @@ describe.only('Leaderboard Repo', function () {
             });
         });
     });
-    it('should find all by season and status');
-    it('should find by id and update');
+    describe('finders', () => {
+        let lb1;
+        beforeEach((done) => {
+            leaderboard_model_1.LeaderboardModel.create([
+                {
+                    status: leaderboard_model_1.BoardStatus.UPDATING_SCORES,
+                    boardType: leaderboard_model_1.BoardType.GLOBAL_SEASON,
+                    season: season.id
+                }, {
+                    status: leaderboard_model_1.BoardStatus.UPDATING_SCORES,
+                    boardType: leaderboard_model_1.BoardType.GLOBAL_MONTH,
+                    season: season.id,
+                    year: 2018,
+                    month: 4
+                }, {
+                    status: leaderboard_model_1.BoardStatus.REFRESHED,
+                    boardType: leaderboard_model_1.BoardType.GLOBAL_ROUND,
+                    season: season.id,
+                    gameRound: 20
+                }
+            ]).then(lbs => { lb1 = lbs[0]; done(); });
+        });
+        afterEach((done) => {
+            leaderboard_model_1.LeaderboardModel.remove({}).then(() => done());
+        });
+        it('should find all by season and status', (done) => {
+            leaderboardRepo.findAll$({ season: season.id, status: leaderboard_model_1.BoardStatus.UPDATING_SCORES })
+                .subscribe(lbs => {
+                chai_1.expect(lbs).to.have.length(2);
+                done();
+            });
+        });
+        it('should find by id and update status', (done) => {
+            leaderboardRepo.findByIdAndUpdate$(lb1.id, { status: leaderboard_model_1.BoardStatus.UPDATING_RANKINGS })
+                .subscribe(lb => {
+                chai_1.expect(lb).to.have.property('status', leaderboard_model_1.BoardStatus.UPDATING_RANKINGS);
+                done();
+            });
+        });
+    });
 });
 //# sourceMappingURL=leaderboard.repo.spec.js.map

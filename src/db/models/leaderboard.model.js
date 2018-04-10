@@ -15,15 +15,16 @@ var BoardType;
     BoardType["MINI_LEAGUE"] = "MINI_LEAGUE";
 })(BoardType = exports.BoardType || (exports.BoardType = {}));
 const { Number, String, ObjectId } = mongoose_1.Schema.Types;
+const Status = BoardStatus;
 const leaderboardSchema = new mongoose_1.Schema({
     season: { type: ObjectId, ref: "Season", index: true },
     gameRound: { type: Number, index: true },
     year: { type: Number, index: true },
     month: { type: Number, index: true },
-    boardStatus: {
+    status: {
         type: String,
-        enum: [BoardStatus.REFRESHED, BoardStatus.UPDATING_SCORES, BoardStatus.UPDATING_RANKINGS],
-        default: BoardStatus.REFRESHED
+        enum: [Status.REFRESHED, Status.UPDATING_SCORES, Status.UPDATING_RANKINGS],
+        default: Status.REFRESHED
     },
     boardType: {
         type: String,
