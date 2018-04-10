@@ -8,7 +8,7 @@ import { LeagueModel as League } from '../../src/db/models/league.model';
 import { SeasonModel as Season } from '../../src/db/models/season.model';
 import { TeamModel as Team } from '../../src/db/models/team.model';
 import { FixtureModel as Fixture } from '../../src/db/models/fixture.model';
-import { IPrediction, IPredictionModel as Prediction } from '../../src/db/models/prediction.model';
+import { IPrediction, IPredictionModel } from '../../src/db/models/prediction.model';
 
 import { UserRepository } from '../../src/db/repositories/user.repo';
 import { PredictionRepository } from '../../src/db/repositories/prediction.repo';
@@ -106,7 +106,7 @@ const kagiri = {
   email: 'kagiri@example.com'
 }
 
-describe('Prediction Repo', function() {
+describe('Prediction Repo', function (){
   this.timeout(5000);
   before(done => {
     db.init(config.testDb.uri, done, { drop: true });
@@ -182,6 +182,10 @@ describe('Prediction Repo', function() {
     })      
   })
 
+  it('should findOne prediction by user and fixture', done => {
+    done();
+  })
+
   describe('findOneOrCreate prediction', () => {
     it('should create prediction if it doesnt exist', done => {
       predictionRepo.findOneOrCreate$({ userId: user1.id, fixtureId: fixture1.id })
@@ -196,15 +200,14 @@ describe('Prediction Repo', function() {
 
     })    
     it('should return existing prediction', done => {
-      let prediction: Prediction;
+      let prediction: IPredictionModel;
       predictionRepo.findOneOrCreate$({ userId: user1.id, fixtureId: fixture1.id })
         .flatMap(p => {
-          prediction = p as Prediction;
+          prediction = p as IPredictionModel;
           return predictionRepo.findOneOrCreate$({ userId: user1.id, fixtureId: fixture1.id })
         })
-        .subscribe((p: Prediction) => {     
+        .subscribe((p: IPredictionModel) => {     
           expect(p.toObject()).to.eql(prediction.toObject())
-          expect(p.id).to.equal(prediction.id)
           done()
         })
     })
@@ -226,7 +229,7 @@ describe('Prediction Repo', function() {
       }
       return predictionRepo.findByIdAndUpdate$(p.id, { scorePoints})
     })
-    .subscribe((p: Prediction) => {
+    .subscribe((p: IPredictionModel) => {
       let pred = p.toObject() as IPrediction;
       expect(pred.scorePoints).to.eql(scorePoints)
       done();

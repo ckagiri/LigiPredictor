@@ -72,7 +72,7 @@ export class PredictionProcessor implements IPredictionProcessor {
   processPrediction$(prediction: IPrediction, fixture: IFixture) {
     let { choice } = prediction;
     let { result } = fixture;
-    let score = this.predictionCalculator.calculateScore(choice, result);
-    return this.predictionRepo.findByIdAndUpdate$(prediction.id, { score })
+    let scorePoints = this.predictionCalculator.calculateScore(choice, result);
+    return this.predictionRepo.findByIdAndUpdate$(prediction.id, { scorePoints })
   }
 }

@@ -11,7 +11,7 @@ import { FootballApiProvider as ApiProvider } from '../../../src/common/football
 import { ILeaderboardUpdater, LeaderboardUpdater } from '../../../src/app/schedulers/leaderboard.updater';
 import { FixtureStatus } from '../../../src/db/models/fixture.model';
 import { PredictionStatus } from '../../../src/db/models/prediction.model';
-import { LeaderboardStatus } from '../../../src/db/models/leaderboard.model';
+import { BoardStatus } from '../../../src/db/models/leaderboard.model';
 import { CacheService } from '../../../src/common/cacheService';
 
 let seasonId = '4edd40c86762e0fb12000001';
@@ -116,7 +116,7 @@ describe('Leaderboard Updater', () => {
       await leaderboardUpdater.updateScores(finishedFixtures)
 
       expect(spy).to.have.been.called;
-      expect(spy).to.have.been.calledWith(seasonId, {status: LeaderboardStatus.UPDATING_SCORES})
+      expect(spy).to.have.been.calledWith(seasonId, {status: BoardStatus.UPDATING_SCORES})
     })
 
     it('should get Monthboard and set status to UPDATING_SCORES ', async () => {
@@ -127,7 +127,7 @@ describe('Leaderboard Updater', () => {
       expect(spy).to.have.been.called;
       let month = ars_che.date.getUTCMonth() + 1;
       let year = ars_che.date.getFullYear();
-      expect(spy.firstCall).to.have.been.calledWith(seasonId, year, month, {status: LeaderboardStatus.UPDATING_SCORES})
+      expect(spy.firstCall).to.have.been.calledWith(seasonId, year, month, {status: BoardStatus.UPDATING_SCORES})
     })
 
     it('should get Roundboard and set status to UPDATING_SCORES ', async () => {
@@ -136,7 +136,7 @@ describe('Leaderboard Updater', () => {
       await leaderboardUpdater.updateScores(finishedFixtures)
 
       expect(spy).to.have.been.called;
-      expect(spy).to.have.been.calledWith(seasonId, gameRound, {status: LeaderboardStatus.UPDATING_SCORES})
+      expect(spy).to.have.been.calledWith(seasonId, gameRound, {status: BoardStatus.UPDATING_SCORES})
     })
     it('should get fixture prediction for the user', async () => {
       let spy = sinon.spy(predictionRepoStub, 'findOne$');
@@ -177,7 +177,7 @@ describe('Leaderboard Updater', () => {
       await leaderboardUpdater.updateRankings(seasonId);
 
       expect(spy).to.have.been.called;
-      expect(spy).to.have.been.calledWith(sinon.match.string, sinon.match({ status: LeaderboardStatus.UPDATING_RANKINGS }))
+      expect(spy).to.have.been.calledWith(sinon.match.string, sinon.match({ status: BoardStatus.UPDATING_RANKINGS }))
     })
 
     it('should get userScores from leaderboard ordered by points', async () => {
@@ -215,7 +215,7 @@ describe('Leaderboard Updater', () => {
       let count = await leaderboardUpdater.markLeaderboardsAsRefreshed(seasonId);
 
       expect(spy).to.have.been.called;
-      expect(spy).to.have.been.calledWith(sinon.match.string, sinon.match({ status: LeaderboardStatus.UPDATING_RANKINGS }))
+      expect(spy).to.have.been.calledWith(sinon.match.string, sinon.match({ status: BoardStatus.UPDATING_RANKINGS }))
     })
   })
 })

@@ -47,14 +47,14 @@ class LeaderboardUpdater {
             let mBoard;
             let rBoard;
             if (this.cacheService != null) {
-                sBoard = this.cacheService.get(`${season}`, this.leaderboardRepo.findSeasonBoardAndUpsert$(season, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES }));
-                mBoard = this.cacheService.get(`${season}-${year}-${month}`, this.leaderboardRepo.findMonthBoardAndUpsert$(season, year, month, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES }));
-                rBoard = this.cacheService.get(`${season}-${gameRound}`, this.leaderboardRepo.findRoundBoardAndUpsert$(season, gameRound, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES }));
+                sBoard = this.cacheService.get(`${season}`, this.leaderboardRepo.findSeasonBoardAndUpsert$(season, { status: leaderboard_model_1.BoardStatus.UPDATING_SCORES }));
+                mBoard = this.cacheService.get(`${season}-${year}-${month}`, this.leaderboardRepo.findMonthBoardAndUpsert$(season, year, month, { status: leaderboard_model_1.BoardStatus.UPDATING_SCORES }));
+                rBoard = this.cacheService.get(`${season}-${gameRound}`, this.leaderboardRepo.findRoundBoardAndUpsert$(season, gameRound, { status: leaderboard_model_1.BoardStatus.UPDATING_SCORES }));
             }
             else {
-                sBoard = this.leaderboardRepo.findSeasonBoardAndUpsert$(season, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
-                mBoard = this.leaderboardRepo.findMonthBoardAndUpsert$(season, year, month, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
-                rBoard = this.leaderboardRepo.findRoundBoardAndUpsert$(season, gameRound, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
+                sBoard = this.leaderboardRepo.findSeasonBoardAndUpsert$(season, { status: leaderboard_model_1.BoardStatus.UPDATING_SCORES });
+                mBoard = this.leaderboardRepo.findMonthBoardAndUpsert$(season, year, month, { status: leaderboard_model_1.BoardStatus.UPDATING_SCORES });
+                rBoard = this.leaderboardRepo.findRoundBoardAndUpsert$(season, gameRound, { status: leaderboard_model_1.BoardStatus.UPDATING_SCORES });
             }
             boards.push(sBoard, mBoard, rBoard);
             return rxjs_1.Observable.forkJoin(boards)
@@ -85,12 +85,12 @@ class LeaderboardUpdater {
             .toPromise();
     }
     updateRankings(seasonId) {
-        return this.leaderboardRepo.findAll$({ season: seasonId, status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES })
+        return this.leaderboardRepo.findAll$({ season: seasonId, status: leaderboard_model_1.BoardStatus.UPDATING_SCORES })
             .flatMap(leaderboards => {
             return rxjs_1.Observable.from(leaderboards);
         })
             .flatMap(leaderboard => {
-            return this.leaderboardRepo.findByIdAndUpdate$(leaderboard.id, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_RANKINGS });
+            return this.leaderboardRepo.findByIdAndUpdate$(leaderboard.id, { status: leaderboard_model_1.BoardStatus.UPDATING_RANKINGS });
         })
             .flatMap(leaderboard => {
             return this.userScoreRepo.findByLeaderboardOrderByPoints$(leaderboard.id);
@@ -109,12 +109,12 @@ class LeaderboardUpdater {
             .toPromise();
     }
     markLeaderboardsAsRefreshed(seasonId) {
-        return this.leaderboardRepo.findAll$({ season: seasonId, status: leaderboard_model_1.LeaderboardStatus.UPDATING_RANKINGS })
+        return this.leaderboardRepo.findAll$({ season: seasonId, status: leaderboard_model_1.BoardStatus.UPDATING_RANKINGS })
             .flatMap(leaderboards => {
             return rxjs_1.Observable.from(leaderboards);
         })
             .flatMap(leaderboard => {
-            return this.leaderboardRepo.findByIdAndUpdate$(leaderboard.id, { status: leaderboard_model_1.LeaderboardStatus.REFRESHED });
+            return this.leaderboardRepo.findByIdAndUpdate$(leaderboard.id, { status: leaderboard_model_1.BoardStatus.REFRESHED });
         })
             .count()
             .toPromise();

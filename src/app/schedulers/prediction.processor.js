@@ -58,8 +58,8 @@ class PredictionProcessor {
     processPrediction$(prediction, fixture) {
         let { choice } = prediction;
         let { result } = fixture;
-        let score = this.predictionCalculator.calculateScore(choice, result);
-        return this.predictionRepo.findByIdAndUpdate$(prediction.id, { score });
+        let scorePoints = this.predictionCalculator.calculateScore(choice, result);
+        return this.predictionRepo.findByIdAndUpdate$(prediction.id, { scorePoints });
     }
 }
 exports.PredictionProcessor = PredictionProcessor;

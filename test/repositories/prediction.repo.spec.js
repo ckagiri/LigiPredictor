@@ -167,6 +167,9 @@ describe('Prediction Repo', function () {
             });
         });
     });
+    it('should findOne prediction by user and fixture', done => {
+        done();
+    });
     describe('findOneOrCreate prediction', () => {
         it('should create prediction if it doesnt exist', done => {
             predictionRepo.findOneOrCreate$({ userId: user1.id, fixtureId: fixture1.id })
@@ -188,7 +191,6 @@ describe('Prediction Repo', function () {
             })
                 .subscribe((p) => {
                 chai_1.expect(p.toObject()).to.eql(prediction.toObject());
-                chai_1.expect(p.id).to.equal(prediction.id);
                 done();
             });
         });

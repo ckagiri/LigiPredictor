@@ -117,7 +117,7 @@ describe('Leaderboard Updater', () => {
             let spy = leaderboardRepoStub.findSeasonBoardAndUpsert$;
             yield leaderboardUpdater.updateScores(finishedFixtures);
             expect(spy).to.have.been.called;
-            expect(spy).to.have.been.calledWith(seasonId, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
+            expect(spy).to.have.been.calledWith(seasonId, { status: leaderboard_model_1.BoardStatus.UPDATING_SCORES });
         }));
         it('should get Monthboard and set status to UPDATING_SCORES ', () => __awaiter(this, void 0, void 0, function* () {
             let spy = leaderboardRepoStub.findMonthBoardAndUpsert$;
@@ -125,13 +125,13 @@ describe('Leaderboard Updater', () => {
             expect(spy).to.have.been.called;
             let month = ars_che.date.getUTCMonth() + 1;
             let year = ars_che.date.getFullYear();
-            expect(spy.firstCall).to.have.been.calledWith(seasonId, year, month, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
+            expect(spy.firstCall).to.have.been.calledWith(seasonId, year, month, { status: leaderboard_model_1.BoardStatus.UPDATING_SCORES });
         }));
         it('should get Roundboard and set status to UPDATING_SCORES ', () => __awaiter(this, void 0, void 0, function* () {
             let spy = leaderboardRepoStub.findRoundBoardAndUpsert$;
             yield leaderboardUpdater.updateScores(finishedFixtures);
             expect(spy).to.have.been.called;
-            expect(spy).to.have.been.calledWith(seasonId, gameRound, { status: leaderboard_model_1.LeaderboardStatus.UPDATING_SCORES });
+            expect(spy).to.have.been.calledWith(seasonId, gameRound, { status: leaderboard_model_1.BoardStatus.UPDATING_SCORES });
         }));
         it('should get fixture prediction for the user', () => __awaiter(this, void 0, void 0, function* () {
             let spy = sinon.spy(predictionRepoStub, 'findOne$');
@@ -162,7 +162,7 @@ describe('Leaderboard Updater', () => {
             let spy = leaderboardRepoStub.findByIdAndUpdate$;
             yield leaderboardUpdater.updateRankings(seasonId);
             expect(spy).to.have.been.called;
-            expect(spy).to.have.been.calledWith(sinon.match.string, sinon.match({ status: leaderboard_model_1.LeaderboardStatus.UPDATING_RANKINGS }));
+            expect(spy).to.have.been.calledWith(sinon.match.string, sinon.match({ status: leaderboard_model_1.BoardStatus.UPDATING_RANKINGS }));
         }));
         it('should get userScores from leaderboard ordered by points', () => __awaiter(this, void 0, void 0, function* () {
             let spy = sinon.spy(userScoreRepoStub, 'findByLeaderboardOrderByPoints$');
@@ -188,7 +188,7 @@ describe('Leaderboard Updater', () => {
             let spy = leaderboardRepoStub.findByIdAndUpdate$;
             let count = yield leaderboardUpdater.markLeaderboardsAsRefreshed(seasonId);
             expect(spy).to.have.been.called;
-            expect(spy).to.have.been.calledWith(sinon.match.string, sinon.match({ status: leaderboard_model_1.LeaderboardStatus.UPDATING_RANKINGS }));
+            expect(spy).to.have.been.calledWith(sinon.match.string, sinon.match({ status: leaderboard_model_1.BoardStatus.UPDATING_RANKINGS }));
         }));
     });
 });

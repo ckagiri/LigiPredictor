@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 
 import { IFixture, FixtureStatus }  from '../../db/models/fixture.model';
 import { IUserRepository, UserRepository }  from '../../db/repositories/user.repo';
-import { LeaderboardStatus, ILeaderboard } from '../../db/models/leaderboard.model';
+import { BoardStatus, ILeaderboard } from '../../db/models/leaderboard.model';
 import { ILeaderboardRepository, LeaderboardRepository }  from '../../db/repositories/leaderboard.repo';
 import { IPredictionRepository, PredictionRepository }  from '../../db/repositories/prediction.repo';
 import { IUserScoreRepository, UserScoreRepository} from '../../db/repositories/userScore.repo';
@@ -62,15 +62,15 @@ export class LeaderboardUpdater implements ILeaderboardUpdater {
         
         if(this.cacheService != null) {
           sBoard = this.cacheService.get(`${season}`, 
-            this.leaderboardRepo.findSeasonBoardAndUpsert$(season, {status: LeaderboardStatus.UPDATING_SCORES}));
+            this.leaderboardRepo.findSeasonBoardAndUpsert$(season, { status: BoardStatus.UPDATING_SCORES }));
           mBoard = this.cacheService.get(`${season}-${year}-${month}`, 
-            this.leaderboardRepo.findMonthBoardAndUpsert$(season, year, month, {status: LeaderboardStatus.UPDATING_SCORES}));
+            this.leaderboardRepo.findMonthBoardAndUpsert$(season, year, month, { status: BoardStatus.UPDATING_SCORES }));
           rBoard = this.cacheService.get(`${season}-${gameRound}`,
-            this.leaderboardRepo.findRoundBoardAndUpsert$(season, gameRound, {status: LeaderboardStatus.UPDATING_SCORES}));
+            this.leaderboardRepo.findRoundBoardAndUpsert$(season, gameRound, { status: BoardStatus.UPDATING_SCORES }));
         } else {
-          sBoard = this.leaderboardRepo.findSeasonBoardAndUpsert$(season, {status: LeaderboardStatus.UPDATING_SCORES});
-          mBoard = this.leaderboardRepo.findMonthBoardAndUpsert$(season, year, month, {status: LeaderboardStatus.UPDATING_SCORES});
-          rBoard = this.leaderboardRepo.findRoundBoardAndUpsert$(season, gameRound, {status: LeaderboardStatus.UPDATING_SCORES});
+          sBoard = this.leaderboardRepo.findSeasonBoardAndUpsert$(season, { status: BoardStatus.UPDATING_SCORES });
+          mBoard = this.leaderboardRepo.findMonthBoardAndUpsert$(season, year, month, {status: BoardStatus.UPDATING_SCORES});
+          rBoard = this.leaderboardRepo.findRoundBoardAndUpsert$(season, gameRound, {status: BoardStatus.UPDATING_SCORES});
         }
         boards.push(sBoard, mBoard, rBoard);
         return Observable.forkJoin(boards)
@@ -103,12 +103,12 @@ export class LeaderboardUpdater implements ILeaderboardUpdater {
   }
 
   updateRankings(seasonId: string) {
-    return this.leaderboardRepo.findAll$({season: seasonId, status: LeaderboardStatus.UPDATING_SCORES})
+    return this.leaderboardRepo.findAll$({season: seasonId, status: BoardStatus.UPDATING_SCORES})
       .flatMap(leaderboards => {
         return Observable.from(leaderboards)
       })
       .flatMap(leaderboard => {
-        return this.leaderboardRepo.findByIdAndUpdate$(leaderboard.id, { status: LeaderboardStatus.UPDATING_RANKINGS })
+        return this.leaderboardRepo.findByIdAndUpdate$(leaderboard.id, { status: BoardStatus.UPDATING_RANKINGS })
       })
       .flatMap(leaderboard => {
         return this.userScoreRepo.findByLeaderboardOrderByPoints$(leaderboard.id);
@@ -128,12 +128,12 @@ export class LeaderboardUpdater implements ILeaderboardUpdater {
   }
 
   markLeaderboardsAsRefreshed(seasonId: string) {
-    return this.leaderboardRepo.findAll$({season: seasonId, status: LeaderboardStatus.UPDATING_RANKINGS})
+    return this.leaderboardRepo.findAll$({season: seasonId, status: BoardStatus.UPDATING_RANKINGS})
     .flatMap(leaderboards => {
       return Observable.from(leaderboards)
     })
     .flatMap(leaderboard => {
-      return this.leaderboardRepo.findByIdAndUpdate$(leaderboard.id, { status: LeaderboardStatus.REFRESHED })
+      return this.leaderboardRepo.findByIdAndUpdate$(leaderboard.id, { status: BoardStatus.REFRESHED })
     })
     .count()
     .toPromise();
