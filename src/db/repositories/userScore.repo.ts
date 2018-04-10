@@ -1,7 +1,8 @@
 import { Observable } from 'rxjs';
 import { Document } from 'mongoose';
 
-import { IUserScore, IUserScoreModel, UserScoreModel, ScorePoints } from '../models/userScore.model';
+import { ScorePoints } from '../../common/score';
+import { IUserScore, IUserScoreModel, UserScoreModel } from '../models/userScore.model';
 import { IBaseRepository, BaseRepository } from './base.repo';
 
 export interface IUserScoreRepository extends IBaseRepository<IUserScore> { 

@@ -1,8 +1,7 @@
 import { Observable } from 'rxjs';
 import { Document } from 'mongoose';
 
-import { ScorePoints } from '../models/userScore.model';
-
+import { ScorePoints } from '../../common/score';
 import { IPrediction, IPredictionModel, PredictionModel, PredictionStatus } from '../models/prediction.model';
 import { FixtureStatus, IFixture } from '../models/fixture.model';
 import { IBaseRepository, BaseRepository } from './base.repo';

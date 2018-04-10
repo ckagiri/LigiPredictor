@@ -1,4 +1,4 @@
-import Score from './score';
+import { Score } from './score';
 import Vose from './vose';
 
 export interface IPredictor {

@@ -7,10 +7,10 @@
     "pretest": "tsc",
     "test": "nyc mocha",
     "watch": "mocha-typescript-watch",
-    "prepare": "tsc",
+    "compile": "tsc",
     "mongodb": "mongod --dbpath=C:/data/db --port 27017",
-    "import:test": "SET NODE_ENV=test&& npm run prepare && node src/import/start.js",
-    "drop:seed:test": "SET NODE_ENV=test&& npm run prepare && node src/db/tasks/drop.js && node src/db/tasks/seed.js"
+    "import:test": "SET NODE_ENV=test&& npm run compile && node src/import/start.js",
+    "drop:seed:test": "SET NODE_ENV=test&& npm run compile && node src/db/tasks/drop.js && node src/db/tasks/seed.js"
   },
   "author": "mimi",
   "license": "ISC",

@@ -3,4 +3,13 @@ export interface Score {
   goalsAwayTeam: number;
 }
 
-export default Score;
+export interface ScorePoints {
+  points: number;
+  APoints: number;
+  BPoints: number;
+  MatchOutcomePoints: number;  
+  TeamScorePlusPoints: number;
+  GoalDifferencePoints: number;
+  ExactScorePoints: number;
+  TeamScoreMinusPoints: number;
+}

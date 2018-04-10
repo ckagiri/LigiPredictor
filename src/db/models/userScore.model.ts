@@ -2,17 +2,6 @@ import { Schema, Model, model, Document } from 'mongoose';
 
 import { IEntity } from './base.model';
 
-export interface ScorePoints {
-  points: number;
-  pointsFor: number;
-  pointsAgainst: number;
-  MatchOutcomePoints: number;
-  GoalDifferencePoints: number;
-  ExactScorePoints: number;
-  ScoreDifferencePoints: number;
-  TeamScorePoints: number;
-}
-
 export interface IUserScore extends IEntity {
   id?: string;
   leaderboard: string;

@@ -1,17 +1,20 @@
-import  {ScorePoints } from '../../db/models/userScore.model';
-
-interface MatchScore { goalsHomeTeam: number, goalsAwayTeam: number }
+import  { ScorePoints, Score } from '../../common/score';
 
 export interface IPredictionCalculator {
-  calculateScore(choice: MatchScore, result: MatchScore): ScorePoints;
+  calculateScore(choice: Score, result: Score): ScorePoints;
 }
 
 export class PredictionCalculator implements IPredictionCalculator {
-  calculateScore(choice: MatchScore, result: MatchScore) {
+  calculateScore(choice: Score, result: Score) {
     return {
-      points: 0, pointsFor: 0, pointsAgainst: 0, 
-      MatchOutcomePoints: 0, ScoreDifferencePoints: 0, TeamScorePoints: 0,
-      ExactScorePoints: 0, GoalDifferencePoints: 0
+      points: 0,
+      APoints: 0,
+      BPoints: 0,
+      MatchOutcomePoints: 0,  
+      TeamScorePlusPoints: 0,
+      GoalDifferencePoints: 0,
+      ExactScorePoints: 0,
+      TeamScoreMinusPoints: 0
     }
   }
 }

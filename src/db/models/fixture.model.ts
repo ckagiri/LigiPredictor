@@ -1,6 +1,7 @@
 import { Schema, Model, model, Document } from 'mongoose';
 
 import { IEntity } from './base.model';
+import { ScorePoints, Score } from '../../common/score';
 
 export enum FixtureStatus {
   SCHEDULED = 'SCHEDULED', 
@@ -9,11 +10,6 @@ export enum FixtureStatus {
   CANCELED = 'CANCELED', 
   POSTPONED = 'POSTPONED', 
   FINISHED = 'FINISHED'
-}
-
-interface Result {
-	goalsHomeTeam: number;
-  goalsAwayTeam: number;
 }
 
 export interface IFixture extends IEntity {
@@ -41,7 +37,7 @@ export interface IFixture extends IEntity {
     awayWin: number,
     draw: number
   };
-  result?: Result,
+  result?: Score,
   venue?: string;
   allPredictionsProcessed?: boolean;
   externalReference?: any;
