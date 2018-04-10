@@ -191,14 +191,10 @@ describe.only('UserScore Repo', function () {
     describe.only('find and upsert', () => {
         it('should create a userScore if it does not exist', done => {
             let leaderboardId = sBoard.id;
-            console.log('l', sBoard);
             let userId = user1.id;
-            console.log('u', user1);
             let fixtureId = fixture1.id;
-            console.log('f', fixture1);
             let predictionId = user1Pred1.id;
-            console.log('p', user1Pred1);
-            let points = {
+            let predictionPoints = {
                 points: 7,
                 APoints: 7,
                 BPoints: 0,
@@ -209,7 +205,7 @@ describe.only('UserScore Repo', function () {
                 TeamScoreMinusPoints: 0
             };
             let hasJoker = true;
-            userScoreRepo.findOneAndUpsert$(leaderboardId, userId, fixtureId, predictionId, points, hasJoker)
+            userScoreRepo.findOneAndUpsert$(leaderboardId, userId, fixtureId, predictionId, predictionPoints, hasJoker)
                 .subscribe(score => {
                 console.log(score);
                 done();

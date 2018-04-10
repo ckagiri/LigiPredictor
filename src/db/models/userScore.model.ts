@@ -16,6 +16,8 @@ export interface IUserScore extends IEntity {
   GoalDifferencePoints: number;
   ExactScorePoints: number;
   TeamScoreMinusPoints: number;
+  APointsExcludingJoker?: number;
+  BPointsExcludingJoker?: number;
   pointsExcludingJoker?: number;
   pointsOld?: number;
   pointsNew?: number;
@@ -42,6 +44,8 @@ const userScoreSchema = new Schema({
   GoalDifferencePoints: { type: Number },
   ExactScorePoints: { type: Number },
   TeamScoreMinusPoints: { type: Number },
+  APointsExcludingJoker: { type: Number },
+  BPointsExcludingJoker: { type: Number },
   pointsExcludingJoker: { type: Number },
   pointsOld: { type: Number },
   pointsNew: { type: Number },

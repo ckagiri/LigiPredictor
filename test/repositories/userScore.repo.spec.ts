@@ -202,7 +202,7 @@ describe.only('UserScore Repo', function () {
       let userId = user1.id;
       let fixtureId = fixture1.id;
       let predictionId = user1Pred1.id;
-      let points: ScorePoints = {
+      let predictionPoints: ScorePoints = {
         points: 7,
         APoints: 7,
         BPoints: 0,
@@ -213,7 +213,7 @@ describe.only('UserScore Repo', function () {
         TeamScoreMinusPoints: 0
       }
       let hasJoker = true;
-      userScoreRepo.findOneAndUpsert$(leaderboardId, userId, fixtureId, predictionId, points, hasJoker)
+      userScoreRepo.findOneAndUpsert$(leaderboardId, userId, fixtureId, predictionId, predictionPoints, hasJoker)
         .subscribe(score => {
           console.log(score);
           done();          
