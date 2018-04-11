@@ -21,7 +21,7 @@ const utils_1 = require("./utils");
 const finishedFixtures_processor_1 = require("../../src/app/schedulers/finishedFixtures.processor");
 let user1, user2, league, season, team1, team2, team3, team4, fixture1, fixture2, user1Pred1, user1Pred2, user2Pred1, user2Pred2, sBoard, rBoard;
 let finishedFixturesProcessor = finishedFixtures_processor_1.FinishedFixturesProcessor.getInstance();
-describe.only('Finished Fixtures Processor', function () {
+describe('Finished Fixtures Processor', function () {
     this.timeout(5000);
     before(done => {
         db.init(index_1.config.testDb.uri, done, { drop: true });
@@ -140,10 +140,9 @@ describe.only('Finished Fixtures Processor', function () {
             chai_1.expect(ps.length).to.equal(4);
         });
     }));
-    it('should set to true allPredictionProcess', () => __awaiter(this, void 0, void 0, function* () {
+    it('should set to true allPredictionProcessed', () => __awaiter(this, void 0, void 0, function* () {
         let c = yield finishedFixturesProcessor.setToTrueAllPredictionsProcessed([fixture1, fixture2]);
         fixture_model_1.FixtureModel.find({}).exec().then(fs => {
-            console.log(fs);
         });
     }));
 });
