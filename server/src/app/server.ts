@@ -1,4 +1,3 @@
-import * as favicon from 'serve-favicon';
 import * as logger from 'morgan';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';

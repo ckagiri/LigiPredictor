@@ -24,7 +24,7 @@ class ExpressApp {
     this.express.disable('etag');
     this.express.use(this.nocache);
     this.express.use(logger('dev'));
-    this.express.use(favicon(__dirname + '/favicon.ico'));    
+    // this.express.use(favicon(__dirname + '/favicon.ico'));    
     this.express.use(bodyParser.json({ limit: '50mb' }));
     this.express.use(bodyParser.urlencoded({ extended: true }));
 
