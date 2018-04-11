@@ -104,7 +104,7 @@ const kagiri = {
   email: 'kagiri@example.com'
 }
 
-describe.only('UserScore Repo', function () {
+describe('UserScore Repo', function () {
   this.timeout(5000);
   before(done => {
     db.init(config.testDb.uri, done, { drop: true });

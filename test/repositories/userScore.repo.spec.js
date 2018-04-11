@@ -90,7 +90,7 @@ const kagiri = {
     username: 'kagiri',
     email: 'kagiri@example.com'
 };
-describe.only('UserScore Repo', function () {
+describe('UserScore Repo', function () {
     this.timeout(5000);
     before(done => {
         db.init(index_1.config.testDb.uri, done, { drop: true });
@@ -349,8 +349,8 @@ describe.only('UserScore Repo', function () {
             return userScoreRepo.findByIdAndUpdate$(standing.id, { positionNew, positionOld });
         })
             .subscribe(standing => {
-            console.log('pn', standing.positionNew);
-            console.log('po', standing.positionOld);
+            chai_1.expect(standing.positionNew).to.equal(2);
+            chai_1.expect(standing.positionOld).to.equal(1);
             done();
         });
     });
