@@ -4,12 +4,14 @@ const rxjs_1 = require("rxjs");
 const prediction_model_1 = require("../../db/models/prediction.model");
 const fixture_model_1 = require("../../db/models/fixture.model");
 const prediction_processor_1 = require("./prediction.processor");
+const fixture_repo_1 = require("../../db/repositories/fixture.repo");
 class FinishedFixturesProcessor {
-    constructor(predictionProcessor) {
+    constructor(predictionProcessor, fixtureRepo) {
         this.predictionProcessor = predictionProcessor;
+        this.fixtureRepo = fixtureRepo;
     }
     static getInstance() {
-        return new FinishedFixturesProcessor(prediction_processor_1.PredictionProcessor.getInstance());
+        return new FinishedFixturesProcessor(prediction_processor_1.PredictionProcessor.getInstance(), fixture_repo_1.FixtureRepository.getInstance());
     }
     processPredictions(fixtures) {
         return rxjs_1.Observable.from(fixtures)
@@ -31,6 +33,17 @@ class FinishedFixturesProcessor {
             .flatMap(data => {
             let { fixture, prediction } = data;
             return this.predictionProcessor.processPrediction$(prediction, fixture);
+        })
+            .count()
+            .toPromise();
+    }
+    setToTrueAllPredictionsProcessed(fixtures) {
+        return rxjs_1.Observable.from(fixtures)
+            .filter(fixture => {
+            return fixture.status === fixture_model_1.FixtureStatus.FINISHED && fixture.allPredictionsProcessed === false;
+        })
+            .flatMap(fixture => {
+            return this.fixtureRepo.findByIdAndUpdate$(fixture.id, { allPredictionsProcessed: true });
         })
             .count()
             .toPromise();

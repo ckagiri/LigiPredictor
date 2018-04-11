@@ -13,7 +13,7 @@ export interface IFixtureRepository extends IBaseProviderRepository<IFixture> {
 }
 
 export class FixtureRepository extends BaseProviderRepository<IFixture> implements IFixtureRepository {
-  static getInstance(provider: ApiProvider): IFixtureRepository {
+  static getInstance(provider: ApiProvider = ApiProvider.LIGI): IFixtureRepository {
     return new FixtureRepository(FixtureConverter.getInstance(provider));
   }
 

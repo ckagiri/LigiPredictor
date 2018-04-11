@@ -135,4 +135,12 @@ describe('Finished Fixtures Processor', function () {
       expect(ps.length).to.equal(4);
     })
   })
+
+  it('should set to true allPredictionProcess', async () => {    
+    let c = await finishedFixturesProcessor.setToTrueAllPredictionsProcessed([fixture1, fixture2])
+
+    Fixture.find({}).exec().then(fs => {
+      console.log(fs)
+    })
+  })
 })

@@ -14,14 +14,13 @@ import { config } from '../../src/config/environment/index'
 import { ScorePoints, Score } from '../../src/common/score'
 import u from './utils';
 import { LeaderboardUpdater } from '../../src/app/schedulers/leaderboard.updater';
-import { FinishedFixturesProcessor } from '../../src/app/schedulers/finishedFixtures.processor';
 
 let user1: any, user2: any, league: any, season: any, team1: any, team2: any, team3: any, team4: any, 
 fixture1: any, fixture2: any, user1Pred1: any, user1Pred2: any, user2Pred1: any, user2Pred2: any, sBoard: any, rBoard: any;
 
 let leaderboardUpdater = LeaderboardUpdater.getInstance();
 
-describe.only('Leaderboard Updater', function () {
+describe('Leaderboard Updater', function () {
   this.timeout(5000);
   before(done => {
     db.init(config.testDb.uri, done, { drop: true });
@@ -149,7 +148,7 @@ describe.only('Leaderboard Updater', function () {
     })
   })
 
-  it.only('should update rankings => second take', async() => {
+  it('should update rankings => second take', async () => {
     await leaderboardUpdater.updateScores([fixture1])
 
     await leaderboardUpdater.updateRankings(season.id);
@@ -160,6 +159,17 @@ describe.only('Leaderboard Updater', function () {
 
     UserScore.find({}).exec().then(standings => {
       // console.log('standings', standings)
+    })
+  })
+
+  it('should mark leaderboards as refreshed', async () => {
+    await leaderboardUpdater.updateScores([fixture1])
+    await leaderboardUpdater.updateRankings(season.id);
+    
+    let c = await leaderboardUpdater.markLeaderboardsAsRefreshed(season.id);
+    
+    Leaderboard.find({}).exec().then(boards => {
+      console.log(boards)
     })
   })
 })

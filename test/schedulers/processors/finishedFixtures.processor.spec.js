@@ -54,6 +54,9 @@ let predictionProcessorStub = {
     getPredictions$: sinon.stub(),
     processPrediction$: sinon.stub()
 };
+let fixtureRepoStub = {
+    findByIdAndUpdate$: () => { return rxjs_1.Observable.of({}); }
+};
 let finishedFixturesProcessor;
 describe('Finished Fixtures', () => {
     describe('processPredictions', () => {
@@ -61,7 +64,7 @@ describe('Finished Fixtures', () => {
             predictionProcessorStub.getPredictions$.withArgs(sinon.match(ars_che)).returns(rxjs_1.Observable.of([pred1, pred2]));
             predictionProcessorStub.getPredictions$.withArgs(sinon.match(liv_sou)).returns(rxjs_1.Observable.of([pred3, pred4]));
             predictionProcessorStub.processPrediction$.returns(rxjs_1.Observable.of(pred1));
-            finishedFixturesProcessor = new finishedFixtures_processor_1.FinishedFixturesProcessor(predictionProcessorStub);
+            finishedFixturesProcessor = new finishedFixtures_processor_1.FinishedFixturesProcessor(predictionProcessorStub, fixtureRepoStub);
         });
         afterEach(() => {
             predictionProcessorStub.getPredictions$ = sinon.stub();

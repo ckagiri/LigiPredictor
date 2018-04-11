@@ -4,8 +4,9 @@ const rxjs_1 = require("rxjs");
 const fixture_model_1 = require("../models/fixture.model");
 const baseProvider_repo_1 = require("./baseProvider.repo");
 const fixture_converter_1 = require("../converters/fixture.converter");
+const footballApiProvider_1 = require("../../common/footballApiProvider");
 class FixtureRepository extends baseProvider_repo_1.BaseProviderRepository {
-    static getInstance(provider) {
+    static getInstance(provider = footballApiProvider_1.FootballApiProvider.LIGI) {
         return new FixtureRepository(fixture_converter_1.FixtureConverter.getInstance(provider));
     }
     constructor(converter) {

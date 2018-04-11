@@ -22,7 +22,7 @@ const utils_1 = require("./utils");
 const leaderboard_updater_1 = require("../../src/app/schedulers/leaderboard.updater");
 let user1, user2, league, season, team1, team2, team3, team4, fixture1, fixture2, user1Pred1, user1Pred2, user2Pred1, user2Pred2, sBoard, rBoard;
 let leaderboardUpdater = leaderboard_updater_1.LeaderboardUpdater.getInstance();
-describe.only('Leaderboard Updater', function () {
+describe('Leaderboard Updater', function () {
     this.timeout(5000);
     before(done => {
         db.init(index_1.config.testDb.uri, done, { drop: true });
@@ -149,13 +149,21 @@ describe.only('Leaderboard Updater', function () {
             // console.log('standings', standings)
         });
     }));
-    it.only('should update rankings => second take', () => __awaiter(this, void 0, void 0, function* () {
+    it('should update rankings => second take', () => __awaiter(this, void 0, void 0, function* () {
         yield leaderboardUpdater.updateScores([fixture1]);
         yield leaderboardUpdater.updateRankings(season.id);
         yield leaderboardUpdater.updateScores([fixture2]);
         yield leaderboardUpdater.updateRankings(season.id);
         userScore_model_1.UserScoreModel.find({}).exec().then(standings => {
-            console.log('standings', standings);
+            // console.log('standings', standings)
+        });
+    }));
+    it('should mark leaderboards as refreshed', () => __awaiter(this, void 0, void 0, function* () {
+        yield leaderboardUpdater.updateScores([fixture1]);
+        yield leaderboardUpdater.updateRankings(season.id);
+        let c = yield leaderboardUpdater.markLeaderboardsAsRefreshed(season.id);
+        leaderboard_model_1.LeaderboardModel.find({}).exec().then(boards => {
+            console.log(boards);
         });
     }));
 });

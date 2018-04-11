@@ -89,27 +89,21 @@ class LeaderboardUpdater {
     updateRankings(seasonId) {
         return this.leaderboardRepo.findAll$({ season: seasonId, status: leaderboard_model_1.BoardStatus.UPDATING_SCORES })
             .flatMap(leaderboards => {
-            console.log('lbs', leaderboards);
             return rxjs_1.Observable.from(leaderboards);
         })
             .flatMap(leaderboard => {
             return this.leaderboardRepo.findByIdAndUpdate$(leaderboard.id, { status: leaderboard_model_1.BoardStatus.UPDATING_RANKINGS });
         })
             .flatMap(leaderboard => {
-            console.log('lbs', leaderboard);
             return this.userScoreRepo.findByLeaderboardOrderByPoints$(leaderboard.id)
                 .flatMap(userScores => {
                 return rxjs_1.Observable.from(userScores);
             })
                 .flatMap((standing, index) => {
                 index += 1;
-                console.log('points', standing.points);
-                console.log('ix', index);
                 let previousPosition = standing.positionNew || 0;
                 let positionOld = previousPosition;
                 let positionNew = index;
-                console.log('positionNew', positionNew);
-                console.log('positionOld', positionOld);
                 return this.userScoreRepo.findByIdAndUpdate$(standing.id, { positionNew, positionOld })
                     .map(_ => {
                     return leaderboard.id;

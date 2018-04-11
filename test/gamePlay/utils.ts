@@ -55,7 +55,7 @@ const ars = {
 
 const manuVmanc = {
   date: "2017-09-10T11:30:00Z",
-  status: FixtureStatus.SCHEDULED,
+  status: FixtureStatus.FINISHED,
   matchRound: 20,
   gameRound: 20,
   season: null,
@@ -66,7 +66,7 @@ const manuVmanc = {
 }
 const cheVars = {
   date: "2017-09-10T11:30:00Z",
-  status: FixtureStatus.SCHEDULED,
+  status: FixtureStatus.FINISHED,
   matchRound: 20,
   gameRound: 20,
   season: null,

@@ -47,6 +47,10 @@ let predictionProcessorStub:any = {
   getPredictions$: sinon.stub(),
   processPrediction$: sinon.stub()
 }
+let fixtureRepoStub: any = {
+  findByIdAndUpdate$: () => { return Observable.of({}) }
+}
+
 let finishedFixturesProcessor: IFinishedFixturesProcessor;
 
 describe('Finished Fixtures', () => {
@@ -56,7 +60,7 @@ describe('Finished Fixtures', () => {
       predictionProcessorStub.getPredictions$.withArgs(sinon.match(liv_sou)).returns(Observable.of([ pred3, pred4 ])); 
       
       predictionProcessorStub.processPrediction$.returns(Observable.of(pred1));       
-      finishedFixturesProcessor = new FinishedFixturesProcessor(predictionProcessorStub);
+      finishedFixturesProcessor = new FinishedFixturesProcessor(predictionProcessorStub, fixtureRepoStub);
     })
     afterEach(() => {
       predictionProcessorStub.getPredictions$ = sinon.stub();
