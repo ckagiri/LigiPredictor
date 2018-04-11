@@ -6,8 +6,6 @@
 # compiled output
 /dist
 /tmp
-/app/**/*.js
-/app/**/*.js.map
 
 # dependencies
 /node_modules
@@ -129,6 +127,4 @@ $RECYCLE.BIN/
 
 # End of https://www.gitignore.io/api/node,windows,typings,angular,visualstudiocode
 
-/src/config
-/src/config/environment
-/src/**/*.js.map
+server/src/config

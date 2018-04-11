@@ -1,1 +1,0 @@
-{"version":3,"file":"footballApi.schedulers.js","sourceRoot":"","sources":["footballApi.schedulers.ts"],"names":[],"mappings":";;AACA,0EAAsF;AACtF,qEAAiE;AAEjE;IACE,MAAM,CAAC,WAAW;QAChB,MAAM,CAAC,IAAI,qBAAqB,EAAE,CAAC;IACrC,CAAC;IAED,KAAK;QACH,kCAAe,CAAC,WAAW,CAAC,yCAAW,CAAC,iBAAiB,CAAC,CAAC,KAAK,EAAE,CAAC;IACrE,CAAC;CACF;AARD,sDAQC"}
