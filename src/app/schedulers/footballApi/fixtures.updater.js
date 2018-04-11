@@ -10,6 +10,11 @@ let fixtureChanged = (apiFixture, dbFixture) => {
         apiFixture.result.goalsAwayTeam !== dbFixture.result.goalsAwayTeam) {
         return true;
     }
+    if ((apiFixture.odds && apiFixture.odds.homeWin) !== dbFixture.odds.homeWin ||
+        (apiFixture.odds && apiFixture.odds.awayWin) !== dbFixture.odds.awayWin ||
+        (apiFixture.odds && apiFixture.odds.draw) !== dbFixture.odds.draw) {
+        return true;
+    }
     return false;
 };
 class FixturesUpdater {
@@ -36,8 +41,10 @@ class FixturesUpdater {
             let apiFixture = externalIdToApiFixtureMap[extId];
             if (fixtureChanged(apiFixture, dbFixture)) {
                 let id = dbFixture.id;
-                let { result, status } = apiFixture;
-                return this.fixtureRepo.findByIdAndUpdate$(id, { result, status });
+                let { result, status, odds } = apiFixture;
+                let update = { result: result, status, odds: odds };
+                Object.keys(update).forEach(key => update[key] == null && delete update[key]);
+                return this.fixtureRepo.findByIdAndUpdate$(id, update);
             }
             return rxjs_1.Observable.of(dbFixture);
         }).toPromise();

@@ -19,7 +19,8 @@ let newApiFixture = () => {
     result: {
       goalsHomeTeam: 1,
       goalsAwayTeam: 1
-    }
+    },
+    odds: null
   }
 }
 let newDbFixture = () => { 

@@ -13,3 +13,9 @@ export interface ScorePoints {
   GoalDifferencePoints: number;
   TeamScoreMinusPoints: number;
 }
+
+export interface Odds {
+  homeWin:number,
+  awayWin: number,
+  draw: number
+}

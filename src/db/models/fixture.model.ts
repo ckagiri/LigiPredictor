@@ -1,7 +1,7 @@
 import { Schema, Model, model, Document } from 'mongoose';
 
 import { IEntity } from './base.model';
-import { ScorePoints, Score } from '../../common/score';
+import { ScorePoints, Score, Odds } from '../../common/score';
 
 export enum FixtureStatus {
   SCHEDULED = 'SCHEDULED', 
@@ -32,11 +32,7 @@ export interface IFixture extends IEntity {
     crestUrl: string,
     id: string
   };
-  odds?: {
-    homeWin:number,
-    awayWin: number,
-    draw: number
-  };
+  odds?: Odds;
   result?: Score,
   venue?: string;
   allPredictionsProcessed?: boolean;
