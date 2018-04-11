@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "pretest": "tsc",
-    "test": "nyc mocha --opts ./mocha.opts",
+    "test": "nyc mocha --opts ./mocha.opts test/**/*.spec.ts",
     "watch": "mocha-typescript-watch",
     "clean": "rimraf dist",
     "compile": "tsc",
@@ -65,11 +64,11 @@
     "typescript": "^2.7.2"
   },
   "nyc": {
-    "check-coverage": false,
-    "lines": 80,
-    "statements": 80,
-    "functions": 80,
-    "branches": 80,
+    "check-coverage": true,
+    "lines": 50,
+    "statements": 50,
+    "functions": 50,
+    "branches": 50,
     "extension": [
       ".ts"
     ],
