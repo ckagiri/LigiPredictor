@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const chai_1 = require("chai");
 const db = require("../../src/db/index");
 const index_1 = require("../../src/config/environment/index");
 const user_model_1 = require("../../src/db/models/user.model");
@@ -11,7 +12,7 @@ const prediction_model_1 = require("../../src/db/models/prediction.model");
 const leaderboard_model_1 = require("../../src/db/models/leaderboard.model");
 const userScore_repo_1 = require("../../src/db/repositories/userScore.repo");
 let userScoreRepo = userScore_repo_1.UserScoreRepository.getInstance();
-let user1, user2, league, season, team1, team2, team3, team4, fixture1, fixture2, user1Pred1, user2Pred1, sBoard, rBoard;
+let user1, user2, league, season, team1, team2, team3, team4, fixture1, fixture2, user1Pred1, user1Pred2, user2Pred1, sBoard, rBoard;
 const epl = {
     name: 'English Premier League',
     slug: 'english_premier_league',
@@ -161,7 +162,7 @@ describe.only('UserScore Repo', function () {
         })
             .then(predictions => {
             user1Pred1 = predictions[0];
-            user1Pred1 = predictions[1];
+            user1Pred2 = predictions[1];
             user2Pred1 = predictions[2];
             return leaderboard_model_1.LeaderboardModel.create([
                 {
@@ -188,7 +189,7 @@ describe.only('UserScore Repo', function () {
     after(done => {
         db.close().then(() => { done(); });
     });
-    describe.only('find and upsert', () => {
+    describe('find and upsert', () => {
         it('should create a userScore if it does not exist', done => {
             let leaderboardId = sBoard.id;
             let userId = user1.id;
@@ -207,19 +208,151 @@ describe.only('UserScore Repo', function () {
             let hasJoker = true;
             userScoreRepo.findOneAndUpsert$(leaderboardId, userId, fixtureId, predictionId, predictionPoints, hasJoker)
                 .subscribe(score => {
-                console.log(score);
+                chai_1.expect(score.pointsExcludingJoker).to.equal(7);
+                chai_1.expect(score.APointsExcludingJoker).to.equal(7);
+                chai_1.expect(score.BPointsExcludingJoker).to.equal(0);
+                chai_1.expect(score.points).to.equal(14);
+                chai_1.expect(score.APoints).to.equal(14);
+                chai_1.expect(score.BPoints).to.equal(0);
+                chai_1.expect(score.fixtures).to.contain(fixture1.id);
+                chai_1.expect(score.predictions).to.contain(user1Pred1.id);
                 done();
             });
         });
-        xit('should update a userScore if it exists', done => {
+        it('should update a userScore if it exists', done => {
+            let leaderboardId = sBoard.id;
+            let userId = user1.id;
+            let fixtureId = fixture1.id;
+            let predictionId = user1Pred1.id;
+            let score1 = {
+                leaderboard: leaderboardId,
+                user: userId,
+                points: 14,
+                APoints: 14,
+                BPoints: 0,
+                MatchOutcomePoints: 8,
+                TeamScorePlusPoints: 6,
+                ExactScorePoints: 0,
+                GoalDifferencePoints: 0,
+                TeamScoreMinusPoints: 0,
+                fixtures: [fixtureId],
+                predictions: [predictionId],
+                pointsExcludingJoker: 7,
+                APointsExcludingJoker: 7,
+                BPointsExcludingJoker: 0
+            };
+            userScoreRepo.insert$(score1)
+                .flatMap(_ => {
+                let predictionPoints = {
+                    points: 10,
+                    APoints: 8,
+                    BPoints: 2,
+                    MatchOutcomePoints: 4,
+                    TeamScorePlusPoints: 4,
+                    GoalDifferencePoints: 1,
+                    ExactScorePoints: 1,
+                    TeamScoreMinusPoints: 0
+                };
+                let hasJoker = false;
+                fixtureId = fixture2.id;
+                predictionId = user1Pred2.id;
+                return userScoreRepo.findOneAndUpsert$(leaderboardId, userId, fixtureId, predictionId, predictionPoints, hasJoker);
+            })
+                .subscribe(score => {
+                chai_1.expect(score.pointsExcludingJoker).to.equal(17);
+                chai_1.expect(score.APointsExcludingJoker).to.equal(15);
+                chai_1.expect(score.BPointsExcludingJoker).to.equal(2);
+                chai_1.expect(score.points).to.equal(24);
+                chai_1.expect(score.APoints).to.equal(22);
+                chai_1.expect(score.BPoints).to.equal(2);
+                chai_1.expect(score.fixtures).to.contain(fixture1.id, fixture2.id);
+                chai_1.expect(score.predictions).to.contain(user1Pred1.id, user1Pred2.id);
+                done();
+            });
+        });
+    });
+    it('should find by leaderboard and order by points', done => {
+        let leaderboardId = sBoard.id;
+        let fixtureId = fixture1.id;
+        let score1 = {
+            leaderboard: leaderboardId,
+            user: user1.id,
+            points: 14,
+            APoints: 14,
+            BPoints: 0,
+            MatchOutcomePoints: 8,
+            TeamScorePlusPoints: 6,
+            ExactScorePoints: 0,
+            GoalDifferencePoints: 0,
+            TeamScoreMinusPoints: 0,
+            fixtures: [fixtureId],
+            predictions: [user1Pred1.id],
+            pointsExcludingJoker: 7,
+            APointsExcludingJoker: 7,
+            BPointsExcludingJoker: 0
+        };
+        let score2 = {
+            leaderboard: leaderboardId,
+            user: user2.id,
+            points: 10,
+            APoints: 8,
+            BPoints: 2,
+            MatchOutcomePoints: 4,
+            TeamScorePlusPoints: 4,
+            ExactScorePoints: 1,
+            GoalDifferencePoints: 1,
+            TeamScoreMinusPoints: 0,
+            fixtures: [fixtureId],
+            predictions: [user2Pred1.id],
+            pointsExcludingJoker: 7,
+            APointsExcludingJoker: 7,
+            BPointsExcludingJoker: 0
+        };
+        userScoreRepo.insertMany$([score2, score1])
+            .flatMap(_ => {
+            return userScoreRepo.findByLeaderboardOrderByPoints$(sBoard.id);
+        })
+            .subscribe(standings => {
+            chai_1.expect(standings[0].points).to.be.at.least(standings[1].points);
             done();
         });
     });
-    xit('should find by leaderboard and order by points', done => {
-        done();
-    });
-    xit('should find by id and update positions', done => {
-        done();
+    it('should find by id and update positions', done => {
+        let leaderboardId = sBoard.id;
+        let userId = user1.id;
+        let fixtureId = fixture1.id;
+        let predictionId = user1Pred1.id;
+        let score1 = {
+            leaderboard: leaderboardId,
+            user: userId,
+            points: 14,
+            APoints: 14,
+            BPoints: 0,
+            MatchOutcomePoints: 8,
+            TeamScorePlusPoints: 6,
+            ExactScorePoints: 0,
+            GoalDifferencePoints: 0,
+            TeamScoreMinusPoints: 0,
+            fixtures: [fixtureId],
+            predictions: [predictionId],
+            pointsExcludingJoker: 7,
+            APointsExcludingJoker: 7,
+            BPointsExcludingJoker: 0,
+            positionNew: 1,
+            positionOld: 2
+        };
+        userScoreRepo.insert$(score1)
+            .flatMap(standing => {
+            let prevPosition = standing.positionNew;
+            let positionOld = prevPosition;
+            let positionNew = prevPosition + 1;
+            return userScoreRepo.findByIdAndUpdate$(standing.id, { positionNew, positionOld });
+        })
+            .subscribe(standing => {
+            console.log('pn', standing.positionNew);
+            console.log('po', standing.positionOld);
+            done();
+        });
     });
 });
 //# sourceMappingURL=userScore.repo.spec.js.map

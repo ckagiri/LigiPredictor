@@ -10,13 +10,14 @@ import { TeamModel as Team } from '../../src/db/models/team.model';
 import { FixtureModel as Fixture } from '../../src/db/models/fixture.model';
 import { PredictionModel as Prediction } from '../../src/db/models/prediction.model';
 import { LeaderboardModel as Leaderboard, BoardStatus, BoardType } from '../../src/db/models/leaderboard.model';
+import { IUserScore } from '../../src/db/models/userScore.model';
 
 import { ScorePoints } from '../../src/common/score'
 import { UserScoreRepository } from '../../src/db/repositories/userScore.repo';
 
 let userScoreRepo = UserScoreRepository.getInstance();
 let user1: any, user2: any, league: any, season: any, team1: any, team2: any, team3: any, team4: any, 
-fixture1: any, fixture2: any, user1Pred1: any, user2Pred1: any, sBoard: any, rBoard: any;
+fixture1: any, fixture2: any, user1Pred1: any, user1Pred2: any, user2Pred1: any, sBoard: any, rBoard: any;
 
 const epl = {
   name: 'English Premier League',
@@ -170,7 +171,7 @@ describe.only('UserScore Repo', function () {
       return Prediction.create([pred1, pred2, pred3])
     })
     .then(predictions => {
-      user1Pred1 = predictions[0]; user1Pred1 = predictions[1]; user2Pred1 = predictions[2];
+      user1Pred1 = predictions[0]; user1Pred2 = predictions[1]; user2Pred1 = predictions[2];
       return Leaderboard.create([
         {
           status: BoardStatus.UPDATING_SCORES,
@@ -196,7 +197,7 @@ describe.only('UserScore Repo', function () {
     db.close().then(() => { done(); })
   })
 
-  describe.only('find and upsert', () => {
+  describe('find and upsert', () => {
     it('should create a userScore if it does not exist', done => {
       let leaderboardId = sBoard.id;
       let userId = user1.id;
@@ -215,20 +216,152 @@ describe.only('UserScore Repo', function () {
       let hasJoker = true;
       userScoreRepo.findOneAndUpsert$(leaderboardId, userId, fixtureId, predictionId, predictionPoints, hasJoker)
         .subscribe(score => {
-          console.log(score);
+          expect(score.pointsExcludingJoker).to.equal(7)
+          expect(score.APointsExcludingJoker).to.equal(7)
+          expect(score.BPointsExcludingJoker).to.equal(0)
+          expect(score.points).to.equal(14)
+          expect(score.APoints).to.equal(14)
+          expect(score.BPoints).to.equal(0)
+          expect(score.fixtures).to.contain(fixture1.id)
+          expect(score.predictions).to.contain(user1Pred1.id)          
           done();          
         })
     })
-    xit('should update a userScore if it exists', done => {
-      done();
+    it('should update a userScore if it exists', done => {
+      let leaderboardId = sBoard.id;
+      let userId = user1.id;
+      let fixtureId = fixture1.id;
+      let predictionId = user1Pred1.id;
+      let score1: IUserScore = { 
+        leaderboard: leaderboardId,
+        user: userId,
+        points: 14,
+        APoints: 14,
+        BPoints: 0,
+        MatchOutcomePoints: 8,
+        TeamScorePlusPoints: 6,
+        ExactScorePoints: 0,
+        GoalDifferencePoints: 0,
+        TeamScoreMinusPoints: 0,
+        fixtures: [ fixtureId ],
+        predictions: [ predictionId ],
+        pointsExcludingJoker: 7,
+        APointsExcludingJoker: 7,
+        BPointsExcludingJoker: 0
+      }
+      userScoreRepo.insert$(score1)
+      .flatMap(_ => {
+        let predictionPoints: ScorePoints = {
+          points: 10,
+          APoints: 8,
+          BPoints: 2,
+          MatchOutcomePoints: 4,  
+          TeamScorePlusPoints: 4,
+          GoalDifferencePoints: 1,
+          ExactScorePoints: 1,
+          TeamScoreMinusPoints: 0
+        }
+        let hasJoker = false;      
+        fixtureId = fixture2.id;
+        predictionId = user1Pred2.id  
+        return userScoreRepo.findOneAndUpsert$(leaderboardId, userId, fixtureId, predictionId, predictionPoints, hasJoker);
+      })
+      .subscribe(score => {
+        expect(score.pointsExcludingJoker).to.equal(17)
+        expect(score.APointsExcludingJoker).to.equal(15)
+        expect(score.BPointsExcludingJoker).to.equal(2)
+        expect(score.points).to.equal(24)
+        expect(score.APoints).to.equal(22)
+        expect(score.BPoints).to.equal(2)
+        expect(score.fixtures).to.contain(fixture1.id, fixture2.id)
+        expect(score.predictions).to.contain(user1Pred1.id, user1Pred2.id)          
+        done();          
+      })
     });
   })
 
-  xit('should find by leaderboard and order by points', done => {
-    done()
+  it('should find by leaderboard and order by points', done => {
+    let leaderboardId = sBoard.id;
+    let fixtureId = fixture1.id;
+    let score1: IUserScore = { 
+      leaderboard: leaderboardId,
+      user: user1.id,
+      points: 14,
+      APoints: 14,
+      BPoints: 0,
+      MatchOutcomePoints: 8,
+      TeamScorePlusPoints: 6,
+      ExactScorePoints: 0,
+      GoalDifferencePoints: 0,
+      TeamScoreMinusPoints: 0,
+      fixtures: [ fixtureId ],
+      predictions: [ user1Pred1.id ],
+      pointsExcludingJoker: 7,
+      APointsExcludingJoker: 7,
+      BPointsExcludingJoker: 0
+    }
+    let score2: IUserScore = { 
+      leaderboard: leaderboardId,
+      user: user2.id,
+      points: 10,
+      APoints: 8,
+      BPoints: 2,
+      MatchOutcomePoints: 4,  
+      TeamScorePlusPoints: 4,
+      ExactScorePoints: 1,      
+      GoalDifferencePoints: 1,
+      TeamScoreMinusPoints: 0,  
+      fixtures: [ fixtureId ],
+      predictions: [ user2Pred1.id ],
+      pointsExcludingJoker: 7,
+      APointsExcludingJoker: 7,
+      BPointsExcludingJoker: 0
+    }
+    userScoreRepo.insertMany$([score2, score1])
+      .flatMap(_ => {
+        return userScoreRepo.findByLeaderboardOrderByPoints$(sBoard.id)
+      })
+      .subscribe(standings => {
+        expect(standings[0].points).to.be.at.least(standings[1].points)
+        done();        
+      })    
   })
 
-  xit('should find by id and update positions', done => {
-    done()
+  it('should find by id and update positions', done => {
+    let leaderboardId = sBoard.id;
+    let userId = user1.id;
+    let fixtureId = fixture1.id;
+    let predictionId = user1Pred1.id;
+    let score1: IUserScore = { 
+      leaderboard: leaderboardId,
+      user: userId,
+      points: 14,
+      APoints: 14,
+      BPoints: 0,
+      MatchOutcomePoints: 8,
+      TeamScorePlusPoints: 6,
+      ExactScorePoints: 0,
+      GoalDifferencePoints: 0,
+      TeamScoreMinusPoints: 0,
+      fixtures: [ fixtureId ],
+      predictions: [ predictionId ],
+      pointsExcludingJoker: 7,
+      APointsExcludingJoker: 7,
+      BPointsExcludingJoker: 0,
+      positionNew: 1,
+      positionOld: 2
+    }
+    userScoreRepo.insert$(score1)
+      .flatMap(standing => {
+        let prevPosition = standing.positionNew;
+        let positionOld = prevPosition;
+        let positionNew = prevPosition + 1;
+        return userScoreRepo.findByIdAndUpdate$(standing.id, { positionNew, positionOld })
+      })
+      .subscribe(standing => {
+        expect(standing.positionNew).to.equal(2);
+        expect(standing.positionOld).to.equal(1)
+        done();        
+      });
   })
 })

@@ -47,6 +47,20 @@ describe('PredictionCalculator', function () {
         TeamScoreMinusPoints: 0
       })
     })  
+
+    it('should be correct for choice 4 2', () => {
+      let scorePoints = calculator.calculateScore({ goalsHomeTeam: 3, goalsAwayTeam: 0 }, { goalsHomeTeam: 4, goalsAwayTeam: 2 })
+      expect(scorePoints).to.eql({
+        points: 3,
+        APoints: 4,
+        BPoints: -1,
+        MatchOutcomePoints: 4,  
+        TeamScorePlusPoints: 0,
+        GoalDifferencePoints: 0,
+        ExactScorePoints: 0,
+        TeamScoreMinusPoints: -1
+      })
+    })  
   
     it('should be correct for choice 2 0', () => {
       let scorePoints = calculator.calculateScore({ goalsHomeTeam: 3, goalsAwayTeam: 0 }, { goalsHomeTeam: 2, goalsAwayTeam: 0 })

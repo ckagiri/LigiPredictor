@@ -82,7 +82,13 @@ class UserScoreRepository extends base_repo_1.BaseRepository {
         });
     }
     findByLeaderboardOrderByPoints$(leaderboardId) {
-        return rxjs_1.Observable.of([{}]);
+        return this.findAll$({ leaderboard: leaderboardId }, null, {
+            sort: {
+                points: -1, APoints: -1, BPoints: -1,
+                MatchOutcomePoints: -1, TeamScorePlusPoints: -1,
+                ExactScorePoints: -1, GoalDifferencePoints: -1
+            }
+        });
     }
 }
 exports.UserScoreRepository = UserScoreRepository;

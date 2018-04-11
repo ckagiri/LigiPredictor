@@ -96,6 +96,13 @@ export class UserScoreRepository extends BaseRepository<IUserScore> implements I
   }
 
   findByLeaderboardOrderByPoints$(leaderboardId: string) {
-    return Observable.of([<IUserScore>{}]);
+    return this.findAll$({ leaderboard: leaderboardId }, null, 
+      { 
+        sort: { 
+          points: -1, APoints: -1, BPoints: -1, 
+          MatchOutcomePoints: -1, TeamScorePlusPoints: -1, 
+          ExactScorePoints: -1, GoalDifferencePoints: -1 
+        }
+      });
   }
 }
