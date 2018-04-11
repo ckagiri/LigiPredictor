@@ -5,14 +5,14 @@
   "main": "index.js",
   "scripts": {
     "pretest": "tsc",
-    "test": "nyc mocha",
+    "test": "nyc mocha --opts ./mocha.opts",
     "watch": "mocha-typescript-watch",
     "clean": "rimraf dist",
     "compile": "tsc",
     "start:server": "npm run compile && node dist/app/server.js",
     "mongodb": "mongod --dbpath=C:/data/db --port 27017",
-    "import:test": "SET NODE_ENV=test&& npm run compile && node src/import/start.js",
-    "drop:seed:test": "SET NODE_ENV=test&& npm run compile && node src/db/tasks/drop.js && node src/db/tasks/seed.js"
+    "import:test": "SET NODE_ENV=test&& npm run compile && node dist/import/start.js",
+    "drop:seed:test": "SET NODE_ENV=test&& npm run compile && node dist/db/tasks/drop.js && node dist/db/tasks/seed.js"
   },
   "author": "mimi",
   "license": "ISC",
@@ -70,16 +70,19 @@
     "statements": 80,
     "functions": 80,
     "branches": 80,
+    "extension": [
+      ".ts"
+    ],
     "include": [
-      "src/**/*.js"
+      "src/**/*.ts"
     ],
     "exclude": [
-      "test/**/*.js"
+      "**/*.d.ts"
     ],
     "reporter": [
       "lcov",
       "text-summary"
-    ],
+      ],
     "all": true
   }
 }
