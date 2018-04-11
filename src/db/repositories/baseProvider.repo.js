@@ -48,6 +48,9 @@ class BaseProviderRepository {
         let externalIdKey = `externalReference.${this.Provider}.id`;
         return this.findAll$({ [externalIdKey]: { $in: ids } });
     }
+    saveMany$(objs) {
+        return this._baseRepo.saveMany$(objs);
+    }
     insert$(obj) {
         return this._baseRepo.insert$(obj);
     }

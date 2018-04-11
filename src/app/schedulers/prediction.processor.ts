@@ -6,7 +6,7 @@ import { IPredictionRepository, PredictionRepository }  from '../../db/repositor
 import { PredictionCalculator } from './prediction.calculator';
 
 import { IFixture }  from '../../db/models/fixture.model';
-import { IPrediction }  from '../../db/models/prediction.model';
+import { IPrediction, PredictionStatus }  from '../../db/models/prediction.model';
 import { FootballApiProvider as ApiProvider } from '../../common/footballApiProvider';
 
 export interface IPredictionProcessor {
@@ -33,7 +33,7 @@ export class PredictionProcessor implements IPredictionProcessor {
     let { season: seasonId, gameRound } = fixture;
     return this.fixtureRepo.findSelectableFixtures$(seasonId, gameRound)
       .map(selectableFixtures => {
-        return [...selectableFixtures, fixture].map(n => n.id)
+        return selectableFixtures.map(n => n.id)
       })
       .flatMap(fixtureIds => {
         return this.userRepo.findAll$()  
@@ -61,6 +61,7 @@ export class PredictionProcessor implements IPredictionProcessor {
       .flatMap(data => {
         let fixtureId = fixture.id;
         let { userId, jokerPrediction } = data;
+                
         if(jokerPrediction.fixture === fixtureId) {
           return Observable.of(jokerPrediction)
         }
@@ -73,6 +74,7 @@ export class PredictionProcessor implements IPredictionProcessor {
     let { choice } = prediction;
     let { result } = fixture;
     let scorePoints = this.predictionCalculator.calculateScore(choice, result);
-    return this.predictionRepo.findByIdAndUpdate$(prediction.id, { scorePoints })
+    let status = PredictionStatus.PROCESSED;
+    return this.predictionRepo.findByIdAndUpdate$(prediction.id, { scorePoints, status })
   }
 }

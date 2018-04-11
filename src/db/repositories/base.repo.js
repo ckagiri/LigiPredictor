@@ -15,6 +15,15 @@ class BaseRepository {
             return data;
         });
     }
+    saveMany$(data) {
+        return this._baseDao.saveMany$(data)
+            .catch((error) => {
+            return rxjs_1.Observable.throw(error);
+        })
+            .map((data) => {
+            return data;
+        });
+    }
     insert$(data) {
         return this._baseDao.insert$(data)
             .catch((error) => {

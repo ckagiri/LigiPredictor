@@ -14,6 +14,10 @@ export class DocumentDao<T extends Document> {
     return model.save();
   }
 
+  saveMany(objs: IEntity[]): Promise<T[]> {
+    return this._model.create(objs) as Promise<T[]>
+  }
+
   insert(obj: IEntity): Promise<T> {
     return this._model.create(obj) as Promise<T>
   }

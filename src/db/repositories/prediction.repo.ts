@@ -60,7 +60,7 @@ export class PredictionRepository extends BaseRepository<IPrediction> implements
         }
         newJokerFixture = fixture;
 			  if(autoPicked || newJokerFixture.status === FixtureStatus.SCHEDULED || newJokerFixture.status === FixtureStatus.TIMED) {
-          return super.findOne$({ user: userId, fixture: newJokerFixtureId})
+          return this.findOne$({ user: userId, fixture: newJokerFixtureId})
         }
         return Observable.throw(new Error('Fixture not scheduled'))
       })
@@ -86,7 +86,7 @@ export class PredictionRepository extends BaseRepository<IPrediction> implements
           currentJoker.hasJoker = false;
           predictionJokers.push(currentJoker)
         }
-        return this.insertMany$(predictionJokers)
+        return this.saveMany$(predictionJokers)
       })
       .flatMap(predictions => {
         return Observable.from(predictions);

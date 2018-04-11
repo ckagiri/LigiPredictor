@@ -32,6 +32,9 @@ describe('Leaderboard Repo', function () {
   before(done => {
     db.init(config.testDb.uri, done, { drop: true });
   })
+  before(done => {
+    db.init(config.testDb.uri, done, { drop: true });
+  })
   beforeEach(done => {
     League.create(epl)
       .then(l => {

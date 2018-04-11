@@ -13,6 +13,16 @@ class BaseDao extends document_dao_1.DocumentDao {
             });
         });
     }
+    saveMany$(objs) {
+        return rxjs_1.Observable.create((observer) => {
+            this.saveMany(objs).then((result) => {
+                observer.next(result);
+                observer.complete();
+            }, (error) => {
+                observer.error(error);
+            });
+        });
+    }
     insert$(obj) {
         return rxjs_1.Observable.create((observer) => {
             this.insert(obj).then((result) => {

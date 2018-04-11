@@ -8,6 +8,9 @@ class DocumentDao {
         const model = new this._model(obj);
         return model.save();
     }
+    saveMany(objs) {
+        return this._model.create(objs);
+    }
     insert(obj) {
         return this._model.create(obj);
     }

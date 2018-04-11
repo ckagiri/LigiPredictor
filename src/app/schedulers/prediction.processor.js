@@ -5,6 +5,7 @@ const fixture_repo_1 = require("../../db/repositories/fixture.repo");
 const user_repo_1 = require("../../db/repositories/user.repo");
 const prediction_repo_1 = require("../../db/repositories/prediction.repo");
 const prediction_calculator_1 = require("./prediction.calculator");
+const prediction_model_1 = require("../../db/models/prediction.model");
 const footballApiProvider_1 = require("../../common/footballApiProvider");
 class PredictionProcessor {
     constructor(fixtureRepo, userRepo, predictionRepo, predictionCalculator) {
@@ -20,7 +21,7 @@ class PredictionProcessor {
         let { season: seasonId, gameRound } = fixture;
         return this.fixtureRepo.findSelectableFixtures$(seasonId, gameRound)
             .map(selectableFixtures => {
-            return [...selectableFixtures, fixture].map(n => n.id);
+            return selectableFixtures.map(n => n.id);
         })
             .flatMap(fixtureIds => {
             return this.userRepo.findAll$()
@@ -59,7 +60,8 @@ class PredictionProcessor {
         let { choice } = prediction;
         let { result } = fixture;
         let scorePoints = this.predictionCalculator.calculateScore(choice, result);
-        return this.predictionRepo.findByIdAndUpdate$(prediction.id, { scorePoints });
+        let status = prediction_model_1.PredictionStatus.PROCESSED;
+        return this.predictionRepo.findByIdAndUpdate$(prediction.id, { scorePoints, status });
     }
 }
 exports.PredictionProcessor = PredictionProcessor;

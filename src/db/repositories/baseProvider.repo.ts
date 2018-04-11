@@ -73,6 +73,10 @@ export class BaseProviderRepository<T extends IEntity> implements IBaseProviderR
 
     return this.findAll$({ [externalIdKey]: { $in : ids } });
   }
+
+  saveMany$(objs: IEntity[]): Observable<T[]> {
+    return this._baseRepo.saveMany$(objs);
+  }
   
   insert$(obj: IEntity): Observable<T> {
     return this._baseRepo.insert$(obj);

@@ -50,7 +50,7 @@ class PredictionRepository extends base_repo_1.BaseRepository {
             }
             newJokerFixture = fixture;
             if (autoPicked || newJokerFixture.status === fixture_model_1.FixtureStatus.SCHEDULED || newJokerFixture.status === fixture_model_1.FixtureStatus.TIMED) {
-                return super.findOne$({ user: userId, fixture: newJokerFixtureId });
+                return this.findOne$({ user: userId, fixture: newJokerFixtureId });
             }
             return rxjs_1.Observable.throw(new Error('Fixture not scheduled'));
         })
@@ -77,7 +77,7 @@ class PredictionRepository extends base_repo_1.BaseRepository {
                 currentJoker.hasJoker = false;
                 predictionJokers.push(currentJoker);
             }
-            return this.insertMany$(predictionJokers);
+            return this.saveMany$(predictionJokers);
         })
             .flatMap(predictions => {
             return rxjs_1.Observable.from(predictions);
