@@ -9,7 +9,8 @@ interface CacheContent {
 export interface ICacheService {
   get(key: string, fallback?: Observable<any>, maxAge?: number): Observable<any> | Subject<any>;
   set(key: string, value: any, maxAge?: number): void;
-  has(key: string): boolean
+  has(key: string): boolean;
+  clear(): void;
 }
 
 /**
@@ -68,6 +69,10 @@ export class CacheService {
     return this.cache.has(key);
   }
 
+  clear() {
+    this.cache.clear();
+  }
+
   /**
    * Publishes the value to all observers of the given
    * in progress observables if observers exist.
@@ -77,7 +82,7 @@ export class CacheService {
       const inFlight = this.inFlightObservables.get(key);
       const observersCount = inFlight.observers.length;
       if (observersCount) {
-        console.log(`%cNotifying ${inFlight.observers.length} flight subscribers for ${key}`, 'color: blue');
+        // console.log(`%cNotifying ${inFlight.observers.length} flight subscribers for ${key}`, 'color: blue');
         inFlight.next(value);
       }
       inFlight.complete();

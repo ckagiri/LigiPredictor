@@ -45,7 +45,7 @@ class BaseDao extends document_dao_1.DocumentDao {
     }
     findByIdAndUpdate$(id, update) {
         return rxjs_1.Observable.create((observer) => {
-            super.findByIdAndUpdate(id, update).exec().then((result) => {
+            this.findByIdAndUpdate(id, update).exec().then((result) => {
                 observer.next(result);
                 observer.complete();
             }, (error) => {
@@ -55,7 +55,7 @@ class BaseDao extends document_dao_1.DocumentDao {
     }
     findOneAndUpdate$(conditions, update, options) {
         return rxjs_1.Observable.create((observer) => {
-            super.findOneAndUpdate(conditions, update, options).exec().then((result) => {
+            this.findOneAndUpdate(conditions, update, options).exec().then((result) => {
                 observer.next(result);
                 observer.complete();
             }, (error) => {
@@ -65,7 +65,7 @@ class BaseDao extends document_dao_1.DocumentDao {
     }
     findAll$(conditions, projection, options) {
         return rxjs_1.Observable.create((observer) => {
-            super.findAll(conditions, projection, options).exec().then((result) => {
+            this.findAll(conditions, projection, options).exec().then((result) => {
                 observer.next(result);
                 observer.complete();
             }, (error) => {
@@ -75,7 +75,7 @@ class BaseDao extends document_dao_1.DocumentDao {
     }
     findOne$(conditions, projection) {
         return rxjs_1.Observable.create((observer) => {
-            super.findOne(conditions).exec().then((result) => {
+            this.findOne(conditions).exec().then((result) => {
                 observer.next(result);
                 observer.complete();
             }, (error) => {
@@ -85,7 +85,7 @@ class BaseDao extends document_dao_1.DocumentDao {
     }
     findById$(id) {
         return rxjs_1.Observable.create((observer) => {
-            super.findById(id).exec().then((result) => {
+            this.findById(id).exec().then((result) => {
                 observer.next(result);
                 observer.complete();
             }, (error) => {
@@ -95,7 +95,7 @@ class BaseDao extends document_dao_1.DocumentDao {
     }
     remove$(id) {
         return rxjs_1.Observable.create((observer) => {
-            super.remove(id).exec().then(() => {
+            this.remove(id).exec().then(() => {
                 observer.next();
                 observer.complete();
             }, (error) => {
@@ -105,7 +105,7 @@ class BaseDao extends document_dao_1.DocumentDao {
     }
     count$(conditions) {
         return rxjs_1.Observable.create((observer) => {
-            super.count(conditions).exec().then((result) => {
+            this.count(conditions).exec().then((result) => {
                 observer.next(result);
                 observer.complete();
             }, (error) => {

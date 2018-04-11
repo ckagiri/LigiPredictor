@@ -7,6 +7,7 @@ const leaderboard_model_1 = require("../../db/models/leaderboard.model");
 const leaderboard_repo_1 = require("../../db/repositories/leaderboard.repo");
 const prediction_repo_1 = require("../../db/repositories/prediction.repo");
 const userScore_repo_1 = require("../../db/repositories/userScore.repo");
+const cacheService_1 = require("../../common/cacheService");
 class LeaderboardUpdater {
     constructor(userRepo, leaderboardRepo, predictionRepo, userScoreRepo) {
         this.userRepo = userRepo;
@@ -15,15 +16,16 @@ class LeaderboardUpdater {
         this.userScoreRepo = userScoreRepo;
     }
     static getInstance() {
-        user_repo_1.UserRepository.getInstance(),
-            leaderboard_repo_1.LeaderboardRepository.getInstance(),
-            prediction_repo_1.PredictionRepository.getInstance(),
-            userScore_repo_1.UserScoreRepository.getInstance();
+        return new LeaderboardUpdater(user_repo_1.UserRepository.getInstance(), leaderboard_repo_1.LeaderboardRepository.getInstance(), prediction_repo_1.PredictionRepository.getInstance(), userScore_repo_1.UserScoreRepository.getInstance()).setCacheService(new cacheService_1.CacheService());
     }
     setCacheService(cacheService) {
         this.cacheService = cacheService;
+        return this;
     }
     updateScores(fixtures) {
+        if (this.cacheService != null) {
+            this.cacheService.clear();
+        }
         return rxjs_1.Observable.from(fixtures)
             .filter(fixture => {
             return fixture.status === fixture_model_1.FixtureStatus.FINISHED && fixture.allPredictionsProcessed === false;
@@ -87,24 +89,34 @@ class LeaderboardUpdater {
     updateRankings(seasonId) {
         return this.leaderboardRepo.findAll$({ season: seasonId, status: leaderboard_model_1.BoardStatus.UPDATING_SCORES })
             .flatMap(leaderboards => {
+            console.log('lbs', leaderboards);
             return rxjs_1.Observable.from(leaderboards);
         })
             .flatMap(leaderboard => {
             return this.leaderboardRepo.findByIdAndUpdate$(leaderboard.id, { status: leaderboard_model_1.BoardStatus.UPDATING_RANKINGS });
         })
             .flatMap(leaderboard => {
-            return this.userScoreRepo.findByLeaderboardOrderByPoints$(leaderboard.id);
+            console.log('lbs', leaderboard);
+            return this.userScoreRepo.findByLeaderboardOrderByPoints$(leaderboard.id)
+                .flatMap(userScores => {
+                return rxjs_1.Observable.from(userScores);
+            })
+                .flatMap((standing, index) => {
+                index += 1;
+                console.log('points', standing.points);
+                console.log('ix', index);
+                let previousPosition = standing.positionNew || 0;
+                let positionOld = previousPosition;
+                let positionNew = index;
+                console.log('positionNew', positionNew);
+                console.log('positionOld', positionOld);
+                return this.userScoreRepo.findByIdAndUpdate$(standing.id, { positionNew, positionOld })
+                    .map(_ => {
+                    return leaderboard.id;
+                });
+            });
         })
-            .flatMap(userScores => {
-            return rxjs_1.Observable.from(userScores);
-        })
-            .concatMap((standing, index) => {
-            index += 1;
-            let prevPosition = standing.positionNew || 0;
-            let positionOld = prevPosition;
-            let positionNew = index;
-            return this.userScoreRepo.findByIdAndUpdate$(standing.id, { positionNew, positionOld });
-        })
+            .distinct()
             .count()
             .toPromise();
     }

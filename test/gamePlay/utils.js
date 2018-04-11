@@ -56,7 +56,8 @@ const manuVmanc = {
     season: null,
     homeTeam: null,
     awayTeam: null,
-    slug: null
+    slug: null,
+    result: null
 };
 const cheVars = {
     date: "2017-09-10T11:30:00Z",
@@ -66,7 +67,8 @@ const cheVars = {
     season: null,
     homeTeam: null,
     awayTeam: null,
-    slug: null
+    slug: null,
+    result: null
 };
 const chalo = {
     username: 'chalo',

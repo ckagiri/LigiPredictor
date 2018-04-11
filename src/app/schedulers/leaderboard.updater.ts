@@ -16,10 +16,12 @@ export interface ILeaderboardUpdater {
 
 export class LeaderboardUpdater implements ILeaderboardUpdater {
   static getInstance() {
-    UserRepository.getInstance(),
-    LeaderboardRepository.getInstance(),
-    PredictionRepository.getInstance(),
-    UserScoreRepository.getInstance()
+    return new LeaderboardUpdater(
+      UserRepository.getInstance(),
+      LeaderboardRepository.getInstance(),
+      PredictionRepository.getInstance(),
+      UserScoreRepository.getInstance()
+    ).setCacheService(new CacheService())
   }
   
   private cacheService: ICacheService;
@@ -33,9 +35,13 @@ export class LeaderboardUpdater implements ILeaderboardUpdater {
 
   setCacheService(cacheService: ICacheService) {
     this.cacheService = cacheService;
+    return this;
   }
 
   updateScores(fixtures: IFixture[]) {
+    if(this.cacheService != null) {
+      this.cacheService.clear();
+    }
     return Observable.from(fixtures)
       .filter(fixture => {
         return fixture.status === FixtureStatus.FINISHED  && fixture.allPredictionsProcessed === false;
@@ -111,18 +117,22 @@ export class LeaderboardUpdater implements ILeaderboardUpdater {
         return this.leaderboardRepo.findByIdAndUpdate$(leaderboard.id, { status: BoardStatus.UPDATING_RANKINGS })
       })
       .flatMap(leaderboard => {
-        return this.userScoreRepo.findByLeaderboardOrderByPoints$(leaderboard.id);
+        return this.userScoreRepo.findByLeaderboardOrderByPoints$(leaderboard.id)
+          .flatMap(userScores => {
+            return Observable.from(userScores);
+          })
+          .flatMap((standing, index) => {
+            index += 1;
+            let previousPosition = standing.positionNew || 0;
+            let positionOld = previousPosition;
+            let positionNew = index;
+            return this.userScoreRepo.findByIdAndUpdate$(standing.id, { positionNew, positionOld })
+              .map(_ => {
+                return leaderboard.id;
+              })
+          })
       })
-      .flatMap(userScores => {
-        return Observable.from(userScores);
-      })
-      .concatMap((standing, index) => {
-        index += 1;
-        let prevPosition = standing.positionNew || 0;
-        let positionOld = prevPosition;
-        let positionNew = index;
-        return this.userScoreRepo.findByIdAndUpdate$(standing.id, { positionNew, positionOld })
-      })
+      .distinct()
       .count()
       .toPromise();
   }

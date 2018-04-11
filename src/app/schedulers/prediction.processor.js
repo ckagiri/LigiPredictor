@@ -21,7 +21,7 @@ class PredictionProcessor {
         let { season: seasonId, gameRound } = fixture;
         return this.fixtureRepo.findSelectableFixtures$(seasonId, gameRound)
             .map(selectableFixtures => {
-            return selectableFixtures.map(n => n.id);
+            return [...selectableFixtures, fixture].map(n => n.id);
         })
             .flatMap(fixtureIds => {
             return this.userRepo.findAll$()

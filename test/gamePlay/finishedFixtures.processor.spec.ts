@@ -13,12 +13,12 @@ import { ScorePoints, Score } from '../../src/common/score'
 import u from './utils';
 import { FinishedFixturesProcessor } from '../../src/app/schedulers/finishedFixtures.processor';
 
-let finishedFixturesProcessor = FinishedFixturesProcessor.getInstance();
 let user1: any, user2: any, league: any, season: any, team1: any, team2: any, team3: any, team4: any, 
 fixture1: any, fixture2: any, user1Pred1: any, user1Pred2: any, user2Pred1: any, user2Pred2: any, sBoard: any, rBoard: any;
 
-let finished
-describe.only('Finished Fixtures Processor', function () {
+let finishedFixturesProcessor = FinishedFixturesProcessor.getInstance();
+
+describe('Finished Fixtures Processor', function () {
   this.timeout(5000);
   before(done => {
     db.init(config.testDb.uri, done, { drop: true });
@@ -72,11 +72,11 @@ describe.only('Finished Fixtures Processor', function () {
       fixture1 = fixtures[0]; fixture2 = fixtures[1];    
       let pred1 = { 
         user: user1.id, fixture: fixture1.id, fixtureSlug: fixture1.slug, season: season.id, gameRound: fixture1.gameRound, 
-        choice: { goalsHomeTeam: 1, goalsAwayTeam: 0, isComputerGenerated: true }
+        choice: { goalsHomeTeam: 2, goalsAwayTeam: 0, isComputerGenerated: true }
       }
       let pred2 = { 
         user: user1.id, fixture: fixture2.id, fixtureSlug: fixture2.slug, season: season.id, gameRound: fixture2.gameRound, 
-        choice: { goalsHomeTeam: 2, goalsAwayTeam: 0, isComputerGenerated: true }
+        choice: { goalsHomeTeam: 1, goalsAwayTeam: 0, isComputerGenerated: true }
       }
       let pred3 = {
         user: user2.id, fixture: fixture1.id, fixtureSlug: fixture1.slug, season: season.id, gameRound: fixture1.gameRound, 
@@ -84,7 +84,7 @@ describe.only('Finished Fixtures Processor', function () {
       }
       let pred4 = {
         user: user2.id, fixture: fixture2.id, fixtureSlug: fixture2.slug, season: season.id, gameRound: fixture2.gameRound, 
-        choice: { goalsHomeTeam: 2, goalsAwayTeam: 1, isComputerGenerated: true }
+        choice: { goalsHomeTeam: 3, goalsAwayTeam: 0, isComputerGenerated: true }
       }
 
       return Prediction.create([pred1, pred2, pred3, pred4])
@@ -101,6 +101,24 @@ describe.only('Finished Fixtures Processor', function () {
   after(done => {
     db.close().then(() => { done(); })
   })
+  it('should process predictions', async () => {
+    fixture1.status = FixtureStatus.FINISHED;
+    fixture1.result = {
+      goalsHomeTeam: 2, goalsAwayTeam: 1, 
+    }
+    fixture2.status = FixtureStatus.FINISHED;
+    fixture2.result = {
+      goalsHomeTeam: 3, goalsAwayTeam: 0, 
+    }
+    let c = await finishedFixturesProcessor.processPredictions([fixture1, fixture2])
+    expect(c).to.equal(4);
+
+    Prediction.find({}).exec().then(ps => {
+      // console.log(ps)
+      expect(ps.length).to.equal(4);
+    })
+  })
+
   it('should process predictions', async () => {
     fixture1.status = FixtureStatus.FINISHED;
     fixture1.result = {

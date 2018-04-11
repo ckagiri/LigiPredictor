@@ -65,7 +65,7 @@ export class BaseDao<T extends Document> extends DocumentDao<T> implements IBase
   
   findByIdAndUpdate$(id: string, update: any): Observable<T> {
 		return Observable.create((observer: Subscriber<T>) => {
-			super.findByIdAndUpdate(id, update).exec().then((result: T) => {
+			this.findByIdAndUpdate(id, update).exec().then((result: T) => {
 				observer.next(result);
 				observer.complete();
 			}, (error: any) => {
@@ -76,7 +76,7 @@ export class BaseDao<T extends Document> extends DocumentDao<T> implements IBase
     
   findOneAndUpdate$(conditions: any, update: any, options?: any): Observable<T> {
     return Observable.create((observer: Subscriber<T>) => {
-			super.findOneAndUpdate(conditions, update, options).exec().then((result: T) => {
+			this.findOneAndUpdate(conditions, update, options).exec().then((result: T) => {
 				observer.next(result);
 				observer.complete();
 			}, (error: any) => {
@@ -87,7 +87,7 @@ export class BaseDao<T extends Document> extends DocumentDao<T> implements IBase
 
   findAll$(conditions?: any, projection?: any, options?: any): Observable<T[]> {
     return Observable.create((observer: Subscriber<T[]>) => {
-			super.findAll(conditions, projection, options).exec().then((result: T[]) => {
+			this.findAll(conditions, projection, options).exec().then((result: T[]) => {
 				observer.next(result);
 				observer.complete();
 			}, (error: any) => {
@@ -98,7 +98,7 @@ export class BaseDao<T extends Document> extends DocumentDao<T> implements IBase
 
   findOne$(conditions: any, projection?: any): Observable<T> {
 		return Observable.create((observer: Subscriber<T>) => {
-			super.findOne(conditions).exec().then((result: T) => {
+			this.findOne(conditions).exec().then((result: T) => {
 				observer.next(result);
 				observer.complete();
 			}, (error: any) => {
@@ -109,7 +109,7 @@ export class BaseDao<T extends Document> extends DocumentDao<T> implements IBase
 
   findById$(id: string): Observable<T> {
 		return Observable.create((observer: Subscriber<T>) => {
-			super.findById(id).exec().then((result: T) => {
+			this.findById(id).exec().then((result: T) => {
 				observer.next(result);
 				observer.complete();
 			}, (error: any) => {
@@ -120,7 +120,7 @@ export class BaseDao<T extends Document> extends DocumentDao<T> implements IBase
   
   remove$(id: string): Observable<void> {
 		return Observable.create( (observer: Subscriber<void>) => {
-			super.remove(id).exec().then( () => {
+			this.remove(id).exec().then( () => {
 				observer.next();
 				observer.complete();
 			}, (error: any) => {
@@ -131,7 +131,7 @@ export class BaseDao<T extends Document> extends DocumentDao<T> implements IBase
 
 	count$(conditions: any): Observable<number> {
 		return Observable.create((observer: Subscriber<number>) => {
-			super.count(conditions).exec().then((result: number) => {
+			this.count(conditions).exec().then((result: number) => {
 				observer.next(result);
 				observer.complete();
 			}, (error: any) => {

@@ -54,6 +54,9 @@ class CacheService {
     has(key) {
         return this.cache.has(key);
     }
+    clear() {
+        this.cache.clear();
+    }
     /**
      * Publishes the value to all observers of the given
      * in progress observables if observers exist.
@@ -63,7 +66,7 @@ class CacheService {
             const inFlight = this.inFlightObservables.get(key);
             const observersCount = inFlight.observers.length;
             if (observersCount) {
-                console.log(`%cNotifying ${inFlight.observers.length} flight subscribers for ${key}`, 'color: blue');
+                // console.log(`%cNotifying ${inFlight.observers.length} flight subscribers for ${key}`, 'color: blue');
                 inFlight.next(value);
             }
             inFlight.complete();

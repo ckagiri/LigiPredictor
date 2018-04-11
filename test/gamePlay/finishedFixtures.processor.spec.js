@@ -19,10 +19,9 @@ const db = require("../../src/db/index");
 const index_1 = require("../../src/config/environment/index");
 const utils_1 = require("./utils");
 const finishedFixtures_processor_1 = require("../../src/app/schedulers/finishedFixtures.processor");
-let finishedFixturesProcessor = finishedFixtures_processor_1.FinishedFixturesProcessor.getInstance();
 let user1, user2, league, season, team1, team2, team3, team4, fixture1, fixture2, user1Pred1, user1Pred2, user2Pred1, user2Pred2, sBoard, rBoard;
-let finished;
-describe.only('Finished Fixtures Processor', function () {
+let finishedFixturesProcessor = finishedFixtures_processor_1.FinishedFixturesProcessor.getInstance();
+describe('Finished Fixtures Processor', function () {
     this.timeout(5000);
     before(done => {
         db.init(index_1.config.testDb.uri, done, { drop: true });
@@ -80,11 +79,11 @@ describe.only('Finished Fixtures Processor', function () {
             fixture2 = fixtures[1];
             let pred1 = {
                 user: user1.id, fixture: fixture1.id, fixtureSlug: fixture1.slug, season: season.id, gameRound: fixture1.gameRound,
-                choice: { goalsHomeTeam: 1, goalsAwayTeam: 0, isComputerGenerated: true }
+                choice: { goalsHomeTeam: 2, goalsAwayTeam: 0, isComputerGenerated: true }
             };
             let pred2 = {
                 user: user1.id, fixture: fixture2.id, fixtureSlug: fixture2.slug, season: season.id, gameRound: fixture2.gameRound,
-                choice: { goalsHomeTeam: 2, goalsAwayTeam: 0, isComputerGenerated: true }
+                choice: { goalsHomeTeam: 1, goalsAwayTeam: 0, isComputerGenerated: true }
             };
             let pred3 = {
                 user: user2.id, fixture: fixture1.id, fixtureSlug: fixture1.slug, season: season.id, gameRound: fixture1.gameRound,
@@ -92,7 +91,7 @@ describe.only('Finished Fixtures Processor', function () {
             };
             let pred4 = {
                 user: user2.id, fixture: fixture2.id, fixtureSlug: fixture2.slug, season: season.id, gameRound: fixture2.gameRound,
-                choice: { goalsHomeTeam: 2, goalsAwayTeam: 1, isComputerGenerated: true }
+                choice: { goalsHomeTeam: 3, goalsAwayTeam: 0, isComputerGenerated: true }
             };
             return prediction_model_1.PredictionModel.create([pred1, pred2, pred3, pred4]);
         })
@@ -122,7 +121,22 @@ describe.only('Finished Fixtures Processor', function () {
         let c = yield finishedFixturesProcessor.processPredictions([fixture1, fixture2]);
         chai_1.expect(c).to.equal(4);
         prediction_model_1.PredictionModel.find({}).exec().then(ps => {
-            console.log(ps);
+            // console.log(ps)
+            chai_1.expect(ps.length).to.equal(4);
+        });
+    }));
+    it('should process predictions', () => __awaiter(this, void 0, void 0, function* () {
+        fixture1.status = fixture_model_1.FixtureStatus.FINISHED;
+        fixture1.result = {
+            goalsHomeTeam: 2, goalsAwayTeam: 1,
+        };
+        fixture2.status = fixture_model_1.FixtureStatus.FINISHED;
+        fixture2.result = {
+            goalsHomeTeam: 3, goalsAwayTeam: 0,
+        };
+        let c = yield finishedFixturesProcessor.processPredictions([fixture1, fixture2]);
+        chai_1.expect(c).to.equal(4);
+        prediction_model_1.PredictionModel.find({}).exec().then(ps => {
             chai_1.expect(ps.length).to.equal(4);
         });
     }));
