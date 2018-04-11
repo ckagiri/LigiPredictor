@@ -169,7 +169,7 @@ describe('Leaderboard Updater', function () {
     let c = await leaderboardUpdater.markLeaderboardsAsRefreshed(season.id);
     
     Leaderboard.find({}).exec().then(boards => {
-      console.log(boards)
+      // console.log(boards)
     })
   })
 })

@@ -32,9 +32,6 @@ describe('Leaderboard Repo', function () {
   before(done => {
     db.init(config.testDb.uri, done, { drop: true });
   })
-  before(done => {
-    db.init(config.testDb.uri, done, { drop: true });
-  })
   beforeEach(done => {
     League.create(epl)
       .then(l => {
@@ -103,7 +100,7 @@ describe('Leaderboard Repo', function () {
     })
   })
 
-  describe('finders', () => {
+  describe('finders', function () {
     let lb1: ILeaderboard;
     beforeEach((done) => {
       Leaderboard.create([
