@@ -1,3 +1,5 @@
+import 'mocha';
+import 'sinon-chai';
 import * as sinon from 'sinon';
 import * as chai from 'chai';
 const sinonChai = require("sinon-chai");
